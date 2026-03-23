@@ -298,13 +298,14 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .vote-footer{width:100%;max-width:var(--w);margin-top:.9rem;text-align:center;}
 
 /* ══ TOP 3 ══ */
-.top3-wrap{display:flex;flex-direction:column;gap:.5rem;margin:.8rem auto;width:100%;max-width:min(var(--w),92vw);position:relative;z-index:1;align-items:center;}
+.top3-wrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:.8rem auto;width:100%;max-width:min(560px,92vw);position:relative;z-index:1;align-items:stretch;}
 .top3-item{width:100%;animation:top3SlideIn .5s ease both;}
 .top3-item:nth-child(1){animation-delay:.2s;}
-.top3-item:nth-child(2){animation-delay:.5s;}
-.top3-item:nth-child(3){animation-delay:.8s;}
-.top3-img{width:100%;height:130px;object-fit:cover;border-radius:5px;border:1px solid var(--goldb);display:block;}
-.top3-emoji-fallback{width:100%;height:130px;background:var(--bg3);border:1px solid var(--goldb);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.top3-item:nth-child(2){animation-delay:.35s;}
+.top3-item:nth-child(3){animation-delay:.5s;}
+.top3-item:nth-child(4){animation-delay:.65s;}
+.top3-img{width:100%;height:148px;object-fit:cover;border-radius:5px;border:1px solid var(--goldb);display:block;}
+.top3-emoji-fallback{width:100%;height:148px;background:var(--bg3);border:1px solid var(--goldb);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
 @keyframes top3SlideIn{0%{opacity:0;transform:translateY(10px);}100%{opacity:1;transform:translateY(0);}}
   60%{transform:scale(1.25) rotate(5deg);filter:drop-shadow(0 0 18px rgba(200,168,75,.9));}
   80%{filter:drop-shadow(0 0 8px rgba(200,168,75,.5));}
@@ -331,8 +332,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .summary-value{font-size:.88rem;color:var(--cre);line-height:1.5;}
 .summary-emojis{display:flex;gap:.4rem;font-size:1.3rem;margin-top:.2rem;}
 .sum-photos{display:flex;gap:.6rem;margin-top:.6rem;justify-content:center;width:100%;}
-.sum-photos-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem;margin-top:.6rem;width:100%;align-items:stretch;}
-.sum-photo{width:100%;height:118px;object-fit:cover;object-position:center center;border-radius:4px;border:1px solid var(--goldb);display:block;animation:rvB .7s cubic-bezier(.36,.07,.19,.97) both;}
+.sum-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;width:100%;max-width:100%;}
+.sum-photo{width:100%;height:140px;object-fit:cover;border-radius:4px;border:1px solid var(--goldb);display:block;animation:rvB .7s cubic-bezier(.36,.07,.19,.97) both;}
 .sum-photo:nth-child(2){animation-delay:.2s;}
 .sum-photo:nth-child(3){animation-delay:.4s;}
 .surprise-note{background:var(--bg3);border:1px solid rgba(200,168,75,.12);padding:.85rem 1.1rem;width:100%;max-width:380px;font-size:.78rem;color:var(--cre2);text-align:center;line-height:1.7;font-style:italic;margin-top:.3rem;}
@@ -398,7 +399,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .top3-item{background:var(--bg2);border:1px solid var(--goldb);border-radius:4px;overflow:hidden;width:100%;max-width:280px;}
 
 /* Resum fotos */
-.sum-photo{width:100%;height:118px;object-fit:cover;object-position:center center;border-radius:4px;display:block;border:1px solid var(--goldb);}
+.sum-photo{width:100%;height:140px;object-fit:cover;border-radius:4px;display:block;}
 /* ══ CEL NOCTURN TOP 3 ══ */
 #results{overflow:hidden;}
 .sky-wrap{position:absolute;inset:0;z-index:0;pointer-events:none;}
@@ -511,12 +512,12 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <div class="screen" id="veto">
   <div class="veto-header">
     <div class="lbl" style="letter-spacing:.12em;">Obriu les targetes per descobrir les pistes</div>
-    <div class="lbl" style="letter-spacing:.08em;margin-top:.25rem;color:var(--cre2);">i veteu-ne màxim 6</div>
+    <div class="lbl" style="letter-spacing:.08em;margin-top:.25rem;color:var(--cre2);">i veteu-ne màxim 4</div>
   </div>
   <div class="bp-grid" id="bpGrid"></div>
   <div class="cta-area">
     <div class="unveto-hint" id="unvetoHint"></div>
-    <div class="veto-counter" style="margin:.7rem 0 .3rem;">Vetats: <b id="vcnt">0</b> / <b>6</b></div>
+    <div class="veto-counter" style="margin:.7rem 0 .3rem;">Vetats: <b id="vcnt">0</b> / <b>4</b></div>
     <button class="btn btn-s" id="confVetoBtn" onclick="confirmVetos()">Confirmar vetos →</button>
   </div>
 </div>
@@ -560,7 +561,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   <h1>Els destins preferits</h1>
   <p style="margin-top:.4rem;font-size:.8rem;">Un d'aquests quatre us espera.</p>
   <div class="top3-wrap" id="top3Wrap"></div>
-  <p style="margin-top:.6rem;font-size:.78rem;color:var(--cre2);">Ara teniu un minut per decidir el quart destí</p>
+  <p style="margin:.7rem auto 0;font-size:.82rem;color:var(--cre2);font-style:italic;">Ara teniu un minut per decidir el quart destí</p>
   <div class="sep-l"></div>
   <button class="btn btn-s" onclick="showS('datepick')" style="margin-top:.5rem;">Anem a triar les dates →</button>
 </div>
@@ -598,7 +599,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
         <div class="summary-icon">🗺️</div>
         <div class="summary-label">Destins possibles</div>
       </div>
-      <div id="sumEmojis" class="sum-photos-grid"></div>
+      <div id="sumEmojis" class="sum-grid"></div>
     </div>
     <div class="summary-row">
       <div class="summary-icon">📅</div>
@@ -643,7 +644,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 
     <!-- Destins (ocult si ja hi ha resultats) -->
     <div class="asec" id="admDestsSection">
-      <div class="asec-t">12 Boarding passes · emoji · nom · pista 1 · pista 2 · pista 3</div>
+      <div class="asec-t">11 + 1 boarding passes · emoji · nom · pista 1 · pista 2 · pista 3</div>
       <div id="admDG"></div>
     </div>
 
@@ -657,7 +658,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </div>
 
 <script>
-const LETTERS='ABCDEFGHIJKL'.split('');
+const LETTERS='ABCDEFGHI'.split('');
 const KC='vsrp11_cfg',KG='vsrp11_game';
 const VOTER_ORDER=['david','anna','carles','nuska'];
 
@@ -995,11 +996,11 @@ function buildResults(){
   }).sort((a,b)=>b.total-a.total);
 
   const top3=totals.slice(0,3);
-  const mystery=cfg.destinations.find(d=>d.mystery) || {emoji:'❓',img:''};
-  const top4=[...top3, mystery];
+  const mystery=cfg.destinations.find(d=>d.locked||d.mystery);
+  const final4=mystery?[...top3,mystery]:top3;
 
   const wrap=document.getElementById('top3Wrap');wrap.innerHTML='';
-  top4.forEach((d,i)=>{
+  final4.forEach((d,i)=>{
     const item=document.createElement('div');item.className='top3-item';
     if(d.img){
       item.innerHTML=`<img class="top3-img" src="${d.img}" alt="">`;
@@ -1008,11 +1009,10 @@ function buildResults(){
     }
     wrap.appendChild(item);
   });
-  const results=document.getElementById('results');
-  let sky=results.querySelector('.sky-wrap');
+  let sky=document.getElementById('results').querySelector('.sky-wrap');
   if(!sky){
     sky=document.createElement('div');sky.className='sky-wrap';
-    results.insertBefore(sky,results.firstChild);
+    document.getElementById('results').insertBefore(sky,document.getElementById('results').firstChild);
     for(let i=0;i<40;i++){
       const s=document.createElement('div');s.className='sky-star';
       const sz=(Math.random()*3+1).toFixed(1);
@@ -1020,7 +1020,7 @@ function buildResults(){
       sky.appendChild(s);
     }
   }
-  window._top3=top4;
+  window._top3=final4;
 }
 
 /* ════ DATE PICKER ════ */
@@ -1081,11 +1081,11 @@ function showSummary(){buildSummary();saveG('summary');showS('summary');}
 
 /* ════ SUMMARY ════ */
 function buildSummary(){
-  const top4=window._top3||[];
+  const top3=window._top3||[];
   const emojisEl=document.getElementById('sumEmojis');
-  emojisEl.innerHTML=top4.map(d=>{
+  emojisEl.innerHTML=top3.map(d=>{
     if(d.img) return `<img class="sum-photo" src="${d.img}" alt="${d.emoji||''}">`;
-    return `<span style="font-size:2rem">${d.emoji||'🌍'}</span>`;
+    return `<div class="top3-emoji-fallback">${d.emoji||'🌍'}</div>`;
   }).join('');
   const months=(_selectedMonths&&_selectedMonths.length>0?_selectedMonths:[selMonth]).filter(m=>m!==null).sort((a,b)=>a-b).map(m=>MONTHS_CA[m]);
   document.getElementById('sumDate').textContent=(months.length>0?months.join(', '):'—')+' '+(selYear||'—');
