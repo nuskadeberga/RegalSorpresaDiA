@@ -18,7 +18,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--cre);font-family:'Ou
 #stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
 .star{position:absolute;border-radius:50%;background:var(--cre);animation:tw var(--d,3s) ease-in-out var(--dl,0s) infinite;}
 @keyframes tw{0%,100%{opacity:0;}50%{opacity:var(--op,.3);}}
-.screen{position:relative;z-index:1;min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.1rem;overflow:hidden;}
+.screen{position:relative;z-index:1;min-height:100dvh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.1rem;overflow:hidden;}
 .screen.active{display:flex;animation:sIn .5s ease both;}
 @keyframes sIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,7vw,3.8rem);color:var(--gold2);text-align:center;line-height:1.15;}
@@ -383,6 +383,85 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   .bp-grid{grid-template-columns:repeat(3,1fr);max-width:min(680px,92vw);}
   /* Handoff: text més gran */
   .handoff-name{font-size:clamp(3rem,8vw,5rem);}
+}
+
+/* ══ VETO compactat per iPad / Safari ══ */
+@media (min-width: 768px) and (max-width: 1180px) {
+  #veto{
+    min-height: 100dvh;
+    height: 100dvh;
+    justify-content: flex-start;
+    padding: .55rem .9rem .75rem;
+    overflow: hidden;
+  }
+
+  #veto .veto-header{
+    padding: .35rem .7rem;
+    margin-bottom: .15rem;
+  }
+
+  #veto .veto-counter{
+    font-size: .78rem;
+    margin: .25rem 0 .15rem;
+    letter-spacing: .14em;
+  }
+
+  #veto .bp-grid{
+    width: 100%;
+    max-width: min(720px, 92vw);
+    gap: .45rem;
+    align-content: start;
+  }
+
+  #veto .bp-closed{
+    aspect-ratio: .78;
+    border-radius: 7px;
+  }
+
+  #veto .bp-notch{
+    top: -12px;
+    width: 24px;
+    height: 24px;
+  }
+
+  #veto .bp-dashed{
+    top: 17%;
+  }
+
+  #veto .bp-dashed-b{
+    bottom: 13%;
+  }
+
+  #veto .bp-em{
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
+    margin-top: -2%;
+  }
+
+  #veto .bp-plane{
+    font-size: clamp(.95rem, 1.8vw, 1.25rem);
+    bottom: 15%;
+  }
+
+  #veto .bp-stamp span{
+    width: clamp(34px, 7vw, 46px);
+    height: clamp(34px, 7vw, 46px);
+    font-size: clamp(.34rem, .8vw, .46rem);
+  }
+
+  #veto .cta-area{
+    margin-top: .45rem;
+  }
+
+  #veto .unveto-hint{
+    margin-top: .15rem;
+    min-height: .65rem;
+    font-size: .54rem;
+  }
+
+  #veto #confVetoBtn{
+    padding: .72rem 1.15rem;
+    font-size: .72rem;
+  }
 }
 
 /* ══ REVEAL AMB IMATGE ══ */
