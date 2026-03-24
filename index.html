@@ -557,7 +557,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function goStart(){
       try {
         if (typeof showS === 'function') {
-          showS('cover');
+          showS('welcome');
         }
       } catch(e){}
     }
@@ -570,15 +570,6 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 </script>
 
-
-<style>
-@media (min-width: 820px){
-  #summary{padding:1rem 2rem;}
-  #summary .summary-box{max-width:1100px;margin:auto;}
-  #summary .sum-grid{grid-template-columns:repeat(4,1fr);}
-  #summary .sum-photo{height:120px;}
-}
-</style>
 </head>
 <body>
 <div id="stars"></div>
@@ -675,7 +666,7 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="surprise-flash">SORPRESA!!</div>
   <div class="sep-l"></div>
   <p class="surprise-copy">Nosaltres també vindrem, pel que també tenim dret a vot!</p>
-  <button class="btn btn-s" onclick="showS('cover')" style="margin-top:1.5rem;">D'acord, quin remei</button>
+  <button class="btn btn-s" onclick="showS('welcome')" style="margin-top:1.5rem;">D'acord, quin remei</button>
 </div>
 
 <div class="screen" id="handoff">
@@ -875,8 +866,8 @@ function init(){
     selYear=g.selYear||null;selMonth=g.selMonth||null;
     if(g.phase==='veto'&&vetoed.length>0){buildBpGrid();updateVetoUI();showS('veto');return;}
     if(g.phase==='discovery'){buildDiscovery();showS('discovery');return;}
-    if(g.phase==='handoff'){buildHandoff(votingTurn);showS('cover');return;}
-    if(g.phase==='voting'){buildVoting();showS('cover');return;}
+    if(g.phase==='handoff'){buildHandoff(votingTurn);showS('welcome');return;}
+    if(g.phase==='voting'){buildVoting();showS('welcome');return;}
   }
   showS('welcome');
 }
@@ -1191,7 +1182,7 @@ function showHint(btn,i){
 
 /* ════ HANDOFF ════ */
 function startHandoff(turn){
-  votingTurn=turn;buildHandoff(turn);saveG('handoff');showS('cover');
+  votingTurn=turn;buildHandoff(turn);saveG('handoff');showS('welcome');
 }
 
 const VOTER_DISPLAY={
@@ -1213,7 +1204,7 @@ function buildHandoff(turn){
 }
 
 /* ════ VOTING ════ */
-function startVoting(){buildVoting();saveG('voting');showS('cover');}
+function startVoting(){buildVoting();saveG('voting');showS('welcome');}
 
 function buildVoting(){
   const voter=VOTER_ORDER[votingTurn];
@@ -1344,7 +1335,7 @@ function pickMonth(mi,el){
   saveG('datepick');
 }
 
-function showSummary(){buildSummary();saveG('summary');showS('cover');}
+function showSummary(){buildSummary();saveG('summary');showS('welcome');}
 
 /* ════ SUMMARY ════ */
 function buildSummary(){
