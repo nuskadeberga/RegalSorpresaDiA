@@ -553,7 +553,26 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   100% { transform: translateY(120vh) rotate(720deg); }
 }
 </style>
-</head>
+<style id="handoff-surprise-style">
+#handoff-surprise .flash-big{
+  font-size:clamp(2.1rem,7vw,4.4rem);
+  font-weight:900;
+  text-align:center;
+  line-height:1.05;
+  color:var(--gold2);
+  letter-spacing:.04em;
+  animation:handoffFlash .9s infinite;
+}
+#handoff-surprise p{
+  font-size:1.1rem;
+  color:var(--cre);
+  text-align:center;
+}
+@keyframes handoffFlash{
+  0%,49%{opacity:1;transform:scale(1);}
+  50%,100%{opacity:.28;transform:scale(1.03);}
+}
+</style></head>
 <body>
 <div id="stars"></div>
 <!-- ══ MODAL BOARDING PASS ══ -->
@@ -643,6 +662,13 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <button class="btn btn-s" onclick="startHandoff(0)" style="margin-top:1.3rem;">Iniciar votació →</button>
 </div>
 <!-- ══ HANDOFF ══ -->
+
+<div class="screen" id="handoff-surprise">
+<div class="flash-big">SORPRESA!!</div>
+<p style="max-width:520px;margin-top:.6rem;">Nosaltres també vindrem, pel que també tenim dret a vot!</p>
+<div class="sep-l"></div>
+<button class="btn btn-s" onclick="showS('handoff')" style="margin-top:1.4rem;">D'acord, quin remei</button>
+</div>
 <div class="screen" id="handoff">
 <div class="handoff-icon">📱</div>
 <div class="lbl" id="handoffPrep" style="margin-bottom:.5rem;">Passeu el dispositiu al</div>
@@ -840,7 +866,7 @@ function init(){
     selYear=g.selYear||null;selMonth=g.selMonth||null;
     if(g.phase==='veto'&&vetoed.length>0){buildBpGrid();updateVetoUI();showS('veto');return;}
     if(g.phase==='discovery'){buildDiscovery();showS('discovery');return;}
-    if(g.phase==='handoff'){buildHandoff(votingTurn);showS('handoff');return;}
+    if(g.phase==='handoff'){buildHandoff(votingTurn);if(i===2){ showS('handoff-surprise'); } else { showS('handoff'); }return;}
     if(g.phase==='voting'){buildVoting();showS('voting');return;}
   }
   showS('welcome');
@@ -1156,7 +1182,7 @@ function showHint(btn,i){
 
 /* ════ HANDOFF ════ */
 function startHandoff(turn){
-  votingTurn=turn;buildHandoff(turn);saveG('handoff');showS('handoff');
+  votingTurn=turn;buildHandoff(turn);saveG('handoff');if(i===2){ showS('handoff-surprise'); } else { showS('handoff'); }
 }
 
 const VOTER_DISPLAY={
