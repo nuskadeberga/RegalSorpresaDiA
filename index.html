@@ -484,8 +484,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 #countdown-wrap.done #countdown-num{color:var(--teal);}
 #countdown-wrap.done .ring-progress{stroke:var(--teal);}
 </style>
+
 <style id="surprise-handoff-style">
-/* ══ SURPRISE HANDOFF ══ */
 #handoff-surprise .surprise-flash{
   font-size:clamp(2.2rem,8vw,4.8rem);
   font-weight:900;
@@ -508,7 +508,9 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   0%,49%{opacity:1;transform:scale(1);}
   50%,100%{opacity:.28;transform:scale(1.03);}
 }
-</style></head>
+</style>
+
+</head>
 <body>
 <div id="stars"></div>
 <!-- ══ MODAL BOARDING PASS ══ -->
@@ -599,12 +601,14 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </div>
 <!-- ══ HANDOFF ══ -->
 
+<!-- ══ HANDOFF SURPRISE ══ -->
 <div class="screen" id="handoff-surprise">
-<div class="surprise-flash">SORPRESA!!</div>
-<div class="sep-l"></div>
-<p class="surprise-copy">Nosaltres també vindrem, pel que també tenim dret a vot!</p>
-<button class="btn btn-s" onclick="goToCarlesHandoff()" style="margin-top:1.5rem;">D'acord, quin remei</button>
+  <div class="surprise-flash">SORPRESA!!</div>
+  <div class="sep-l"></div>
+  <p class="surprise-copy">Nosaltres també vindrem, pel que també tenim dret a vot!</p>
+  <button class="btn btn-s" onclick="showS('handoff')" style="margin-top:1.5rem;">D'acord, quin remei</button>
 </div>
+
 <div class="screen" id="handoff">
 <div class="handoff-icon">📱</div>
 <div class="lbl" id="handoffPrep" style="margin-bottom:.5rem;">Passeu el dispositiu al</div>
@@ -1118,21 +1122,7 @@ function showHint(btn,i){
 
 /* ════ HANDOFF ════ */
 function startHandoff(turn){
-  votingTurn=turn;
-  if(turn===2){
-    saveG('handoff-surprise');
-    showS('handoff-surprise');
-    return;
-  }
-  buildHandoff(turn);
-  saveG('handoff');
-  showS('handoff');
-}
-
-function goToCarlesHandoff(){
-  buildHandoff(votingTurn);
-  saveG('handoff');
-  showS('handoff');
+  votingTurn=turn;buildHandoff(turn);saveG('handoff');showS('handoff');
 }
 
 const VOTER_DISPLAY={
@@ -1464,6 +1454,21 @@ function hardReset(){
 function confetti(){}
 
 init();
+
+/* SAFE SURPRISE HANDOFF HOOK */
+(function(){
+  const __origShowS = showS;
+  let __surpriseSeen = false;
+  showS = function(id){
+    if(id==='handoff' && typeof votingTurn!=='undefined' && votingTurn===2 && !__surpriseSeen){
+      __surpriseSeen = true;
+      return __origShowS('handoff-surprise');
+    }
+    return __origShowS(id);
+  };
+  window.addEventListener('beforeunload', ()=>{ __surpriseSeen = false; });
+})();
+
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
