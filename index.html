@@ -530,6 +530,46 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+
+<script id="hard-reset-start">
+(function(){
+  function hardResetToStart(){
+    try {
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    } catch(e){}
+    try {
+      sessionStorage.clear();
+    } catch(e){}
+    try {
+      Object.keys(localStorage).forEach(function(k){
+        if(/vote|vot|flykube|trip|desti|dest|countdown|screen|handoff|state|progress/i.test(k)){
+          try { localStorage.removeItem(k); } catch(e){}
+        }
+      });
+    } catch(e){}
+    try {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs){
+          regs.forEach(function(reg){ reg.unregister(); });
+        });
+      }
+    } catch(e){}
+    function goStart(){
+      try {
+        if (typeof showS === 'function') {
+          showS('cover');
+        }
+      } catch(e){}
+    }
+    setTimeout(goStart, 0);
+    setTimeout(goStart, 200);
+    setTimeout(goStart, 800);
+  }
+  document.addEventListener('DOMContentLoaded', hardResetToStart);
+  window.addEventListener('load', hardResetToStart);
+})();
+</script>
+
 </head>
 <body>
 <div id="stars"></div>
@@ -626,7 +666,7 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="surprise-flash">SORPRESA!!</div>
   <div class="sep-l"></div>
   <p class="surprise-copy">Nosaltres també vindrem, pel que també tenim dret a vot!</p>
-  <button class="btn btn-s" onclick="showS('handoff')" style="margin-top:1.5rem;">D'acord, quin remei</button>
+  <button class="btn btn-s" onclick="showS('cover')" style="margin-top:1.5rem;">D'acord, quin remei</button>
 </div>
 
 <div class="screen" id="handoff">
@@ -826,8 +866,8 @@ function init(){
     selYear=g.selYear||null;selMonth=g.selMonth||null;
     if(g.phase==='veto'&&vetoed.length>0){buildBpGrid();updateVetoUI();showS('veto');return;}
     if(g.phase==='discovery'){buildDiscovery();showS('discovery');return;}
-    if(g.phase==='handoff'){buildHandoff(votingTurn);showS('handoff');return;}
-    if(g.phase==='voting'){buildVoting();showS('voting');return;}
+    if(g.phase==='handoff'){buildHandoff(votingTurn);showS('cover');return;}
+    if(g.phase==='voting'){buildVoting();showS('cover');return;}
   }
   showS('welcome');
 }
@@ -1142,7 +1182,7 @@ function showHint(btn,i){
 
 /* ════ HANDOFF ════ */
 function startHandoff(turn){
-  votingTurn=turn;buildHandoff(turn);saveG('handoff');showS('handoff');
+  votingTurn=turn;buildHandoff(turn);saveG('handoff');showS('cover');
 }
 
 const VOTER_DISPLAY={
@@ -1164,7 +1204,7 @@ function buildHandoff(turn){
 }
 
 /* ════ VOTING ════ */
-function startVoting(){buildVoting();saveG('voting');showS('voting');}
+function startVoting(){buildVoting();saveG('voting');showS('cover');}
 
 function buildVoting(){
   const voter=VOTER_ORDER[votingTurn];
@@ -1295,7 +1335,7 @@ function pickMonth(mi,el){
   saveG('datepick');
 }
 
-function showSummary(){buildSummary();saveG('summary');showS('summary');}
+function showSummary(){buildSummary();saveG('summary');showS('cover');}
 
 /* ════ SUMMARY ════ */
 function buildSummary(){
