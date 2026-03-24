@@ -510,6 +510,26 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 }
 </style>
 
+
+<script id="force-start-from-beginning">
+document.addEventListener('DOMContentLoaded', function () {
+  try {
+    localStorage.removeItem('flykubeGameState');
+    localStorage.removeItem('gameState');
+    localStorage.removeItem('state');
+    localStorage.removeItem('screen');
+    localStorage.removeItem('currentScreen');
+    localStorage.removeItem('resumeScreen');
+    localStorage.removeItem('savedScreen');
+    Object.keys(localStorage).forEach(function(k){
+      if(/vote|vot|flykube|trip|desti|dest|countdown|screen|handoff/i.test(k)){
+        try { localStorage.removeItem(k); } catch(e){}
+      }
+    });
+  } catch(e) {}
+});
+</script>
+
 </head>
 <body>
 <div id="stars"></div>
