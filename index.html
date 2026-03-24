@@ -270,6 +270,17 @@ p{text-align:center;font-size:1rem;line-height:1.85;color:var(--cre2);max-width:
 .disc-extra.on{display:block;}
 
 /* ══ HANDOFF ══ */
+.surprise-flash{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,8vw,4.4rem);
+  color:var(--gold2);
+  text-align:center;
+  animation:surpriseFlash .8s steps(1,end) infinite;
+}
+@keyframes surpriseFlash{
+  0%,49%{opacity:1;text-shadow:0 0 8px rgba(228,204,122,.35),0 0 18px rgba(228,204,122,.18);}
+  50%,100%{opacity:.2;text-shadow:none;}
+}
 .handoff-icon{font-size:3.5rem;margin-bottom:.5rem;}
 .handoff-name{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,7vw,3.5rem);font-style:italic;}
 .handoff-name.david{color:var(--david);}
@@ -573,6 +584,13 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <div class="disc-grid" id="discGrid"></div>
 <button class="btn btn-s" onclick="startHandoff(0)" style="margin-top:1.3rem;">Iniciar votació →</button>
 </div>
+<!-- ══ SURPRISE HANDOFF ══ -->
+<div class="screen" id="surpriseHandoff">
+<div class="surprise-flash">SORPRESA!!</div>
+<div class="sep-l"></div>
+<p style="max-width:520px;">Nosaltres també vindrem, pel que també tenim dret a vot!</p>
+<button class="btn btn-s" onclick="continueAfterSurprise()" style="margin-top:1.5rem;">D'acord, quin remei</button>
+</div>
 <!-- ══ HANDOFF ══ -->
 <div class="screen" id="handoff">
 <div class="handoff-icon">📱</div>
@@ -771,6 +789,7 @@ function init(){
     selYear=g.selYear||null;selMonth=g.selMonth||null;
     if(g.phase==='veto'&&vetoed.length>0){buildBpGrid();updateVetoUI();showS('veto');return;}
     if(g.phase==='discovery'){buildDiscovery();showS('discovery');return;}
+    if(g.phase==='surpriseHandoff'){showS('surpriseHandoff');return;}
     if(g.phase==='handoff'){buildHandoff(votingTurn);showS('handoff');return;}
     if(g.phase==='voting'){buildVoting();showS('voting');return;}
   }
@@ -1090,6 +1109,17 @@ function startHandoff(turn){
   votingTurn=turn;buildHandoff(turn);saveG('handoff');showS('handoff');
 }
 
+function showSurpriseHandoff(){
+  saveG('surpriseHandoff');
+  showS('surpriseHandoff');
+}
+
+function continueAfterSurprise(){
+  buildHandoff(votingTurn);
+  saveG('handoff');
+  showS('handoff');
+}
+
 const VOTER_DISPLAY={
   david: {nomGran:'David',  prep:"Passa el dispositiu al",  boto:"Sóc el David, comencem →"},
   anna:  {nomGran:'Anna',   prep:"Passa el dispositiu a l'",boto:"Sóc l'Anna, comencem →"},
@@ -1145,6 +1175,7 @@ function submitVotes(){
   survivors.forEach(d=>{const sl=document.getElementById('sl'+d.i);if(sl)votes[voter][d.i]=parseInt(sl.value);});
   votingTurn++;saveG();
   if(votingTurn>=VOTER_ORDER.length){saveG('results');buildResults();showS('results');confetti();}
+  else if(votingTurn===2){showSurpriseHandoff();}
   else startHandoff(votingTurn);
 }
 
