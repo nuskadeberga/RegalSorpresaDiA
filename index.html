@@ -13,6 +13,7 @@
   --cre:#e8dcc8;--cre2:#9a8870;--red:#c0392b;--teal:#2eaaa4;
   --david:#5ba4cf;--anna:#d4879a;--carles:#6abf8a;--nuska:#a78bca;
   --w:min(520px,92vw);
+  --w-final:min(760px,94vw);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{min-height:100vh;background:var(--bg);color:var(--cre);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;font-size:20px;}
@@ -352,6 +353,14 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .surprise-note{background:var(--bg3);border:1px solid rgba(200,168,75,.12);padding:.85rem 1.1rem;width:100%;max-width:380px;font-size:.78rem;color:var(--cre2);text-align:center;line-height:1.7;font-style:italic;margin-top:.3rem;}
 .surprise-note strong{color:var(--gold2);font-style:normal;}
 .summary-gif{display:block;width:min(160px,50vw);height:auto;margin:.85rem auto 0;border:1px solid rgba(200,168,75,.18);border-radius:4px;}
+#summary{position:relative;overflow:hidden;}
+.summary-confetti{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.summary-box,.surprise-note,#summary > .lbl,#summary > .sep-l,#summary > h1{position:relative;z-index:2;}
+.summary-gif{animation:emojiSwing 3.6s ease-in-out infinite;transform-origin:50% 8%;will-change:transform;}
+@keyframes emojiSwing{0%,100%{transform:rotate(-5deg) translateY(0);}25%{transform:rotate(4deg) translateY(-2px);}50%{transform:rotate(7deg) translateY(0);}75%{transform:rotate(-3deg) translateY(-1px);}}
+.sconf{position:absolute;top:-12vh;border-radius:2px;opacity:.78;animation:sConfFall linear infinite;}
+.sconf.circle{border-radius:999px;}
+@keyframes sConfFall{0%{transform:translate3d(0,-12vh,0) rotate(0deg);}100%{transform:translate3d(var(--drift,0px),112vh,0) rotate(720deg);}}
 
 /* ══ ADMIN ══ */
 #admin{justify-content:flex-start;padding-top:1.5rem;padding-bottom:2.5rem;}
@@ -430,6 +439,15 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   .bp-closed{aspect-ratio:.82;}
   /* Handoff: text més gran */
   .handoff-name{font-size:clamp(3rem,8vw,5rem);}
+  /* Pàgina final més ampla per iPad */
+  .summary-box,.surprise-note{max-width:var(--w-final);}
+  .summary-box{padding:1.6rem 1.9rem;}
+  .surprise-note{padding:1rem 1.4rem;}
+  .sum-grid{gap:1rem;}
+  .sum-photo,.top3-emoji-fallback{height:170px;}
+}
+@media(min-width:900px){
+  .summary-box,.surprise-note{max-width:min(860px,88vw);}
 }
 
 /* ══ REVEAL AMB IMATGE ══ */
@@ -656,6 +674,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </div>
 <!-- ══ SUMMARY ══ -->
 <div class="screen" id="summary">
+<div class="summary-confetti" aria-hidden="true" id="summaryConfetti"></div>
 <div class="lbl">Resum del viatge</div>
 <div class="sep-l"></div>
 <h1 style="font-size:2rem;">Tot a punt</h1>
@@ -914,6 +933,7 @@ function showS(id){
   document.querySelector('.reset-hint').style.display=(id==='welcome'||id==='admin')?'none':'flex';
 
   // Countdown a la pantalla de resultats
+  if(id === 'summary'){ buildSummaryConfetti(); }
   if(id === 'results'){
     startCountdown();
   } else {
@@ -1271,7 +1291,30 @@ function pickMonth(mi,el){
   saveG('datepick');
 }
 
-function showSummary(){buildSummary();saveG('summary');showS('summary');}
+
+function buildSummaryConfetti(){
+  const host=document.getElementById('summaryConfetti');
+  if(!host) return;
+  host.innerHTML='';
+  const count=window.innerWidth>=768?34:22;
+  const shapes=['rect','circle'];
+  for(let i=0;i<count;i++){
+    const el=document.createElement('span');
+    const size=6+Math.random()*10;
+    el.className='sconf '+(Math.random()>.72?'circle':'rect');
+    el.style.left=(Math.random()*100)+'%';
+    el.style.width=size+'px';
+    el.style.height=(Math.random()>.75?size:size*0.55)+'px';
+    el.style.background=Math.random()>.55?'rgba(228,204,122,.85)':'rgba(232,220,200,.65)';
+    el.style.animationDuration=(6+Math.random()*5)+'s';
+    el.style.animationDelay=(-Math.random()*8)+'s';
+    el.style.setProperty('--drift', ((Math.random()*120)-60)+'px');
+    host.appendChild(el);
+  }
+}
+
+function showSummary(){buildSummary();buildSummaryConfetti();saveG('summary');showS('summary');}
+
 
 /* ════ SUMMARY ════ */
 function buildSummary(){
