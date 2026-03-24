@@ -353,14 +353,14 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .surprise-note{background:var(--bg3);border:1px solid rgba(200,168,75,.12);padding:.85rem 1.1rem;width:100%;max-width:380px;font-size:.78rem;color:var(--cre2);text-align:center;line-height:1.7;font-style:italic;margin-top:.3rem;}
 .surprise-note strong{color:var(--gold2);font-style:normal;}
 .summary-gif{display:block;width:min(160px,50vw);height:auto;margin:.85rem auto 0;border:1px solid rgba(200,168,75,.18);border-radius:4px;}
-#summary{position:relative;overflow:hidden;}
-.summary-confetti{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.summary-box,.surprise-note,#summary > .lbl,#summary > .sep-l,#summary > h1{position:relative;z-index:2;}
+#summary{position:relative;overflow:hidden;isolation:isolate;}
+.summary-confetti{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:hidden;}
+.summary-box,.surprise-note,#summary > .lbl,#summary > .sep-l,#summary > h1,.summary-gif{position:relative;z-index:2;}
 .summary-gif{animation:emojiSwing 3.6s ease-in-out infinite;transform-origin:50% 8%;will-change:transform;}
 @keyframes emojiSwing{0%,100%{transform:rotate(-5deg) translateY(0);}25%{transform:rotate(4deg) translateY(-2px);}50%{transform:rotate(7deg) translateY(0);}75%{transform:rotate(-3deg) translateY(-1px);}}
-.sconf{position:absolute;top:-12vh;border-radius:2px;opacity:.78;animation:sConfFall linear infinite;}
-.sconf.circle{border-radius:999px;}
-@keyframes sConfFall{0%{transform:translate3d(0,-12vh,0) rotate(0deg);}100%{transform:translate3d(var(--drift,0px),112vh,0) rotate(720deg);}}
+.sconf{position:absolute;top:-14vh;border-radius:2px;opacity:.72;filter:blur(.15px);will-change:transform,opacity;animation:sConfFall var(--fall,8.5s) cubic-bezier(.22,.61,.36,1) infinite;}
+.sconf.circle,.sconf.slim{border-radius:999px;}
+@keyframes sConfFall{0%{transform:translate3d(0,-14vh,0) rotate(0deg);opacity:0;}8%{opacity:var(--op,.74);}100%{transform:translate3d(var(--drift,0px),112vh,0) rotate(var(--rot,160deg));opacity:0;}}
 
 /* ══ ADMIN ══ */
 #admin{justify-content:flex-start;padding-top:1.5rem;padding-bottom:2.5rem;}
@@ -1296,19 +1296,42 @@ function buildSummaryConfetti(){
   const host=document.getElementById('summaryConfetti');
   if(!host) return;
   host.innerHTML='';
-  const count=window.innerWidth>=768?34:22;
-  const shapes=['rect','circle'];
+
+  const count=window.innerWidth>=768 ? 42 : 28;
+  const palette=[
+    'rgba(228,204,122,.88)',
+    'rgba(214,190,138,.78)',
+    'rgba(176,132,92,.68)',
+    'rgba(120,146,156,.34)'
+  ];
+  const shapes=['rect','circle','slim'];
+
   for(let i=0;i<count;i++){
     const el=document.createElement('span');
-    const size=6+Math.random()*10;
-    el.className='sconf '+(Math.random()>.72?'circle':'rect');
+    const shape=shapes[Math.floor(Math.random()*shapes.length)];
+    const size=shape==='slim' ? (8+Math.random()*10) : (5+Math.random()*7);
+
+    el.className='sconf '+shape;
     el.style.left=(Math.random()*100)+'%';
-    el.style.width=size+'px';
-    el.style.height=(Math.random()>.75?size:size*0.55)+'px';
-    el.style.background=Math.random()>.55?'rgba(228,204,122,.85)':'rgba(232,220,200,.65)';
-    el.style.animationDuration=(6+Math.random()*5)+'s';
-    el.style.animationDelay=(-Math.random()*8)+'s';
-    el.style.setProperty('--drift', ((Math.random()*120)-60)+'px');
+
+    if(shape==='circle'){
+      el.style.width=size+'px';
+      el.style.height=size+'px';
+    }else if(shape==='slim'){
+      el.style.width=(2+Math.random()*2)+'px';
+      el.style.height=(12+Math.random()*16)+'px';
+    }else{
+      el.style.width=(5+Math.random()*7)+'px';
+      el.style.height=(3+Math.random()*5)+'px';
+    }
+
+    el.style.background=palette[Math.floor(Math.random()*palette.length)];
+    el.style.setProperty('--drift', ((Math.random()*90)-45)+'px');
+    el.style.setProperty('--rot', ((Math.random()*120)-60)+'deg');
+    el.style.setProperty('--op', (0.42+Math.random()*0.3).toFixed(2));
+    el.style.setProperty('--fall', (7.5+Math.random()*3.5)+'s');
+    el.style.animationDelay=(-Math.random()*9)+'s';
+
     host.appendChild(el);
   }
 }
