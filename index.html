@@ -662,7 +662,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <button class="btn btn-s" onclick="startHandoff(0)" style="margin-top:1.3rem;">Iniciar votació →</button>
 </div>
 <!-- ══ HANDOFF ══ -->
-
 <div class="screen" id="handoff-surprise">
 <div class="flash-big">SORPRESA!!</div>
 <p style="max-width:520px;margin-top:.6rem;">Nosaltres també vindrem, pel que també tenim dret a vot!</p>
@@ -1560,5 +1559,33 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 </script>
-</body>
+<script id="handoff-surprise-safe-hook">
+document.addEventListener('DOMContentLoaded', function(){
+  if(typeof window.showS !== 'function') return;
+
+  // Intercept only navigation to #handoff immediately after Anna has voted.
+  var origShowS = window.showS;
+  window.__afterAnnaNeedsSurprise = false;
+
+  // Try to flag the state by wrapping the most likely vote-confirm buttons/forms.
+  document.querySelectorAll('button, .btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var txt = (btn.textContent || '').toLowerCase();
+      var active = document.querySelector('.screen.active, .page.active, .step.active');
+      var activeTxt = active ? (active.textContent || '').toLowerCase() : '';
+      if(activeTxt.includes('anna') && (txt.includes('votar') || txt.includes('confirmar') || txt.includes('continuar') || txt.includes('següent') || txt.includes('seguent'))){
+        window.__afterAnnaNeedsSurprise = true;
+      }
+    }, true);
+  });
+
+  window.showS = function(id){
+    if(id === 'handoff' && window.__afterAnnaNeedsSurprise){
+      window.__afterAnnaNeedsSurprise = false;
+      return origShowS('handoff-surprise');
+    }
+    return origShowS(id);
+  };
+});
+</script></body>
 </html>
