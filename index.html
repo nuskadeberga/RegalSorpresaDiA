@@ -484,38 +484,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 #countdown-wrap.done #countdown-num{color:var(--teal);}
 #countdown-wrap.done .ring-progress{stroke:var(--teal);}
 </style>
-
-<style id="surprise-handoff-style">
-#handoff-surprise .surprise-flash{
-  font-size:clamp(2.2rem,8vw,4.8rem);
-  font-weight:900;
-  letter-spacing:.06em;
-  color:var(--gold2);
-  text-align:center;
-  line-height:1.05;
-  animation:surpriseFlash .9s infinite;
-  text-transform:uppercase;
-}
-#handoff-surprise .surprise-copy{
-  max-width:520px;
-  margin-top:.9rem;
-  text-align:center;
-  color:var(--cre);
-  line-height:1.8;
-  font-size:1.06rem;
-}
-@keyframes surpriseFlash{
-  0%,49%{opacity:1;transform:scale(1);}
-  50%,100%{opacity:.28;transform:scale(1.03);}
-}
-</style>
-
-
-
-
-
-
-
 </head>
 <body>
 <div id="stars"></div>
@@ -559,10 +527,10 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <div style="margin-top:.8rem;">
 <p>Davant vostre hi ha <strong style="color:var(--cre)">11 destins misteriosos</strong> i <strong style="color:var(--gold2)">un últim d'incògnit</strong>.<br/>
     Obriu les targetes, llegiu les pistes<br/>
-    i decidiu si <em style="color:rgba(192,57,43,.9)">veteu</em> o <em style="color:var(--teal)">manteniu</em> cada destí.<br/>
+    i decidiu si <em style="color:rgba(192,57,43,.9)">...i veteu-ne màxim 6</em> o <em style="color:var(--teal)">manteniu</em> cada destí.<br/>
     Podeu vetar un màxim de <strong style="color:var(--gold)">6 destins</strong>. ✈️</p>
 </div>
-<p style="margin-top:1.2rem;font-size:1rem;color:var(--gold2);font-style:italic;"></p>
+<p style="margin-top:1.2rem;font-size:1rem;color:var(--gold2);font-style:italic;">I el millor de tot... hi anirem els quatre junts! 🎉</p>
 <button class="btn btn-s" onclick="startVeto()" style="margin-top:1rem;">Comencem →</button>
 </div>
 <!-- ══ BOTONS GLOBALS (visibles a totes les pantalles) ══ -->
@@ -587,7 +555,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <div class="screen" id="veto">
 <div class="veto-header">
 <div class="lbl" style="letter-spacing:.12em;">Obriu les targetes per descobrir les pistes</div>
-<div class="lbl" style="letter-spacing:.08em;margin-top:.25rem;color:var(--cre2);">...i recordeu, veteu-ne màxim 6</div>
+<div class="lbl" style="letter-spacing:.08em;margin-top:.25rem;color:var(--cre2);">...i veteu-ne màxim 6</div>
 </div>
 <div class="bp-grid" id="bpGrid"></div>
 <div class="cta-area">
@@ -606,15 +574,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <button class="btn btn-s" onclick="startHandoff(0)" style="margin-top:1.3rem;">Iniciar votació →</button>
 </div>
 <!-- ══ HANDOFF ══ -->
-
-<!-- ══ HANDOFF SURPRISE ══ -->
-<div class="screen" id="handoff-surprise">
-  <div class="surprise-flash">SORPRESA!!</div>
-  <div class="sep-l"></div>
-  <p class="surprise-copy">Nosaltres també vindrem, pel que també tenim dret a vot!</p>
-  <button class="btn btn-s" onclick="showS('cover')" style="margin-top:1.5rem;">D'acord, quin remei</button>
-</div>
-
 <div class="screen" id="handoff">
 <div class="handoff-icon">📱</div>
 <div class="lbl" id="handoffPrep" style="margin-bottom:.5rem;">Passeu el dispositiu al</div>
@@ -812,8 +771,8 @@ function init(){
     selYear=g.selYear||null;selMonth=g.selMonth||null;
     if(g.phase==='veto'&&vetoed.length>0){buildBpGrid();updateVetoUI();showS('veto');return;}
     if(g.phase==='discovery'){buildDiscovery();showS('discovery');return;}
-    if(g.phase==='handoff'){buildHandoff(votingTurn);showS('cover');return;}
-    if(g.phase==='voting'){buildVoting();showS('cover');return;}
+    if(g.phase==='handoff'){buildHandoff(votingTurn);showS('handoff');return;}
+    if(g.phase==='voting'){buildVoting();showS('voting');return;}
   }
   showS('welcome');
 }
@@ -1281,7 +1240,7 @@ function pickMonth(mi,el){
   saveG('datepick');
 }
 
-function showSummary(){buildSummary();saveG('summary');showS('cover');}
+function showSummary(){buildSummary();saveG('summary');showS('summary');}
 
 /* ════ SUMMARY ════ */
 function buildSummary(){
@@ -1460,21 +1419,6 @@ function hardReset(){
 function confetti(){}
 
 init();
-
-/* SAFE SURPRISE HANDOFF HOOK */
-(function(){
-  const __origShowS = showS;
-  let __surpriseSeen = false;
-  showS = function(id){
-    if(id==='handoff' && typeof votingTurn!=='undefined' && votingTurn===2 && !__surpriseSeen){
-      __surpriseSeen = true;
-      return __origShowS('handoff-surprise');
-    }
-    return __origShowS(id);
-  };
-  window.addEventListener('beforeunload', ()=>{ __surpriseSeen = false; });
-})();
-
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
