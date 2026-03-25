@@ -729,7 +729,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </div>
 <div id="countdown-label">temps restant per decidir</div>
 </div>
-<div id="customDestBlock" style="margin:.9rem auto 0;text-align:center;max-width:420px;">
+<div id="customDestBlock" style="display:none;margin:.9rem auto 0;text-align:center;max-width:420px;">
   <p style="margin-bottom:.55rem;font-size:.82rem;color:var(--cre2);font-style:italic;">
     Afegiu el quart destí que us faci il·lusió
   </p>
@@ -984,6 +984,7 @@ function startCountdown(){
   _cdTimeout = setTimeout(()=>{
     unlockAudio();
     wrap.classList.add('visible');
+	document.getElementById('customDestBlock').style.display = 'block';
     let remaining = CD_TOTAL;
     num.textContent = '3:00';
     ring.style.strokeDashoffset = '0';
@@ -1515,7 +1516,7 @@ function pickMonth(mi,el){
     const noms=_selectedMonths.sort((a,b)=>a-b).map(m=>MONTHS_CA[m]).join(', ');
     const plural=_selectedMonths.length>1;
     document.getElementById('dateMsgTxt').innerHTML=
-      `Perfecte! <strong style="color:var(--gold2)">${noms}</strong> ${plural?'apuntats':'apuntat'}.<br>Decidiu les dates exactes amb el <strong style="color:var(--carles)">Carles</strong> i la <strong style="color:var(--nuska)">Nuska</strong>. 🗓️`;
+      `Perfecte! <strong style="color:var(--gold2)">${noms}</strong> ${plural?'apuntats':'apuntat'}.<br>Decidiu les dates exactes amb el <strong style="color:var(--carles)">Carles</strong> i la <strong style="color:var(--nuska)">Nuska</strong>.`;
     msg.style.display='block';
     selYear=_pickedYear;selMonth=_selectedMonths[0];
   } else {
