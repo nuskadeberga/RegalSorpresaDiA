@@ -283,12 +283,17 @@ p{text-align:center;font-size:1rem;line-height:1.85;color:var(--cre2);max-width:
   50%,100%{opacity:.2;text-shadow:none;}
 }
 .felicitats-text{
-  font-family:Calibri, Arial, sans-serif;
+ font-family:'Cormorant Garamond',serif;
   font-size:clamp(1.1rem,3vw,1.8rem);
   color:var(--gold2);
   text-align:center;
- animation:surpriseFlash .8s steps(1,end) infinite;
+  animation:felicitatsFlash .8s steps(1,end) infinite;
 }
+@keyframes felicitatsFlash{
+  0%,49%{opacity:1;text-shadow:0 0 8px rgba(228,204,122,.35),0 0 18px rgba(228,204,122,.18);}
+  50%,100%{opacity:.2;text-shadow:none;}
+}
+
 .handoff-icon{font-size:3.5rem;margin-bottom:.5rem;}
 .handoff-name{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,7vw,3.5rem);font-style:italic;}
 .handoff-name.david{color:var(--david);}
@@ -570,7 +575,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <p>Davant vostre veureu <strong style="color:var(--cre)">11 destins misteriosos</strong> i <strong style="color:var(--gold2)">un últim d'incògnit</strong>.<br/>
     Obriu les targetes, llegiu les pistes<br/>
     i decidiu si <em style="color:rgba(192,57,43,.9)">veteu</em> o <em style="color:var(--teal)">manteniu</em> cada destí.<br/>
-    Podeu vetar un màxim de <strong style="color:var(--gold)">6 destins</strong>. ⛔</p>
+    Podeu vetar un màxim de <strong style="color:var(--gold)">6 destins</strong>. 🤭</p>
 </div>
 
 <button class="btn btn-s" onclick="startVeto()" style="margin-top:1rem;">Comencem →</button>
