@@ -383,7 +383,16 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .summary-box,.surprise-note,#summary > .lbl,#summary > .sep-l,#summary > h1,.summary-gif{position:relative;z-index:2;}
 .summary-gif{animation:emojiSwing 3.6s ease-in-out infinite;transform-origin:50% 8%;will-change:transform;}
 @keyframes emojiSwing{0%,100%{transform:rotate(-5deg) translateY(0);}25%{transform:rotate(4deg) translateY(-2px);}50%{transform:rotate(7deg) translateY(0);}75%{transform:rotate(-3deg) translateY(-1px);}}
-.sconf{position:absolute;top:-14vh;border-radius:2px;opacity:.72;filter:blur(.15px);will-change:transform,opacity;animation:sConfFall var(--fall,8.5s) cubic-bezier(.22,.61,.36,1) infinite;}
+.sconf{
+  position:absolute;
+  top:-14vh;
+  width:10px;
+  height:14px;
+  border-radius:2px;
+  opacity:.9;
+  will-change:transform,opacity;
+  animation:sConfFall var(--fall,6s) linear infinite;
+}
 .sconf.circle,.sconf.slim{border-radius:999px;}
 @keyframes sConfFall{0%{transform:translate3d(0,-14vh,0) rotate(0deg);opacity:0;}8%{opacity:var(--op,.74);}100%{transform:translate3d(var(--drift,0px),112vh,0) rotate(var(--rot,160deg));opacity:0;}}
 
