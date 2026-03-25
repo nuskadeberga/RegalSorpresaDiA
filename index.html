@@ -397,9 +397,20 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .sconf:nth-child(4n+1){background:#ffffff;} /* blanc */
 .sconf:nth-child(4n+2){background:#5ba4cf;} /* blau */
 .sconf:nth-child(4n+3){background:#d4879a;} /* rosa */
-.sconf.circle,.sconf.slim{border-radius:999px;}
-@keyframes sConfFall{0%{transform:translate3d(0,-14vh,0) rotate(0deg);opacity:0;}8%{opacity:var(--op,.74);}100%{transform:translate3d(var(--drift,0px),112vh,0) rotate(var(--rot,160deg));opacity:0;}}
+.sconf.circle{border-radius:50%;}
+.sconf.slim{width:6px;height:18px;border-radius:999px;}
 
+@keyframes sConfFall{
+  0%{
+    transform:translate3d(0,-14vh,0) rotate(0deg);
+    opacity:0;
+  }
+  10%{opacity:1;}
+  100%{
+    transform:translate3d(var(--drift,80px),110vh,0) rotate(540deg);
+    opacity:0;
+  }
+}
 /* ══ ADMIN ══ */
 #admin{justify-content:flex-start;padding-top:1.5rem;padding-bottom:2.5rem;}
 .adm{width:100%;max-width:var(--w);}
