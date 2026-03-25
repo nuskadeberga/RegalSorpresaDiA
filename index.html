@@ -332,6 +332,18 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .slider-marks span{font-size:.52rem;color:var(--cre2);}
 .vote-footer{width:100%;max-width:var(--w);margin-top:.9rem;text-align:center;}
 
+/* ══ TIE BREAK ══ */
+#tieBreak{justify-content:flex-start;padding-top:1.5rem;}
+.tie-break-grid{width:100%;max-width:min(1100px,94vw);display:grid;grid-template-columns:1fr;gap:.8rem;margin-top:1rem;}
+.tie-card{background:var(--bg2);border:1px solid var(--goldb);padding:.9rem 1rem;cursor:pointer;transition:all .2s;text-align:center;}
+.tie-card:hover{border-color:var(--gold);background:var(--goldf);}
+.tie-card.sel{border-color:var(--gold2);box-shadow:0 0 0 1px rgba(228,204,122,.25) inset;background:rgba(200,168,75,.08);}
+.tie-card.disabled{opacity:.45;cursor:not-allowed;}
+.tie-card-media{width:100%;height:110px;object-fit:cover;border-radius:4px;display:block;margin-bottom:.65rem;}
+.tie-card-fallback{width:100%;height:110px;background:var(--bg3);border:1px solid var(--goldb);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin-bottom:.65rem;}
+.tie-card-name{font-size:.82rem;color:var(--cre);letter-spacing:.06em;text-transform:uppercase;}
+.tie-break-count{margin-top:.9rem;min-height:1rem;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cre2);text-align:center;}
+
 /* ══ TOP 3 ══ */
 .top3-wrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:.8rem auto;width:100%;max-width:min(560px,92vw);position:relative;z-index:1;align-items:stretch;}
 .top3-item{width:100%;animation:top3SlideIn .5s ease both;}
@@ -383,34 +395,10 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .summary-box,.surprise-note,#summary > .lbl,#summary > .sep-l,#summary > h1,.summary-gif{position:relative;z-index:2;}
 .summary-gif{animation:emojiSwing 3.6s ease-in-out infinite;transform-origin:50% 8%;will-change:transform;}
 @keyframes emojiSwing{0%,100%{transform:rotate(-5deg) translateY(0);}25%{transform:rotate(4deg) translateY(-2px);}50%{transform:rotate(7deg) translateY(0);}75%{transform:rotate(-3deg) translateY(-1px);}}
-.sconf{
-  position:absolute;
-  top:-14vh;
-  width:10px;
-  height:14px;
-  border-radius:2px;
-  opacity:.9;
-  will-change:transform,opacity;
-  animation:sConfFall var(--fall,6s) linear infinite;
-}
-.sconf:nth-child(4n){background:#c8a84b;}   /* daurat */
-.sconf:nth-child(4n+1){background:#ffffff;} /* blanc */
-.sconf:nth-child(4n+2){background:#5ba4cf;} /* blau */
-.sconf:nth-child(4n+3){background:#d4879a;} /* rosa */
-.sconf.circle{border-radius:50%;}
-.sconf.slim{width:6px;height:18px;border-radius:999px;}
+.sconf{position:absolute;top:-14vh;border-radius:2px;opacity:.72;filter:blur(.15px);will-change:transform,opacity;animation:sConfFall var(--fall,8.5s) cubic-bezier(.22,.61,.36,1) infinite;}
+.sconf.circle,.sconf.slim{border-radius:999px;}
+@keyframes sConfFall{0%{transform:translate3d(0,-14vh,0) rotate(0deg);opacity:0;}8%{opacity:var(--op,.74);}100%{transform:translate3d(var(--drift,0px),112vh,0) rotate(var(--rot,160deg));opacity:0;}}
 
-@keyframes sConfFall{
-  0%{
-    transform:translate3d(0,-14vh,0) rotate(0deg);
-    opacity:0;
-  }
-  10%{opacity:1;}
-  100%{
-    transform:translate3d(var(--drift,80px),110vh,0) rotate(540deg);
-    opacity:0;
-  }
-}
 /* ══ ADMIN ══ */
 #admin{justify-content:flex-start;padding-top:1.5rem;padding-bottom:2.5rem;}
 .adm{width:100%;max-width:var(--w);}
@@ -481,6 +469,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 @media(min-width:600px){
   /* Votació: 2 columnes */
   .vote-cards{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .tie-break-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
   /* Descoberta: 2 columnes */
   .disc-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;}
   /* Veto: 4 columnes x 3 files */
@@ -497,6 +486,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 }
 @media(min-width:768px){
   .vote-cards{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .tie-break-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
   .disc-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
   .summary-box,.surprise-note{max-width:min(860px,88vw);}
 }
@@ -680,6 +670,16 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <button class="btn btn-s" onclick="submitVotes()">Enviar puntuacions →</button>
 </div>
 </div>
+<!-- ══ TIE BREAK ══ -->
+<div class="screen" id="tieBreak">
+<div class="lbl">Cal desempatar</div>
+<div class="sep-l"></div>
+<h1 style="font-size:clamp(1.9rem,5vw,3rem);">Hi ha un empat</h1>
+<p id="tieBreakText" style="margin-top:.5rem;font-size:.86rem;max-width:560px;"></p>
+<div class="tie-break-grid" id="tieBreakGrid"></div>
+<div class="tie-break-count" id="tieBreakCount"></div>
+<button class="btn btn-s" id="tieBreakBtn" onclick="confirmTieBreak()" style="margin-top:1rem;" disabled>Confirmar desempat →</button>
+</div>
 <!-- ══ TOP 3 ══ -->
 <div class="screen" id="results">
 <div class="lbl">Els destins més estimats</div>
@@ -822,6 +822,8 @@ let votingTurn=0;
 let selYear=null,selMonth=null;
 let tapCnt=0,tapTmr=null;
 let _selectedMonths=[];
+let tieBreakState=null;
+let tieBreakSelection=[];
 
 /* STARS */
 (()=>{const c=document.getElementById('stars');for(let i=0;i<75;i++){const s=document.createElement('div');s.className='star';const z=(Math.random()*1.7+.35).toFixed(1);s.style.cssText=`width:${z}px;height:${z}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--dl:${(Math.random()*5).toFixed(1)}s;--op:${(Math.random()*.4+.1).toFixed(2)};`;c.appendChild(s);}})();
@@ -857,11 +859,16 @@ function init(){
     const g=JSON.parse(sg);
     vetoed=g.vetoed||[];votes=g.votes||{};votingTurn=g.votingTurn||0;
     selYear=g.selYear||null;selMonth=g.selMonth||null;
+    tieBreakState=g.tieBreakState||null;
     if(g.phase==='veto'&&vetoed.length>0){buildBpGrid();updateVetoUI();showS('veto');return;}
     if(g.phase==='discovery'){buildDiscovery();showS('discovery');return;}
     if(g.phase==='surpriseHandoff'){showS('surpriseHandoff');return;}
     if(g.phase==='handoff'){buildHandoff(votingTurn);showS('handoff');return;}
     if(g.phase==='voting'){buildVoting();showS('voting');return;}
+    if(g.phase==='tieBreak' && tieBreakState){buildTieBreak();showS('tieBreak');return;}
+    if(g.phase==='results'){buildResults();showS('results');return;}
+    if(g.phase==='datepick'){showS('datepick');return;}
+    if(g.phase==='summary'){buildSummary();buildSummaryConfetti();showS('summary');return;}
   }
   showS('welcome');
 }
@@ -1002,7 +1009,10 @@ function confirmReset(){
   localStorage.removeItem(KC);
   cfg={destinations:DEFAULTS.map(d=>({...d}))};
   vetoed=[];votes={};votingTurn=0;selYear=null;selMonth=null;
+  tieBreakState=null;tieBreakSelection=[];
   window._top3=[];
+  tieBreakState=null;
+  tieBreakSelection=[];
   // Tancar modal si és obert
   try{document.getElementById('overlay').classList.remove('on');}catch(e){}
   showS('welcome');
@@ -1238,29 +1248,129 @@ function buildVoting(){
   });
 }
 
+
+function computeSurvivors(){
+  const vi=vetoed.map(v=>v.idx);
+  return cfg.destinations.map((d,i)=>({...d,i})).filter(d=>!d.locked&&!vi.includes(d.i));
+}
+
+function computeTotals(){
+  return computeSurvivors().map(d=>{
+    let sum=0;
+    VOTER_ORDER.forEach(v=>{if(votes[v]&&votes[v][d.i]!==undefined)sum+=votes[v][d.i];});
+    return {...d,total:sum};
+  }).sort((a,b)=>b.total-a.total || (a.realName||'').localeCompare(b.realName||''));
+}
+
+function detectTieForTop3(totals){
+  if(totals.length<=3) return {hasTie:false,fixed:totals.slice(0,3),tied:[],slots:0};
+  const cutoff=totals[2].total;
+  const fixed=totals.filter(d=>d.total>cutoff);
+  const tied=totals.filter(d=>d.total===cutoff);
+  const slots=Math.max(0,3-fixed.length);
+  const hasTie=fixed.length<3 && tied.length>slots;
+  return {hasTie,fixed,tied,slots};
+}
+
+function buildFinalTop3(totals){
+  const tie=detectTieForTop3(totals);
+  if(!tie.hasTie) return totals.slice(0,3);
+  if(tieBreakState && Array.isArray(tieBreakState.selectedIds) && tieBreakState.selectedIds.length===tie.slots){
+    const fixedIds=tie.fixed.map(d=>d.i);
+    const ordered=totals.filter(d=>fixedIds.includes(d.i) || tieBreakState.selectedIds.includes(d.i));
+    const top3=[];
+    fixedIds.forEach(id=>{const found=ordered.find(d=>d.i===id); if(found) top3.push(found);});
+    tieBreakState.selectedIds.forEach(id=>{const found=ordered.find(d=>d.i===id); if(found) top3.push(found);});
+    return top3.slice(0,3);
+  }
+  return totals.slice(0,3);
+}
+
+function buildTieBreak(){
+  if(!tieBreakState) return;
+  const totals=computeTotals();
+  const tied=totals.filter(d=>tieBreakState.tiedIds.includes(d.i));
+  tieBreakSelection=Array.isArray(tieBreakState.selectedIds)?[...tieBreakState.selectedIds]:[];
+  document.getElementById('tieBreakText').innerHTML=`Hi ha un empat entre <strong style="color:var(--gold2)">${tied.map(d=>d.realName).join(', ')}</strong>. Trieu ${tieBreakState.slots===1?'el destí que entra':'els '+tieBreakState.slots+' destins que entren'} al top 3.`;
+  const grid=document.getElementById('tieBreakGrid');
+  grid.innerHTML='';
+  tied.forEach(d=>{
+    const sel=tieBreakSelection.includes(d.i);
+    const disabled=!sel && tieBreakSelection.length>=tieBreakState.slots;
+    const card=document.createElement('div');
+    card.className='tie-card'+(sel?' sel':'')+(disabled?' disabled':'');
+    card.onclick=()=>toggleTieBreakPick(d.i);
+    const media=d.img
+      ? `<img class="tie-card-media" src="${d.img}" alt="">`
+      : `<div class="tie-card-fallback">${d.emoji||'🌍'}</div>`;
+    card.innerHTML=`${media}<div class="tie-card-name">${d.realName}</div><div class="lbl" style="margin-top:.45rem;font-size:.58rem;letter-spacing:.14em;">${d.total} punts</div>`;
+    grid.appendChild(card);
+  });
+  updateTieBreakUI();
+}
+
+function toggleTieBreakPick(idx){
+  if(!tieBreakState) return;
+  const pos=tieBreakSelection.indexOf(idx);
+  if(pos>=0){
+    tieBreakSelection.splice(pos,1);
+  } else {
+    if(tieBreakSelection.length>=tieBreakState.slots) return;
+    tieBreakSelection.push(idx);
+  }
+  tieBreakState.selectedIds=[...tieBreakSelection];
+  buildTieBreak();
+  saveG('tieBreak');
+}
+
+function updateTieBreakUI(){
+  if(!tieBreakState) return;
+  const btn=document.getElementById('tieBreakBtn');
+  const count=document.getElementById('tieBreakCount');
+  count.textContent=`Seleccionats ${tieBreakSelection.length} / ${tieBreakState.slots}`;
+  btn.disabled=tieBreakSelection.length!==tieBreakState.slots;
+}
+
+function confirmTieBreak(){
+  if(!tieBreakState || tieBreakSelection.length!==tieBreakState.slots) return;
+  tieBreakState.selectedIds=[...tieBreakSelection];
+  buildResults();
+  saveG('results');
+  showS('results');
+  confetti();
+}
+
 function submitVotes(){
   const voter=VOTER_ORDER[votingTurn];
-  const vi=vetoed.map(v=>v.idx);
-  const survivors=cfg.destinations.map((d,i)=>({...d,i})).filter(d=>!d.locked&&!vi.includes(d.i));
+  const survivors=computeSurvivors();
   if(!votes[voter])votes[voter]={};
   survivors.forEach(d=>{const sl=document.getElementById('sl'+d.i);if(sl)votes[voter][d.i]=parseInt(sl.value);});
   votingTurn++;saveG();
-  if(votingTurn>=VOTER_ORDER.length){saveG('results');buildResults();showS('results');confetti();}
+  if(votingTurn>=VOTER_ORDER.length){
+    const totals=computeTotals();
+    const tie=detectTieForTop3(totals);
+    if(tie.hasTie){
+      tieBreakState={fixedIds:tie.fixed.map(d=>d.i),tiedIds:tie.tied.map(d=>d.i),slots:tie.slots,selectedIds:[]};
+      tieBreakSelection=[];
+      buildTieBreak();
+      saveG('tieBreak');
+      showS('tieBreak');
+    } else {
+      tieBreakState=null;
+      buildResults();
+      saveG('results');
+      showS('results');
+      confetti();
+    }
+  }
   else if(votingTurn===2){showSurpriseHandoff();}
   else startHandoff(votingTurn);
 }
 
 /* ════ RESULTS ════ */
 function buildResults(){
-  const vi=vetoed.map(v=>v.idx);
-  const survivors=cfg.destinations.map((d,i)=>({...d,i})).filter(d=>!d.locked&&!vi.includes(d.i));
-  const totals=survivors.map(d=>{
-    let sum=0;
-    VOTER_ORDER.forEach(v=>{if(votes[v]&&votes[v][d.i]!==undefined)sum+=votes[v][d.i];});
-    return {...d,total:sum};
-  }).sort((a,b)=>b.total-a.total);
-
-  const top3=totals.slice(0,3);
+  const totals=computeTotals();
+  const top3=buildFinalTop3(totals);
   const mystery=cfg.destinations.find(d=>d.locked||d.mystery);
   const final4=mystery?[...top3,mystery]:top3;
 
@@ -1410,7 +1520,7 @@ function buildSummary(){
 /* ════ PERSIST ════ */
 function saveG(phase){
   localStorage.setItem(KG,JSON.stringify({
-    vetoed,votes,votingTurn,selYear,selMonth,
+    vetoed,votes,votingTurn,selYear,selMonth,tieBreakState,
     phase:phase||(vetoed.length>=6?'ready':'veto')
   }));
 }
