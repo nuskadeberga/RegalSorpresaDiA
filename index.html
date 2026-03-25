@@ -393,6 +393,10 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   will-change:transform,opacity;
   animation:sConfFall var(--fall,6s) linear infinite;
 }
+.sconf:nth-child(4n){background:#c8a84b;}   /* daurat */
+.sconf:nth-child(4n+1){background:#ffffff;} /* blanc */
+.sconf:nth-child(4n+2){background:#5ba4cf;} /* blau */
+.sconf:nth-child(4n+3){background:#d4879a;} /* rosa */
 .sconf.circle,.sconf.slim{border-radius:999px;}
 @keyframes sConfFall{0%{transform:translate3d(0,-14vh,0) rotate(0deg);opacity:0;}8%{opacity:var(--op,.74);}100%{transform:translate3d(var(--drift,0px),112vh,0) rotate(var(--rot,160deg));opacity:0;}}
 
