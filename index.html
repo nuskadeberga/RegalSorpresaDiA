@@ -345,7 +345,13 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .tbname{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cre);}
 .tbmeta{font-size:.62rem;color:var(--cre2);margin-top:.35rem;letter-spacing:.08em;}
 .tiebreak-counter{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--cre2);margin-top:.7rem;}
-
+#tiebreakDesc{
+  text-align:center;
+  margin:0 auto;
+  max-width:600px;
+  line-height:1.6;
+  opacity:.9;
+}
 /* ══ TOP 3 ══ */
 .top3-wrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:.8rem auto;width:100%;max-width:min(560px,92vw);position:relative;z-index:1;align-items:stretch;}
 .top3-item{width:100%;animation:top3SlideIn .5s ease both;}
@@ -1574,6 +1580,27 @@ function showSummary(){buildSummary();buildSummaryConfetti();saveG('summary');sh
 
 
 /* ════ SUMMARY ════ */
+const CUSTOM_DEST_IMAGES = {
+  'ALEMANYA': 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Berlin_Brandenburg_Gate_night.jpg',
+  'ISLÀNDIA': 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Gullfoss%2C_an_iconic_waterfall_of_Iceland.jpg',
+  'LISBOA': 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Lisbon_Montage.png',
+  'SICÍLIA': 'https://upload.wikimedia.org/wikipedia/commons/3/39/Isola_Bella%2C_Taormina%2C_Sicily.jpg',
+  'VIENA': 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Sch%C3%B6nbrunn_Palace_Vienna.jpg',
+  'BUDAPEST': 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Budapest_Parliament_2014.jpg',
+  'NORUEGA': 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Geirangerfjord.jpg',
+  'ISLANDIA': 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Gullfoss%2C_an_iconic_waterfall_of_Iceland.jpg',
+  'ALEMANYA': 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Berlin_Brandenburg_Gate_night.jpg',
+  'BERLIN': 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Berlin_Brandenburg_Gate_night.jpg',
+  'VIENA': 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Sch%C3%B6nbrunn_Palace_Vienna.jpg',
+  'BUDAPEST': 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Budapest_Parliament_2014.jpg',
+  'COPENHAGUEN': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Nyhavn_Copenhagen.jpg',
+  'SARDENYA': 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Cala_Goloritz%C3%A9.jpg',
+  'MALTA': 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Valletta_skyline.jpg',
+  'SUISSA': 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Matterhorn_from_Domh%C3%BCtte_-_2.jpg',
+  'SUÏSSA': 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Matterhorn_from_Domh%C3%BCtte_-_2.jpg',
+  'TIROL': 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Tyrol_Mountains.jpg',
+  'BAVIERA': 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Neuschwanstein_Castle.jpg'
+};
 function buildSummary(){
   const top3 = window._top3 || [];
   const emojisEl = document.getElementById('sumEmojis');
