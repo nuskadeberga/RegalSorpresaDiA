@@ -748,9 +748,17 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <div class="month-grid" id="monthGrid"></div>
 </div>
 <div id="dateMsg" style="display:none;text-align:center;max-width:400px;">
-<div class="sep-l"></div>
-<p id="dateMsgTxt" style="color:var(--teal);font-size:.9rem;font-style:italic;line-height:1.8;"></p>
-<button class="btn btn-s" onclick="showSummary()" style="margin-top:1.2rem;">Veure resum final →</button>
+  <div class="sep-l"></div>
+  <p id="dateMsgTxt" style="color:var(--teal);font-size:.9rem;font-style:italic;line-height:1.8;"></p>
+
+  <input
+    id="customDestInput"
+    type="text"
+    placeholder="Escriviu el 4t destí triat"
+    style="margin-top:1rem;width:100%;max-width:320px;padding:.7rem .9rem;background:transparent;border:1px solid rgba(200,168,75,.28);color:var(--cre);font-family:'Outfit',sans-serif;font-size:.85rem;text-align:center;"
+  >
+
+  <button class="btn btn-s" onclick="showSummary()" style="margin-top:1.2rem;">Veure resum final →</button>
 </div>
 </div>
 <!-- ══ SUMMARY ══ -->
@@ -1559,18 +1567,36 @@ function showSummary(){buildSummary();buildSummaryConfetti();saveG('summary');sh
 
 /* ════ SUMMARY ════ */
 function buildSummary(){
-  const top3=window._top3||[];
-  const emojisEl=document.getElementById('sumEmojis');
-  emojisEl.innerHTML=top3.map((d,i)=>{
+  const top3 = window._top3 || [];
+  const emojisEl = document.getElementById('sumEmojis');
+  const customInput = document.getElementById('customDestInput');
+  const customDest = (customInput && customInput.value.trim()) ? customInput.value.trim().toUpperCase() : '';
+
+  emojisEl.innerHTML = top3.map((d,i)=>{
+    const isFourth = (i===3);
     const isMystery = !!(d.locked || d.mystery || i===3);
-    const label = isMystery ? '_ _ _ _ _' : ((d.realName || d.name || '').toUpperCase() || 'DESTÍ');
+
+    let label = ((d.realName || d.name || '').toUpperCase() || 'DESTÍ');
+    if(isFourth && customDest){
+      label = customDest;
+    } else if(isMystery){
+      label = '_ _ _ _ _';
+    }
+
     const media = d.img
       ? `<img class="sum-photo" src="${d.img}" alt="${label}">`
       : `<div class="top3-emoji-fallback">${d.emoji||'🌍'}</div>`;
-    return `<div class="sum-item">${media}<div class="sum-name${isMystery?' mystery':''}">${label}</div></div>`;
+
+    return `<div class="sum-item">${media}<div class="sum-name${(isMystery && !customDest)?' mystery':''}">${label}</div></div>`;
   }).join('');
-  const months=(_selectedMonths&&_selectedMonths.length>0?_selectedMonths:[selMonth]).filter(m=>m!==null).sort((a,b)=>a-b).map(m=>MONTHS_CA[m]);
-  document.getElementById('sumDate').textContent=(months.length>0?months.join(', '):'—')+' '+(selYear||'—');
+
+  const months = (_selectedMonths && _selectedMonths.length>0 ? _selectedMonths : [selMonth])
+    .filter(m=>m!==null)
+    .sort((a,b)=>a-b)
+    .map(m=>MONTHS_CA[m]);
+
+  document.getElementById('sumDate').textContent =
+    (months.length>0 ? months.join(', ') : '—') + ' ' + (selYear || '—');
 }
 
 
