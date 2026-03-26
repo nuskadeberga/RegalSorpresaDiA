@@ -100,7 +100,17 @@ p{text-align:center;font-size:1rem;line-height:1.85;color:var(--cre2);max-width:
 .veto-header{width:100%;max-width:var(--w);text-align:center;padding:.55rem .9rem;border-bottom:1px solid var(--goldb);margin-bottom:.2rem;}
 .veto-counter{font-size:clamp(.8rem,2.5vw,1rem);color:var(--cre2);letter-spacing:.18em;text-align:center;text-transform:uppercase;}
 .veto-counter b{color:var(--gold);font-size:1em;font-weight:700;}
-.bp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,2.5vw,1rem);width:100%;max-width:min(var(--w),90vw);align-items:start;}
+
+.bp-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  column-gap:clamp(.5rem,2.5vw,1rem);
+  row-gap:1.25rem;
+  width:100%;
+  max-width:min(var(--w),90vw);
+  align-items:start;
+}
+
 .bp{position:relative;cursor:pointer;user-select:none;align-self:start;}
 
 /* Card base */
@@ -531,7 +541,14 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   .disc-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;}
   .tiebreak-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
   /* Veto: 4 columnes x 3 files */
-  .bp-grid{grid-template-columns:repeat(4,1fr);max-width:min(860px,96vw);gap:.45rem;}
+  
+.bp-grid{
+  grid-template-columns:repeat(4,1fr);
+  max-width:min(860px,96vw);
+  column-gap:.45rem;
+  row-gap:1.25rem;
+}
+  
   .bp-closed{aspect-ratio:.82;}
   /* Handoff: text més gran */
   .handoff-name{font-size:clamp(3rem,8vw,5rem);}
