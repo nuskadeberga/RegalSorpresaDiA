@@ -671,7 +671,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <div class="sep-l"></div>
 <div style="margin-top:.8rem;">
 <p>Davant vostre veureu <strong style="color:var(--cre)">11 destins misteriosos</strong> i <strong style="color:var(--gold2)">un últim d'incògnit</strong>.<br/>
-    Obriu les targetes, llegiu les pistes<br/>
+    Obriu les targetes d'embarcament, llegiu les pistes<br/>
     i decidiu si <em style="color:rgba(192,57,43,.9)">veteu</em> o <em style="color:var(--teal)">manteniu</em> cada destí.<br/>
     Podeu vetar un màxim de <strong style="color:var(--gold)">6 destins</strong>. 🤭</p>
 	<p>A continuació haureu de puntuar els destins mantinguts.</p>
@@ -1444,7 +1444,7 @@ function buildTiebreak(){
 
   title.textContent=`Hi ha un empat a la ${posText}`;
   desc.textContent=`${tiedCount} destins estan empatats. Tria ${slots} ${destiText} més per completar el grup final de 3.`;
-  counter.textContent=`Tria ${slots} ${destiText} més · seleccionats ${chosenCount} / ${slots}`;
+  counter.textContent=`seleccionats ${chosenCount} / ${slots}`;
 
   btn.disabled=chosenCount!==slots;
   grid.innerHTML='';
