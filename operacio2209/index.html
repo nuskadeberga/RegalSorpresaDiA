@@ -7,8 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#071018">
-<title>Operació 2209 · Calendari de viatge · V59</title>
-<!-- V59: imatges externes optimitzades per reduir el pes de l’HTML -->
+<title>Operació 2209 · Calendari de viatge · V60</title>
+<!-- V61: juliol compacte, només es mostra el dia 24 -->
 <style>
 :root{
   --bg:#071018;--panel:#0d1923;--panel2:#111f2b;--ink:#edf3f4;--muted:#91a4ad;
@@ -506,13 +506,13 @@ body:before{
 }
 
 /* El dia 29 forma part del viatge */
-.day[data-day="29"] .front{
+.day[data-date="2026-09-29"] .front{
   background:linear-gradient(145deg,rgba(28,57,64,.94),rgba(20,43,50,.94)) !important;
   border-color:rgba(123,209,206,.48) !important;
 }
 
-.day[data-day="29"] .number,
-.day[data-day="29"] .type{
+.day[data-date="2026-09-29"] .number,
+.day[data-date="2026-09-29"] .type{
   color:#7bd1ce !important;
 }
 
@@ -926,6 +926,16 @@ body:before{
 .help-confirm:hover{background:rgba(217,185,111,.18)}
 
 
+
+
+/* V60 · Calendari distribuït entre juliol, agost i setembre */
+.month-block{width:100%}
+.month-block+.month-block{margin-top:34px;padding-top:28px;border-top:1px solid rgba(217,185,111,.16)}
+.month-title{margin:0 0 12px;padding-left:2px;color:#e7d7ad;font-family:Georgia,'Times New Roman',serif;font-size:1.45rem;font-weight:500;letter-spacing:.02em}
+@media(max-width:700px){
+  .month-block+.month-block{margin-top:26px;padding-top:22px}
+  .month-title{font-size:1.3rem;margin-bottom:9px}
+}
 
 /* V31 · Revelació en dues fases, fotografies i pla de vol */
 .modal-media.dossier{max-height:330px;object-fit:cover;background:#0b1720}.mission-result{position:fixed;left:50%;bottom:28px;z-index:1200;transform:translate(-50%,18px);opacity:0;pointer-events:none;min-width:min(420px,calc(100vw - 32px));padding:15px 18px;border:1px solid rgba(217,185,111,.48);border-radius:14px;background:rgba(8,19,28,.97);box-shadow:0 18px 55px rgba(0,0,0,.48);text-align:center;color:#eef3f4;transition:.28s ease}.mission-result.show{opacity:1;transform:translate(-50%,0)}.mission-result b{display:block;color:var(--gold);margin-bottom:4px}.day.completed .front:after{content:"✓";position:absolute;right:12px;bottom:11px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(143,212,167,.16);border:1px solid rgba(143,212,167,.48);color:#bfe8ca;font-weight:800}.intel-note{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
@@ -1627,6 +1637,40 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
 }
 </style>
 
+
+<style id="v61-july-single-day">
+/* Juliol compacte: només es mostra la presentació del dia 24 */
+.month-block.july-single .weekdays{
+  display:none !important;
+}
+.month-block.july-single #calendarJuly{
+  display:grid !important;
+  grid-template-columns:minmax(118px,160px) !important;
+  width:min(160px,100%) !important;
+  min-width:0 !important;
+  gap:0 !important;
+}
+.month-block.july-single #calendarJuly .day{
+  width:100% !important;
+  min-height:112px !important;
+}
+@media(max-width:700px){
+  .month-block.july-single #calendarJuly{
+    grid-template-columns:132px !important;
+    width:132px !important;
+  }
+  .month-block.july-single #calendarJuly .day{
+    min-height:104px !important;
+  }
+}
+</style>
+
+<style id="v62-august-from-16">
+/* Agost compacte: s'eliminen els dies de l'1 al 15 */
+.month-block.august-half .weekdays{
+  display:none !important;
+}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -1708,7 +1752,7 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
           </svg>
         </button>
       </div>
-      <h2>Setembre 2026</h2>
+      <h2>Juliol, agost i setembre 2026</h2>
     </div>
     <div class="legend" aria-label="Llegenda del calendari">
       <span><i style="background:var(--gold)"></i>Informe</span>
@@ -1720,8 +1764,21 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
 
   <div class="calendar-scroll">
     <div class="calendar-inner">
-      <div class="weekdays"><div>DL</div><div>DT</div><div>DC</div><div>DJ</div><div>DV</div><div>DS</div><div>DG</div></div>
-      <div class="calendar" id="calendar"></div>
+      <section class="month-block july-single" aria-labelledby="monthJulyTitle">
+        <h3 class="month-title" id="monthJulyTitle">Juliol 2026</h3>
+        <div class="weekdays"><div>DL</div><div>DT</div><div>DC</div><div>DJ</div><div>DV</div><div>DS</div><div>DG</div></div>
+        <div class="calendar" id="calendarJuly"></div>
+      </section>
+      <section class="month-block august-half" aria-labelledby="monthAugustTitle">
+        <h3 class="month-title" id="monthAugustTitle">Agost 2026</h3>
+        <div class="weekdays"><div>DL</div><div>DT</div><div>DC</div><div>DJ</div><div>DV</div><div>DS</div><div>DG</div></div>
+        <div class="calendar" id="calendarAugust"></div>
+      </section>
+      <section class="month-block" aria-labelledby="monthSeptemberTitle">
+        <h3 class="month-title" id="monthSeptemberTitle">Setembre 2026</h3>
+        <div class="weekdays"><div>DL</div><div>DT</div><div>DC</div><div>DJ</div><div>DV</div><div>DS</div><div>DG</div></div>
+        <div class="calendar" id="calendarSeptember"></div>
+      </section>
     </div>
   </div>
 </main>
@@ -1731,7 +1788,7 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
 <section class="mobile-timeline" id="mobileTimeline" aria-labelledby="mobileTimelineTitle">
   <div class="mobile-timeline-head">
     <div class="eyebrow">CALENDARI DE L’OPERACIÓ</div>
-    <h2 id="mobileTimelineTitle">Setembre 2026</h2>
+    <h2 id="mobileTimelineTitle">agost i setembre 2026</h2>
     <p>Desplaça’t verticalment i toca qualsevol dia disponible per consultar-ne el contingut.</p>
   </div>
   <div class="mobile-progress" aria-label="Progrés de les missions">
@@ -1772,9 +1829,9 @@ const activities = {
 title:"Activació de l’operació",richHtml:`<div class="intel-kicker">BRIEFING INICIAL</div>
 <p><b>El CIDS confirma que l’Operació 2209 ha començat.</b></p>
 <p>A partir d’avui, aquest calendari serà l’únic canal oficial de comunicació amb els agents DiA.</p>
-<p>Durant els pròxims dies anireu rebent <b>informes</b>, <b>missions</b> i <b>instruccions</b> que us conduiran, pas a pas, fins a descobrir el destí de la vostra propera operació.</p>
+<p>Durant les pròximes setmanes anireu rebent <b>informes</b>, <b>missions</b> i <b>instruccions</b> que us conduiran, pas a pas, fins a descobrir el destí de la vostra propera operació.</p>
 <h4>LES MISSIONS</h4>
-<p>A partir del <b>dia 4</b> començaran les missions operatives.</p>
+<p>A partir del <b>20 d’agost</b> començaran les missions operatives.</p>
 <p>Cada missió s’haurà de completar i enviar al canal de WhatsApp del CIDS. Quan l’acció estigui feta, caldrà tornar al calendari i marcar-la com a completada.</p>
 <p>Cada missió completada desbloquejarà una nova peça del <b>document classificat</b>.</p>
 <h4>EL DOCUMENT CLASSIFICAT</h4>
@@ -1946,7 +2003,7 @@ L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser
 🚨Alerta: Una resposta correcta no accelerarà la revelació. Una resposta especialment absurda, però, pot quedar incorporada a l’arxiu oficial.`,mission:true,puzzle:14},
 
 
-19:{kind:"activity",icon:"🎥",title:"Autorització d’embarcament", richHtml:`
+19:{kind:"activity",icon:"🎥",title:"Autorització de viatge", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    La Central necessita una última prova audiovisual que confirmi que l’Equip DiA continua acceptant voluntàriament el protocol de viatge secret.
 <br><p><b>EL REPTE:</b>  Graveu un vídeo de cinc segons, tots dos junts, mirant directament a càmera.
 <br><p><b>FRASE DE SEGURETAT: </b> «L’Equip DiA està preparat».
@@ -1956,7 +2013,7 @@ L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser
 
 20:{kind:"activity",icon:"⌖",title:"Desclassificació final",dynamic:true},
 
-21:{kind:"activity",icon:"✈️",title:"Pla de vol i informació d’equipatge",richHtml:`
+21:{kind:"activity",icon:"✈️",title:"Pla de viatge",richHtml:`
 <p>La documentació operativa ja pot ser consultada.</p>
 <div class="flight-card"><div class="flight-head">DETALLS DEL TEU VIATGE</div>
 <div class="flight-leg"><div class="flight-route">✈ BARCELONA – LANZAROTE <span class="flight-date">dt. 22 set.</span>
@@ -1975,12 +2032,12 @@ L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser
 <div class="flight-note"><b>INFORMACIÓ D’EQUIPATGE</b><br><br>Reviseu la documentació, els horaris i el material necessari abans del trasllat a l’aeroport.<br><br>
 La Central recomana tenir l’equipatge completament preparat durant el dia d’avui.</div>`},
 
-22:{kind:"trip",icon:"✈️",title:"Activitat del dia · Arribada",richHtml:`<p>
+22:{kind:"trip",icon:"",title:"...",richHtml:`<p>
 <b>Operació 2209: comença ara.</b></p>
 <div class="flight-note">Vol VY2470 a les <b>13.30 h</b>. Hora recomanada d’arribada a l’aeroport: <b>11.30 h</b> · Terminal 1.</div>
 <p>Arribada prevista a Lanzarote a les 15.50 h i trasllat al centre d’operacions.</p>`},
 
-23:{kind:"trip",icon:"🌴",title:"Nord de l’illa",text:`Haría — esmorzar amb calma al poble de les mil palmeres.
+23:{kind:"trip",icon:"",title:"...",text:`Haría — esmorzar amb calma al poble de les mil palmeres.
 
 Mirador del Río — vistes sobre La Graciosa.
 
@@ -1989,7 +2046,7 @@ Cueva de los Verdes i Jameos del Agua.
 Órzola — dinar de peix al port.
 
 Caleta de Famara — tarda i capvespre.`},
-24:{kind:"trip",icon:"🌋",title:"Volcans i vinyes",text:`Timanfaya i Ruta dels Volcans.
+24:{kind:"trip",icon:"",title:"...",text:`Timanfaya i Ruta dels Volcans.
 
 El Golfo — llacuna verda i dinar de peix.
 
@@ -1998,12 +2055,12 @@ Los Hervideros i Salinas de Janubio.
 La Geria — vinyes i tast en una bodega.
 
 Yaiza — passeig final.`},
-25:{kind:"trip",icon:"🏖️",title:"Sud i cales",text:`Playa Blanca i Marina Rubicón.
+25:{kind:"trip",icon:"",title:"...",text:`Playa Blanca i Marina Rubicón.
 
 Playa de Papagayo.
 
 Mirador de Femés — tarda amb vistes panoràmiques.`},
-26:{kind:"trip",icon:"🏘️",title:"Mercat i capital",text:`Mercadillo de Teguise — de 9.00 a 14.00 h.
+26:{kind:"trip",icon:"️",title:"...",text:`Mercadillo de Teguise — de 9.00 a 14.00 h.
 
 Passeig pel nucli antic.
 
@@ -2012,23 +2069,67 @@ San Bartolomé.
 Arrecife — Charco de San Ginés i platja d’El Reducto.
 
 Nit a Puerto del Carmen.`},
-27:{kind:"trip",icon:"⛴️",title:"La Graciosa",text:`Ferri des d’Órzola fins a Caleta del Sebo.
+27:{kind:"trip",icon:"",title:"...",text:`Ferri des d’Órzola fins a Caleta del Sebo.
 
 Bicicletes i ruta cap a Playa Francesa i Playa de las Conchas.
 
 Dinar a Caleta del Sebo i retorn de tarda.`},
-28:{kind:"trip",icon:"🌅",title:"Últim dia complet",text:`Puerto Calero.
+28:{kind:"trip",icon:"",title:"...",text:`Puerto Calero.
 
 Playa Quemada — dinar en un poble de pescadors.
 
 Peñas del Chache.
 
 Sopar de comiat a Puerto del Carmen.`},
-29:{kind:"trip",icon:"🛫",title:"Activitat del dia · Retorn",text:`Últimes hores a l’illa, recollida i trasllat a l’aeroport. El vol VY2471 surt a les 16.25 h.`},
+29:{kind:"trip",icon:"",title:"...",text:`Últimes hores a l’illa, recollida i trasllat a l’aeroport. El vol VY2471 surt a les 16.25 h.`},
 30:{kind:"final",icon:"⭐",title:"Informe final",text:"L’Operació 2209 ha finalitzat. Trieu una única fotografia que resumeixi tot el viatge i envieu-la al grup del CIDS.",mission:true}
 };
 
-const calendar=document.getElementById("calendar");
+/* V60 · Presentació el 24 de juliol; continuació des del 16 d’agost */
+const scheduleByDate={
+  "2026-07-24":1,
+  "2026-08-16":2,
+  "2026-08-18":3,
+  "2026-08-20":4,
+  "2026-08-22":5,
+  "2026-08-24":6,
+  "2026-08-26":7,
+  "2026-08-28":8,
+  "2026-08-30":9,
+  "2026-09-01":10,
+  "2026-09-03":11,
+  "2026-09-05":12,
+  "2026-09-07":13,
+  "2026-09-09":14,
+  "2026-09-11":15,
+  "2026-09-13":16,
+  "2026-09-15":17,
+  "2026-09-17":18,
+  "2026-09-19":19,
+  "2026-09-20":20,
+  "2026-09-21":21,
+  "2026-09-22":22,
+  "2026-09-23":23,
+  "2026-09-24":24,
+  "2026-09-25":25,
+  "2026-09-26":26,
+  "2026-09-27":27,
+  "2026-09-28":28,
+  "2026-09-29":29,
+  "2026-09-30":30
+};
+const dateByActivity=Object.fromEntries(Object.entries(scheduleByDate).map(([date,id])=>[id,date]));
+const monthNames=["gener","febrer","març","abril","maig","juny","juliol","agost","setembre","octubre","novembre","desembre"];
+const monthNamesUpper=monthNames.map(name=>name.toUpperCase());
+const pad2=value=>String(value).padStart(2,"0");
+function makeDateKey(year,monthIndex,day){return `${year}-${pad2(monthIndex+1)}-${pad2(day)}`}
+function dateFromKey(dateKey,time="00:00:00"){return new Date(`${dateKey}T${time}`)}
+function partsFromKey(dateKey){const [year,month,day]=dateKey.split("-").map(Number);return {year,month,monthIndex:month-1,day}}
+function dateLabel(dateKey,{uppercase=false}={}){const {monthIndex,day}=partsFromKey(dateKey);const month=uppercase?monthNamesUpper[monthIndex]:monthNames[monthIndex];return `${day} D’${month}`.replace("D’AGOST","D’AGOST").replace("D’SETEMBRE","DE SETEMBRE").replace("D’agost","d’agost").replace("D’setembre","de setembre")}
+
+const calendarJuly=document.getElementById("calendarJuly");
+const calendarAugust=document.getElementById("calendarAugust");
+const calendarSeptember=document.getElementById("calendarSeptember");
 const testMode=document.getElementById("testMode");
 const testbar=document.getElementById("testbar");
 const cidsSeal=document.getElementById("cidsSeal");
@@ -2056,7 +2157,7 @@ const puzzleDays=[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
       13  14  15  16
 
   La casella 15 conté l'espai reservat per al QR.
-  Per això queda assignada a l'última missió, el dia 21.
+  Per això queda assignada a l'última missió, el 19 de setembre.
   Pots canviar qualsevol parella, però no repeteixis números de casella.
 */
 const puzzlePieceByDay={
@@ -2077,13 +2178,23 @@ const puzzlePieceByDay={
   18:5,   // FIX
   19:15   // FIX QR
 };
-let currentMissionDay=null;
-function completedMissions(){try{return JSON.parse(localStorage.getItem("cids2209_missions")||"[]")}catch{return []}}
-function saveCompleted(list){localStorage.setItem("cids2209_missions",JSON.stringify([...new Set(list)]));renderPuzzle()}
-function isCompleted(day){return completedMissions().includes(day)}
-function missionMessage(day){return `CIDS · OPERACIÓ 2209 · DIA ${String(day).padStart(2,"0")}\n\nResposta de l’Equip DiA:\n`;}
-function resolvedActivity(day,data){
-  if(day!==20||!data.dynamic)return data;
+let currentMissionId=null;
+let currentMissionDate=null;
+function completedMissions(){
+  try{return JSON.parse(localStorage.getItem("cids2209_missions")||"[]").map(Number).filter(Number.isFinite)}
+  catch{return []}
+}
+function saveCompleted(list){localStorage.setItem("cids2209_missions",JSON.stringify([...new Set(list.map(Number))]));renderPuzzle()}
+function isCompleted(activityId){return activityId!=null&&completedMissions().includes(Number(activityId))}
+function missionMessage(activityId,dateKey){
+  if(puzzleDays.includes(activityId)){
+    const missionNumber=puzzleDays.indexOf(activityId)+1;
+    return `CIDS · OPERACIÓ 2209 · MISSIÓ ${pad2(missionNumber)} · ${dateLabel(dateKey,{uppercase:true})}\n\nResposta de l’Equip DiA:\n`;
+  }
+  return `CIDS · OPERACIÓ 2209 · ${dateLabel(dateKey,{uppercase:true})}\n\nResposta de l’Equip DiA:\n`;
+}
+function resolvedActivity(dateKey,data){
+  if(dateKey!=="2026-09-20"||!data.dynamic)return data;
   const now=selectedNow();
   const phase1=new Date("2026-09-20T15:00:00");
   const phase2=new Date("2026-09-20T16:00:00");
@@ -2091,25 +2202,60 @@ function resolvedActivity(day,data){
   if(now<phase2){return {...data,title:"Coordenades desclassificades",richHtml:`<p>El CIDS ha autoritzat la publicació de les coordenades del centre d’operacions.</p><div class="coords-box"><div class="coords-label">COORDENADES CONFIDENCIALS</div><div class="coords-value">///terrasses.minúcies.emplenat</div></div><p>Disposeu d’una hora per interpretar aquesta informació. La comunicació definitiva es publicarà a les <b>16.00 h</b>.</p>`};}
   return {...data,title:"Destí desclassificat",richHtml:`<div class="intel-kicker" style="text-align:center">OPERACIÓ 2209 · DESTÍ CONFIRMAT</div><div class="reveal-title">LANZAROTE</div><img class="reveal-photo" src="https://turismolanzarote.com/wp-content/uploads/2021/09/Masdache_%C2%A9-Turismo-Lanzarote-1.jpg" alt="Paisatge de Lanzarote"><p style="text-align:center"></p><div class="coords-box"><a class="cids-link" href="https://www.google.com/maps?q=28.93591959649845,-13.61797219098307" target="_blank" rel="noopener">📍 Veure ubicació de l’allotjament a Google Maps</a></div>`};
 }
-function openMissionModal(day,data){currentMissionDay=day;modalMedia.classList.toggle("show",Boolean(data.media));modalMedia.classList.remove("dossier");if(data.media){modalMedia.src=data.media;modalMedia.alt=data.destination?`Imatge de ${data.destination}`:"Pista visual del CIDS";}else modalMedia.removeAttribute("src");
-if(data.destination){const mt=document.getElementById("modalText");mt.classList.add("modal-text-rich");mt.innerHTML=`<p>${data.text}</p><div class="intel-body" style="padding:12px 0 0"><div class="intel-kicker">EXPEDIENT ${data.code}</div><div class="intel-destination">${data.destination}</div><span class="discard-stamp">DESTÍ DESCARTAT</span></div>`;}missionActions.hidden=!data.mission;missionConfirm.hidden=true;if(data.mission){const done=isCompleted(day);sendWhatsApp.hidden=done;missionReset.hidden=!done;missionReset.textContent=done?"✓ Missió registrada · marcar com a pendent":"Marcar la missió com a pendent";}}
-async function copyMissionText(day){const text=missionMessage(day);try{await navigator.clipboard.writeText(text)}catch{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank");missionConfirm.hidden=false;}
+function openMissionModal(activityId,dateKey,data){
+  currentMissionId=activityId;
+  currentMissionDate=dateKey;
+  modalMedia.classList.toggle("show",Boolean(data.media));
+  modalMedia.classList.remove("dossier");
+  if(data.media){modalMedia.src=data.media;modalMedia.alt=data.destination?`Imatge de ${data.destination}`:"Pista visual del CIDS";}
+  else modalMedia.removeAttribute("src");
+  if(data.destination){
+    const mt=document.getElementById("modalText");
+    mt.classList.add("modal-text-rich");
+    mt.innerHTML=`<p>${data.text}</p><div class="intel-body" style="padding:12px 0 0"><div class="intel-kicker">EXPEDIENT ${data.code}</div><div class="intel-destination">${data.destination}</div><span class="discard-stamp">DESTÍ DESCARTAT</span></div>`;
+  }
+  missionActions.hidden=!data.mission;
+  missionConfirm.hidden=true;
+  if(data.mission){
+    const done=isCompleted(activityId);
+    sendWhatsApp.hidden=done;
+    missionReset.hidden=!done;
+    missionReset.textContent=done?"✓ Missió registrada · marcar com a pendent":"Marcar la missió com a pendent";
+  }
+}
+async function copyMissionText(activityId,dateKey){
+  const text=missionMessage(activityId,dateKey);
+  try{await navigator.clipboard.writeText(text)}
+  catch{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank");
+  missionConfirm.hidden=false;
+}
 const missionResult=document.getElementById("missionResult");
-function showMissionResult(day){
-  const unlocks=puzzleDays.includes(day);
+function showMissionResult(activityId){
+  const unlocks=puzzleDays.includes(activityId);
   missionResult.innerHTML=unlocks?`<b>MISSIÓ COMPLETADA</b>Aquesta tasca ha desbloquejat una nova peça del puzzle.`:`<b>TRANSMISSIÓ REGISTRADA</b>El CIDS confirma la recepció de la resposta.`;
   missionResult.classList.add("show");
   setTimeout(()=>missionResult.classList.remove("show"),2800);
 }
-function renderCompletedDays(){document.querySelectorAll(".day").forEach(c=>c.classList.toggle("completed",isCompleted(Number(c.dataset.day))))}
-sendWhatsApp.addEventListener("click",()=>copyMissionText(currentMissionDay));
+function renderCompletedDays(){
+  document.querySelectorAll(".day").forEach(cell=>{
+    const activityId=Number(cell.dataset.activityId)||null;
+    cell.classList.toggle("completed",isCompleted(activityId));
+  });
+}
+sendWhatsApp.addEventListener("click",()=>copyMissionText(currentMissionId,currentMissionDate));
 missionSent.addEventListener("click",()=>{
-  const day=currentMissionDay,list=completedMissions();if(!list.includes(day))list.push(day);saveCompleted(list);renderCompletedDays();
+  const activityId=currentMissionId,list=completedMissions();
+  if(activityId!=null&&!list.includes(activityId))list.push(activityId);
+  saveCompleted(list);renderCompletedDays();
   missionConfirm.hidden=true;sendWhatsApp.hidden=true;missionReset.hidden=false;missionReset.textContent="✓ Missió registrada · marcar com a pendent";
-  closeMainModal();showMissionResult(day);
+  closeMainModal();showMissionResult(activityId);
 });
 missionPending.addEventListener("click",()=>missionConfirm.hidden=true);
-missionReset.addEventListener("click",()=>{saveCompleted(completedMissions().filter(d=>d!==currentMissionDay));renderCompletedDays();sendWhatsApp.hidden=false;missionReset.hidden=true});
+missionReset.addEventListener("click",()=>{
+  saveCompleted(completedMissions().filter(id=>id!==currentMissionId));
+  renderCompletedDays();sendWhatsApp.hidden=false;missionReset.hidden=true;
+});
 function renderPuzzle(){
   const grid=document.getElementById("puzzleGrid");
   if(!grid)return;
@@ -2125,10 +2271,10 @@ function renderPuzzle(){
   }
   const done=completedMissions();
   let count=0;
-  for(const [day,piece] of Object.entries(puzzlePieceByDay)){
+  for(const [activityId,piece] of Object.entries(puzzlePieceByDay)){
     const tile=grid.querySelector(`[data-piece="${piece}"]`);
     if(!tile)continue;
-    const reveal=done.includes(Number(day));
+    const reveal=done.includes(Number(activityId));
     tile.classList.toggle("revealed",reveal);
     if(reveal)count++;
   }
@@ -2136,64 +2282,100 @@ function renderPuzzle(){
 }
 renderPuzzle();
 
-calendar.appendChild(Object.assign(document.createElement("div"),{className:"blank"}));
-
-for(let day=1;day<=30;day++){
-  const info=activities[day], kind=info?info.kind:"empty";
-  const cell=document.createElement("div");
-  cell.dataset.day=day;
-  const contentType =
-    !info ? "empty" :
-    kind==="final" ? "closing" :
-    kind==="trip" ? "itinerary" :
-    day===20 ? "revelation" :
-    info?.mission ? "mission" :
-    "report";
-  cell.className=`day ${kind} ${contentType} locked test-enabled`.trim();
-  const button=document.createElement("button");
-  button.type="button";button.className="door";button.setAttribute("aria-label",`Obrir dia ${day}`);
-  const back=document.createElement("div");back.className="back";
-  back.innerHTML=info?`<div class="icon">${info.icon}</div><b>${info.title}</b><span>Doble clic per consultar · un clic per tancar</span>`:`<div class="icon">·</div><b>Sense informe</b><span>El CIDS continua treballant en silenci.</span>`;
-  const front=document.createElement("div");front.className="front";
-  const typeLabel =
-    kind==="trip" ? "ITINERARI" :
-    kind==="final" ? "TANCAMENT" :
-    day===20 ? "REVELACIÓ" :
-    kind==="activity" ? (info?.mission ? "MISSIÓ" : "INFORME") :
-    "";
-  front.innerHTML=`<span class="number">${day}</span><span class="type">${typeLabel}</span><span class="lock">⌁</span>`;
-  button.append(back,front);cell.appendChild(button);calendar.appendChild(cell);
-  let clickTimer=null;
-  const showDayDetails=()=>{
-    if(button.disabled)return;
-    clearTimeout(clickTimer);
-    cell.classList.add("open");
-    const base=info||{kind:"empty",title:`Dia ${day} · Sense novetats`,text:"Aquesta data no té cap informe ni missió prevista. El CIDS continua treballant."};
-    const data=resolvedActivity(day,base);
-    const modalBox=modal.querySelector(".modal-box");
-    modalBox.classList.toggle("is-mission",Boolean(data.mission));
-    modalBox.classList.toggle("is-report",data.kind==="activity"&&!data.mission&&day!==20);
-    modalBox.classList.toggle("is-trip",data.kind==="trip"||day===20);
-    modalBox.classList.toggle("is-final",data.kind==="final");
-    document.getElementById("modalTag").textContent=data.kind==="trip"?`DIA ${day} · ITINERARI`:data.kind==="final"?`DIA ${day} · TANCAMENT`:data.kind==="empty"?`DIA ${day} · SENSE INFORME`:day===20?`DIA ${day} · REVELACIÓ`:data.mission?`DIA ${day} · MISSIÓ`:`DIA ${day} · INFORME`;
-    document.getElementById("modalTitle").textContent=data.title;
-    const modalText=document.getElementById("modalText");
-    modalText.classList.toggle("modal-text-rich",Boolean(data.richHtml));
-    if(data.richHtml)modalText.innerHTML=data.richHtml;else modalText.textContent=data.text||"";
-    openMissionModal(day,data);
-    modal.classList.add("show");
-    document.body.classList.add("modal-open");
-  };
-  button.addEventListener("click",()=>{
-    if(button.disabled)return;
-    const touchDevice=window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    if(touchDevice){showDayDetails();return;}
-    clearTimeout(clickTimer);
-    clickTimer=setTimeout(()=>cell.classList.toggle("open"),220);
-  });
-  button.addEventListener("dblclick",showDayDetails);
+function semanticType(dateKey,info){
+  if(!info)return "empty";
+  if(info.kind==="final")return "closing";
+  if(info.kind==="trip")return "itinerary";
+  if(dateKey==="2026-09-20")return "revelation";
+  return info.mission?"mission":"report";
 }
+function visibleTypeLabel(dateKey,info){
+  if(!info)return "";
+  if(info.kind==="trip")return "ITINERARI";
+  if(info.kind==="final")return "TANCAMENT";
+  if(dateKey==="2026-09-20")return "REVELACIÓ";
+  return info.mission?"MISSIÓ":"INFORME";
+}
+function modalTypeLabel(dateKey,info){
+  const label=dateLabel(dateKey,{uppercase:true});
+  if(info.kind==="trip")return `${label} · ITINERARI`;
+  if(info.kind==="final")return `${label} · TANCAMENT`;
+  if(info.kind==="empty")return `${label} · SENSE INFORME`;
+  if(dateKey==="2026-09-20")return `${label} · REVELACIÓ`;
+  return `${label} · ${info.mission?"MISSIÓ":"INFORME"}`;
+}
+function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
+  if(!calendarEl)return;
+  calendarEl.replaceChildren();
+  const firstOffset=(new Date(year,monthIndex,1).getDay()+6)%7;
+  const daysInMonth=new Date(year,monthIndex+1,0).getDate();
+  const daysToRender=Array.isArray(onlyDays)
+    ? onlyDays.filter(day=>day>=1&&day<=daysInMonth)
+    : Array.from({length:daysInMonth},(_,index)=>index+1);
+  if(!Array.isArray(onlyDays)){
+    for(let i=0;i<firstOffset;i++)calendarEl.appendChild(Object.assign(document.createElement("div"),{className:"blank"}));
+  }
 
+  for(const day of daysToRender){
+    const dateKey=makeDateKey(year,monthIndex,day);
+    const activityId=scheduleByDate[dateKey]??null;
+    const info=activityId?activities[activityId]:null;
+    const kind=info?info.kind:"empty";
+    const contentType=semanticType(dateKey,info);
+    const cell=document.createElement("div");
+    cell.dataset.date=dateKey;
+    cell.dataset.day=day;
+    if(activityId)cell.dataset.activityId=activityId;
+    cell.className=`day ${kind} ${contentType} locked test-enabled`.trim();
+
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="door";
+    button.setAttribute("aria-label",`Obrir ${dateLabel(dateKey)}`);
+
+    const back=document.createElement("div");
+    back.className="back";
+    back.innerHTML=info?`<div class="icon">${info.icon}</div><b>${info.title}</b><span>Doble clic per consultar · un clic per tancar</span>`:`<div class="icon">·</div><b>Sense informe</b><span>El CIDS continua treballant en silenci.</span>`;
+
+    const front=document.createElement("div");
+    front.className="front";
+    front.innerHTML=`<span class="number">${day}</span><span class="type">${visibleTypeLabel(dateKey,info)}</span><span class="lock">⌁</span>`;
+    button.append(back,front);cell.appendChild(button);calendarEl.appendChild(cell);
+
+    let clickTimer=null;
+    const showDayDetails=()=>{
+      if(button.disabled)return;
+      clearTimeout(clickTimer);
+      cell.classList.add("open");
+      const base=info||{kind:"empty",title:`${dateLabel(dateKey)} · Sense novetats`,text:"Aquesta data no té cap informe ni missió prevista. El CIDS continua treballant."};
+      const data=resolvedActivity(dateKey,base);
+      const modalBox=modal.querySelector(".modal-box");
+      modalBox.classList.toggle("is-mission",Boolean(data.mission));
+      modalBox.classList.toggle("is-report",data.kind==="activity"&&!data.mission&&dateKey!=="2026-09-20");
+      modalBox.classList.toggle("is-trip",data.kind==="trip"||dateKey==="2026-09-20");
+      modalBox.classList.toggle("is-final",data.kind==="final");
+      document.getElementById("modalTag").textContent=modalTypeLabel(dateKey,data);
+      document.getElementById("modalTitle").textContent=data.title;
+      const modalText=document.getElementById("modalText");
+      modalText.classList.toggle("modal-text-rich",Boolean(data.richHtml));
+      if(data.richHtml)modalText.innerHTML=data.richHtml;else modalText.textContent=data.text||"";
+      openMissionModal(activityId,dateKey,data);
+      modal.classList.add("show");
+      document.body.classList.add("modal-open");
+    };
+    button.addEventListener("click",()=>{
+      if(button.disabled)return;
+      const touchDevice=window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+      if(touchDevice){showDayDetails();return;}
+      clearTimeout(clickTimer);
+      clickTimer=setTimeout(()=>cell.classList.toggle("open"),220);
+    });
+    button.addEventListener("dblclick",showDayDetails);
+  }
+}
+renderMonth(calendarJuly,2026,6,[24]);
+renderMonth(calendarAugust,2026,7,Array.from({length:16},(_,index)=>index+16));
+renderMonth(calendarSeptember,2026,8);
 renderCompletedDays();
 
 function selectedNow(){
@@ -2205,17 +2387,17 @@ function selectedNow(){
 function updateCalendarAccess(){
   const now=selectedNow();
   document.querySelectorAll(".day").forEach(cell=>{
-    const day=Number(cell.dataset.day);
+    const dateKey=cell.dataset.date;
     let available;
-    if(day>=22 && day<=29){
+    if(dateKey>="2026-09-22"&&dateKey<="2026-09-29"){
       // En arribar el dia 22, tots els itineraris del viatge queden disponibles.
       available=now>=new Date("2026-09-22T00:00:00");
-    }else if(day===30){
+    }else if(dateKey==="2026-09-30"){
       // L’informe final només queda disponible després del retorn.
       available=now>=returnDate;
     }else{
-      // Fins al dia 21, cada casella s’obre quan arriba la seva data.
-      available=now>=new Date(`2026-09-${String(day).padStart(2,"0")}T00:00:00`);
+      // La resta de caselles s’activen quan arriba la seva data real.
+      available=now>=dateFromKey(dateKey);
     }
     cell.classList.toggle("locked",!available);
     cell.classList.toggle("test-enabled",testMode.checked);
@@ -2290,7 +2472,7 @@ simTime.addEventListener("change",saveSimulation);
 todayBtn.addEventListener("click",()=>{simDate.value="";simTime.value="12:00";saveSimulation();showSystemMessage("DATA REAL ACTIVADA","El calendari utilitza ara la data i l’hora actuals.");});
 completeAllBtn.addEventListener("click",()=>{
   if(!confirm("Vols marcar totes les missions com a completades i revelar el puzzle?"))return;
-  saveCompleted(Object.keys(activities).map(Number).filter(day=>activities[day]?.mission));
+  saveCompleted(Object.keys(activities).map(Number).filter(activityId=>activities[activityId]?.mission));
   renderCompletedDays();
   showSystemMessage("MISSIONS COMPLETADES","S’han registrat totes les missions i s’ha revelat el puzzle.");
 });
@@ -2324,7 +2506,7 @@ setInterval(()=>{if(!testMode.checked||!simDate.value)updateCounter()},1000);
     <h3 id="helpTitle">Com funciona el calendari?</h3>
     <p><strong>Un toc</strong> obre o tanca la casella del dia.</p>
     <p><strong>Doble toc</strong> mostra tot el contingut de l’informe, la missió o l’itinerari.</p>
-    <p>Fins al dia 21, cada casella s’activa en arribar la seva data.</p>
+    <p>Des del 24 de juliol fins al 21 de setembre, cada casella s’activa en arribar la seva data. Després de la presentació inicial, la següent comunicació arribarà el 16 d’agost.</p>
     <p>Les missions de preparació inclouen un botó per copiar el missatge i obrir WhatsApp. Després de confirmar «Sí, missió enviada», la tasca queda registrada. Cada missió completada desbloqueja una nova peça del puzzle, visible sota el calendari.</p>
     <p>El <strong>20 de setembre</strong>, consta de dues fases, una a les 15h i una altra a les 16h. </p>
 	<p>En aquest moment, també quedaran desbloquejats tots els itineraris del 22 al 29, perquè els pugueu revisar conjuntament.</p>
@@ -2365,48 +2547,55 @@ if(hb&&hm&&ch&&chx){
 
 
 <script>
-/* V47 · La vista mòbil reutilitza tota la lògica i els continguts del calendari original */
+/* V60 · Vista mòbil de juliol, agost i setembre */
 (function(){
   const list=document.getElementById('mobileTimelineList');
   if(!list)return;
   const weekdayNames=['DG','DL','DT','DC','DJ','DV','DS'];
-  const pad=n=>String(n).padStart(2,'0');
+  const monthShort=['GEN','FEB','MAR','ABR','MAI','JUN','JUL','AGO','SET','OCT','NOV','DES'];
 
-  function typeLabel(day,info){
+  function timelineDates(){
+    const dates=['2026-07-24'];
+    let cursor=new Date('2026-08-16T12:00:00');
+    const end=new Date('2026-09-30T12:00:00');
+    while(cursor<=end){
+      dates.push(makeDateKey(cursor.getFullYear(),cursor.getMonth(),cursor.getDate()));
+      cursor.setDate(cursor.getDate()+1);
+    }
+    return dates;
+  }
+  function typeLabel(dateKey,info){
     if(!info)return 'SENSE ACTIVITAT';
     if(info.kind==='trip')return 'ITINERARI DE VIATGE';
     if(info.kind==='final')return 'TANCAMENT';
-    if(day===20)return 'REVELACIÓ';
+    if(dateKey==='2026-09-20')return 'REVELACIÓ';
     return info.mission?'MISSIÓ':'INFORME';
   }
-
   function createTimeline(){
     const fragment=document.createDocumentFragment();
-    for(let day=1;day<=30;day++){
-      const info=activities[day];
-      const source=document.querySelector(`.day[data-day="${day}"]`);
+    for(const dateKey of timelineDates()){
+      const {year,monthIndex,day}=partsFromKey(dateKey);
+      const activityId=scheduleByDate[dateKey]??null;
+      const info=activityId?activities[activityId]:null;
+      const source=document.querySelector(`.day[data-date="${dateKey}"]`);
       const item=document.createElement('article');
-      const semanticClass =
-        !info ? 'empty' :
-        info.kind === 'final' ? 'closing' :
-        info.kind === 'trip' ? 'itinerary' :
-        day === 20 ? 'revelation' :
-        info.mission ? 'mission' :
-        'report';
+      const semanticClass=semanticType(dateKey,info);
       item.className=`timeline-item ${info?.kind||'empty'} ${semanticClass}`;
-      item.dataset.day=day;
+      item.dataset.date=dateKey;
+      if(activityId)item.dataset.activityId=activityId;
       const btn=document.createElement('button');
       btn.type='button';
       btn.className='timeline-card';
+      const weekDay=weekdayNames[new Date(year,monthIndex,day).getDay()];
       btn.innerHTML=`
-        <span class="timeline-date"><strong>${pad(day)}</strong><span>${weekdayNames[new Date(2026,8,day).getDay()]}</span></span>
+        <span class="timeline-date"><strong>${pad2(day)}</strong><span>${weekDay} · ${monthShort[monthIndex]}</span></span>
         <span class="timeline-copy">
-          <span class="timeline-kicker">${typeLabel(day,info)}</span>
+          <span class="timeline-kicker">${typeLabel(dateKey,info)}</span>
           <span class="timeline-title">${info?.title||'Sense activitat prevista'}</span>
           <span class="timeline-status"></span>
         </span>
         <span class="timeline-arrow" aria-hidden="true">›</span>`;
-      btn.setAttribute('aria-label',`${typeLabel(day,info)} del dia ${day}: ${info?.title||'sense activitat'}`);
+      btn.setAttribute('aria-label',`${typeLabel(dateKey,info)} del ${dateLabel(dateKey)}: ${info?.title||'sense activitat'}`);
       btn.addEventListener('click',()=>{
         const sourceButton=source?.querySelector('.door');
         if(!sourceButton||sourceButton.disabled)return;
@@ -2416,24 +2605,24 @@ if(hb&&hm&&ch&&chx){
     }
     list.replaceChildren(fragment);
   }
-
   function syncTimeline(){
     const completed=completedMissions();
     let completedPuzzle=0;
     document.querySelectorAll('.timeline-item').forEach(item=>{
-      const day=Number(item.dataset.day);
-      const source=document.querySelector(`.day[data-day="${day}"]`);
+      const dateKey=item.dataset.date;
+      const activityId=Number(item.dataset.activityId)||null;
+      const source=document.querySelector(`.day[data-date="${dateKey}"]`);
       const btn=item.querySelector('.timeline-card');
       const status=item.querySelector('.timeline-status');
       const available=Boolean(source&&!source.querySelector('.door')?.disabled);
-      const done=completed.includes(day);
+      const done=isCompleted(activityId);
       item.classList.toggle('available',available);
       item.classList.toggle('completed',done);
       btn.disabled=!available;
-      if(done) status.textContent='✓ Missió completada';
-      else if(available) status.textContent=activities[day]?'Toca per consultar':'Toca per veure l’estat del dia';
+      if(done)status.textContent='✓ Missió completada';
+      else if(available)status.textContent=activityId?'Toca per consultar':'Toca per veure l’estat del dia';
       else status.textContent='Disponible quan arribi la data';
-      if(done&&puzzleDays.includes(day))completedPuzzle++;
+      if(done&&puzzleDays.includes(activityId))completedPuzzle++;
     });
     const total=puzzleDays.length;
     const txt=document.getElementById('mobileMissionProgressText');
@@ -2441,28 +2630,20 @@ if(hb&&hm&&ch&&chx){
     if(txt)txt.textContent=`${completedPuzzle} de ${total}`;
     if(fill)fill.style.width=`${(completedPuzzle/total)*100}%`;
   }
-
   function scrollToNext(){
     const items=[...document.querySelectorAll('.timeline-item.available')];
     const now=selectedNow();
-    const today=now.getFullYear()===2026&&now.getMonth()===8?now.getDate():1;
-    const target=items.find(el=>Number(el.dataset.day)>=today)||items[items.length-1];
+    const todayKey=makeDateKey(now.getFullYear(),now.getMonth(),now.getDate());
+    const target=items.find(el=>el.dataset.date>=todayKey)||items[items.length-1];
     target?.scrollIntoView({behavior:'smooth',block:'center'});
   }
-
   createTimeline();
   syncTimeline();
   document.getElementById('jumpNextAvailable')?.addEventListener('click',scrollToNext);
-
   const observer=new MutationObserver(syncTimeline);
-  observer.observe(document.getElementById('calendar'),{subtree:true,attributes:true,attributeFilter:['class','disabled']});
+  [calendarJuly,calendarAugust,calendarSeptember].filter(Boolean).forEach(calendarEl=>observer.observe(calendarEl,{subtree:true,attributes:true,attributeFilter:['class','disabled']}));
   window.addEventListener('storage',syncTimeline);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncTimeline()});
-
-  const originalSaveCompleted=window.saveCompleted;
-  if(typeof originalSaveCompleted==='function'){
-    window.saveCompleted=function(values){originalSaveCompleted(values);syncTimeline()};
-  }
   setTimeout(syncTimeline,0);
 })();
 </script>
