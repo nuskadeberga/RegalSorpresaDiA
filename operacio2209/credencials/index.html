@@ -44,6 +44,13 @@ body:after{content:"";position:fixed;left:0;right:0;top:-10%;height:1px;pointer-
 .intro{text-align:center;max-width:780px;margin:auto}.intro h2{font-family:Georgia,serif;color:var(--gold2);font-size:clamp(1.5rem,4vw,2.25rem);margin:0 0 10px}.intro p{color:#c6b99f;line-height:1.65;margin:0}
 .directory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;max-width:860px;margin:30px auto 0}
 .agent-card{position:relative;text-align:left;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#0d1b25,#08131b);padding:24px;color:var(--ink);cursor:pointer;min-height:222px;transition:.23s ease;overflow:hidden}.agent-card:before{content:"";position:absolute;inset:auto -28px -52px auto;width:150px;height:150px;border:1px solid rgba(189,135,58,.12);border-radius:50%}.agent-card:hover,.agent-card:focus-visible{transform:translateY(-5px);border-color:var(--gold2);box-shadow:0 18px 44px rgba(0,0,0,.4);outline:none}.agent-card .code{font:700 4.4rem/1 Georgia,serif;color:var(--mag)}.agent-card h3{margin:12px 0 7px;color:var(--gold2);font-family:Georgia,serif;letter-spacing:.08em}.agent-card .state{display:inline-flex;align-items:center;gap:7px;color:var(--ok);font-size:.75rem;font-weight:800;letter-spacing:.1em}.dot{width:7px;height:7px;background:currentColor;border-radius:50%;box-shadow:0 0 10px currentColor}.agent-card p{color:var(--mut);font-size:.86rem;line-height:1.55;margin:12px 0 0}.enter{display:inline-block;margin-top:18px;border-bottom:1px solid var(--gold);color:var(--gold2);font-size:.78rem;font-weight:800;letter-spacing:.13em;padding-bottom:4px}
+
+.access-panel{text-align:center;padding:34px 12px 28px;max-width:620px;margin:auto}.access-panel h2{font-family:Georgia,serif;color:var(--gold2);font-size:clamp(1.45rem,4vw,2.15rem);margin:0}.access-panel .agent-ref{margin-top:8px;color:var(--mut);font-size:.8rem;letter-spacing:.13em}.access-copy{max-width:520px;margin:18px auto;color:#c6b99f;line-height:1.65}.code-form{width:min(430px,100%);margin:24px auto 0}.code-input{width:100%;border:1px solid var(--line);border-radius:12px;background:#03090d;color:var(--ink);padding:15px 16px;outline:none;text-align:center;text-transform:uppercase;font:800 1rem/1 Consolas,monospace;letter-spacing:.13em;transition:.2s}.code-input:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(236,199,125,.09)}.code-input.shake{animation:codeShake .34s linear}.access-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:12px}.access-btn{border-radius:11px;padding:13px 15px;font-weight:900;letter-spacing:.07em;font-size:.77rem;cursor:pointer}.access-btn.primary{background:var(--mag);border:1px solid var(--mag);color:#fff}.access-btn.secondary{background:transparent;border:1px solid var(--gold);color:var(--gold2)}.code-error{min-height:24px;margin:11px 0 0;color:#ef7777;font:700 .76rem/1.5 Consolas,monospace}.security-note{margin:16px auto 0;color:#6f6555;font-size:.68rem;line-height:1.55}
+.iris-wrap{text-align:center;padding:20px 12px 28px}.iris-wrap h2{font-family:Georgia,serif;color:var(--gold2);font-size:clamp(1.45rem,4vw,2.15rem);margin:0}.iris-wrap .agent-ref{margin-top:8px;color:var(--mut);font-size:.8rem;letter-spacing:.13em}.iris-copy{max-width:540px;margin:16px auto 0;color:#c6b99f;line-height:1.65}.iris-scanner{position:relative;width:min(230px,62vw);aspect-ratio:1;margin:22px auto;border:1px solid var(--line);border-radius:50%;overflow:hidden;background:radial-gradient(circle,#050b10 0 11%,#b41d62 12% 15%,transparent 16%),repeating-radial-gradient(circle,rgba(236,199,125,.23) 0 2px,transparent 3px 15px),radial-gradient(circle,rgba(180,29,98,.23),rgba(5,11,16,.94) 64%);box-shadow:0 0 0 12px rgba(189,135,58,.035),0 0 45px rgba(180,29,98,.25),inset 0 0 45px #000}.iris-scanner:before,.iris-scanner:after{content:"";position:absolute;inset:14%;border:1px solid rgba(236,199,125,.42);border-radius:50%;animation:irisRotate 4.8s linear infinite}.iris-scanner:after{inset:30%;border-style:dashed;border-color:rgba(105,201,142,.58);animation-direction:reverse;animation-duration:3.1s}.iris-cross-x,.iris-cross-y{position:absolute;background:rgba(236,199,125,.27)}.iris-cross-x{left:0;right:0;top:50%;height:1px}.iris-cross-y{top:0;bottom:0;left:50%;width:1px}.iris-line{position:absolute;left:8%;right:8%;top:7%;height:2px;background:linear-gradient(90deg,transparent,var(--mag),var(--gold2),var(--mag),transparent);box-shadow:0 0 16px var(--mag);animation:irisSweep 2.05s ease-in-out infinite alternate}.iris-message{min-height:48px;color:#c1b398;font:700 .84rem/1.55 Consolas,monospace}.iris-message.ok{color:var(--ok)}.iris-foot{margin-top:7px;color:#6f6555;font-size:.66rem;letter-spacing:.05em}
+@keyframes codeShake{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes irisRotate{to{transform:rotate(360deg)}}
+@keyframes irisSweep{from{top:8%}to{top:91%}}
+
 .verify{text-align:center;padding:44px 12px 30px}.verify h2{font-family:Georgia,serif;color:var(--gold2);font-size:clamp(1.45rem,4vw,2.15rem);margin:0}.verify .agent-ref{margin-top:8px;color:var(--mut);font-size:.8rem;letter-spacing:.13em}.progress{height:8px;width:min(580px,100%);border:1px solid var(--line);border-radius:999px;background:#03090d;overflow:hidden;margin:24px auto}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mag),var(--gold2));box-shadow:0 0 14px rgba(180,29,98,.6);transition:width .45s ease}.verify-log{width:min(570px,100%);margin:auto;text-align:left;font-family:Consolas,monospace;font-size:.85rem;color:#c1b398;min-height:145px}.verify-log div{opacity:0;margin:9px 0}.verify-log div.show{animation:fadeUp .25s ease forwards}.verify-log .ok{color:var(--ok)}
 .viewer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}.viewer-head h2{font-family:Georgia,serif;color:var(--gold2);font-size:clamp(1.45rem,4vw,2.15rem);margin:0}.viewer-head p{color:var(--mut);font-size:.84rem;margin:6px 0 0}.back{border:1px solid var(--line);background:transparent;color:var(--gold2);border-radius:10px;padding:10px 13px;font-weight:800;letter-spacing:.05em;cursor:pointer}
 .viewer-grid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:start}.credential-stage{position:relative;border:1px solid rgba(189,135,58,.28);border-radius:18px;background:radial-gradient(circle at 50% 22%,rgba(236,199,125,.08),transparent 35%),#050d13;padding:clamp(10px,2.6vw,24px);overflow:hidden}.credential{display:block;width:100%;height:auto;max-height:72vh;object-fit:contain;margin:auto;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.55);cursor:zoom-in;animation:pop .48s ease both}.stamp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-7deg);z-index:4;border:3px solid var(--mag);color:#ed6da1;background:rgba(5,11,16,.66);padding:13px 18px;text-align:center;font-weight:900;letter-spacing:.12em;font-size:clamp(.9rem,3vw,1.4rem);opacity:0;pointer-events:none}.stamp.play{animation:stamp 1.05s ease forwards}
@@ -51,7 +58,7 @@ body:after{content:"";position:fixed;left:0;right:0;top:-10%;height:1px;pointer-
 footer{text-align:center;color:#6f6555;font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;line-height:1.7;margin-top:24px}
 .lightbox{position:fixed;inset:0;z-index:100;background:rgba(1,4,7,.94);display:none;place-items:center;padding:54px 18px 22px}.lightbox.open{display:grid}.lightbox img{max-width:min(92vw,900px);max-height:86vh;object-fit:contain;border-radius:16px;box-shadow:0 30px 90px #000;cursor:zoom-out;animation:pop .3s ease}.close{position:absolute;right:18px;top:16px;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#07121a;color:var(--gold2);font-size:1.25rem;cursor:pointer}
 @media(max-width:830px){.directory{grid-template-columns:1fr}.viewer-grid{grid-template-columns:1fr}.dossier{order:-1}.credential{max-height:none}}
-@media(max-width:580px){.app{width:96vw;padding-top:12px}.frame{padding:18px 13px}.viewer-head{flex-direction:column}.back{align-self:flex-start}.directory{gap:14px}.agent-card{min-height:0;padding:20px}.agent-card .code{font-size:3.6rem}.badges{margin-bottom:22px}}
+@media(max-width:580px){.app{width:96vw;padding-top:12px}.frame{padding:18px 13px}.viewer-head{flex-direction:column}.back{align-self:flex-start}.directory{gap:14px}.agent-card{min-height:0;padding:20px}.agent-card .code{font-size:3.6rem}.badges{margin-bottom:22px}.access-actions{grid-template-columns:1fr}.iris-scanner{width:min(195px,60vw)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -103,6 +110,37 @@ footer{text-align:center;color:#6f6555;font-size:.64rem;letter-spacing:.13em;tex
           <p>Expedient vinculat a l'Operació 2209. Credencial disponible per a validació.</p>
           <span class="enter">ACCEDIR A L'EXPEDIENT</span>
         </button>
+      </div>
+    </section>
+
+    <section class="view" id="codeView">
+      <div class="access-panel">
+        <h2>ACCÉS BLOQUEJAT</h2>
+        <div class="agent-ref" id="codeAgent">AGENT —</div>
+        <p class="access-copy">Introduïu el codi d’activació proporcionat per la Central per iniciar la verificació biomètrica de l’expedient.</p>
+        <form class="code-form" id="codeForm" autocomplete="off">
+          <input class="code-input" id="codeInput" type="password" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="CODI D’ACTIVACIÓ" aria-label="Codi d’activació">
+          <div class="access-actions">
+            <button class="access-btn primary" id="codeSubmit" type="submit">VALIDAR CODI</button>
+            <button class="access-btn secondary" id="cancelCode" type="button">← TORNAR</button>
+          </div>
+          <div class="code-error" id="codeError" aria-live="polite"></div>
+        </form>
+        <p class="security-note">Tres intents fallits poden generar una quantitat desproporcionada de burocràcia interna.</p>
+      </div>
+    </section>
+
+    <section class="view" id="irisView">
+      <div class="iris-wrap">
+        <h2>VERIFICACIÓ RETINAL</h2>
+        <div class="agent-ref" id="irisAgent">AGENT —</div>
+        <p class="iris-copy">Apropa un ull a la pantalla, mantent-lo ben obert i no parpellegis fins que el sistema ho autoritzi.</p>
+        <div class="iris-scanner" aria-hidden="true">
+          <span class="iris-cross-x"></span><span class="iris-cross-y"></span><span class="iris-line"></span>
+        </div>
+        <div class="progress"><span id="irisProgress"></span></div>
+        <div class="iris-message" id="irisMessage">&gt; Inicialitzant sensor biomètric...</div>
+        <div class="iris-foot">CIDS · Mòdul retinal d’alta precisió</div>
       </div>
     </section>
 
@@ -162,32 +200,76 @@ const credentials={
 };
 const splash=document.getElementById('splash'), app=document.getElementById('app');
 const bootLines=[...document.querySelectorAll('.boot-line')];
-const directoryView=document.getElementById('directoryView'),verifyView=document.getElementById('verifyView'),viewerView=document.getElementById('viewerView');
+const directoryView=document.getElementById('directoryView'),codeView=document.getElementById('codeView'),irisView=document.getElementById('irisView'),verifyView=document.getElementById('verifyView'),viewerView=document.getElementById('viewerView');
+const codeAgent=document.getElementById('codeAgent'),irisAgent=document.getElementById('irisAgent'),codeForm=document.getElementById('codeForm'),codeInput=document.getElementById('codeInput'),codeSubmit=document.getElementById('codeSubmit'),codeError=document.getElementById('codeError');
+const irisProgress=document.getElementById('irisProgress'),irisMessage=document.getElementById('irisMessage');
 const progressBar=document.getElementById('progressBar'),verifyLog=document.getElementById('verifyLog'),verifyAgent=document.getElementById('verifyAgent');
 const credentialImage=document.getElementById('credentialImage'),lightboxImage=document.getElementById('lightboxImage'),agentField=document.getElementById('agentField'),viewerTitle=document.getElementById('viewerTitle'),stamp=document.getElementById('stamp');
 const lightbox=document.getElementById('lightbox'),downloadBtn=document.getElementById('downloadBtn');
-let currentAgent='A';
+const ACCESS_CODE='PARPELLEJA2209';
+let currentAgent='A',codeAttempts=0,sequenceRunning=false;
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 async function boot(){
  for(let i=0;i<bootLines.length;i++){await sleep(i===0?320:520);bootLines[i].classList.add('show')}
  await sleep(700);splash.classList.add('hide');app.classList.add('ready')
 }
 boot();
-function show(view){[directoryView,verifyView,viewerView].forEach(v=>v.classList.remove('active'));view.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function show(view){[directoryView,codeView,irisView,verifyView,viewerView].forEach(v=>v.classList.remove('active'));view.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function selectAgent(agent){
+ if(sequenceRunning)return;
+ currentAgent=agent;codeAttempts=0;codeAgent.textContent='AGENT '+agent;irisAgent.textContent='AGENT '+agent;
+ codeInput.value='';codeError.textContent='';codeInput.classList.remove('shake');show(codeView);setTimeout(()=>codeInput.focus(),350)
+}
+function normaliseCode(value){return value.trim().toUpperCase().replace(/\s+/g,'')}
+function rejectCode(){
+ codeAttempts++;
+ const messages=[
+  'Codi incorrecte. La Central sospita una persona massa curiosa.',
+  'Segon intent fallit. El sistema està prenent notes.',
+  'Accés denegat. La retina potser sí; el codi, clarament no.'
+ ];
+ codeError.textContent=messages[Math.min(codeAttempts-1,messages.length-1)];
+ codeInput.classList.remove('shake');void codeInput.offsetWidth;codeInput.classList.add('shake');codeInput.select()
+}
+codeForm.addEventListener('submit',async e=>{
+ e.preventDefault();if(sequenceRunning)return;
+ if(normaliseCode(codeInput.value)!==ACCESS_CODE){rejectCode();return}
+ sequenceRunning=true;codeSubmit.disabled=true;codeError.style.color='var(--ok)';codeError.textContent='✓ Codi correcte. Activant sensor retinal...';
+ await sleep(850);codeSubmit.disabled=false;codeError.style.color='';await runIrisScan()
+});
+document.getElementById('cancelCode').addEventListener('click',()=>{if(!sequenceRunning)show(directoryView)});
+async function runIrisScan(){
+ show(irisView);irisProgress.style.width='0';irisMessage.classList.remove('ok');
+ const sequence=[
+  ['> Inicialitzant sensor biomètric...',8,650],
+  ['> Apropeu un ull a la pantalla.',18,1100],
+  ['> Detectant pupil·la...',34,1100],
+  ['> No parpellegeu.',48,1250],
+  ['> Ajustant profunditat retinal...',63,1250],
+  ['> Reflex corneal insuficient. Obriu més l’ull.',78,1550],
+  ['> Comparant patró biomètric amb l’expedient...',92,1450],
+  ['✓ IRIS COMPATIBLE AMB L’EXPEDIENT',100,1050]
+ ];
+ for(let i=0;i<sequence.length;i++){
+  const [message,progress,delay]=sequence[i];irisMessage.textContent=message;irisProgress.style.width=progress+'%';
+  irisMessage.classList.toggle('ok',i===sequence.length-1);await sleep(delay)
+ }
+ await verify(currentAgent)
+}
 async function verify(agent){
  currentAgent=agent;show(verifyView);verifyAgent.textContent='AGENT '+agent;
  progressBar.style.width='0';[...verifyLog.children].forEach(el=>el.classList.remove('show'));
  const lines=[...verifyLog.children],steps=[16,34,56,78,100];
  for(let i=0;i<lines.length;i++){await sleep(i===0?320:470);lines[i].classList.add('show');progressBar.style.width=steps[i]+'%'}
- await sleep(550);openCredential(agent)
+ await sleep(550);openCredential(agent);sequenceRunning=false
 }
 function openCredential(agent){
  const item=credentials[agent];credentialImage.src=item.src;lightboxImage.src=item.src;
  agentField.textContent=agent;viewerTitle.textContent='Credencial oficial · Agent '+agent;show(viewerView);
  stamp.classList.remove('play');void stamp.offsetWidth;stamp.classList.add('play')
 }
-document.querySelectorAll('.agent-card').forEach(btn=>btn.addEventListener('click',()=>verify(btn.dataset.agent)));
-document.getElementById('backBtn').addEventListener('click',()=>show(directoryView));
+document.querySelectorAll('.agent-card').forEach(btn=>btn.addEventListener('click',()=>selectAgent(btn.dataset.agent)));
+document.getElementById('backBtn').addEventListener('click',()=>{sequenceRunning=false;show(directoryView)});
 function openLightbox(){lightbox.classList.add('open');lightbox.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closeLightbox(){lightbox.classList.remove('open');lightbox.setAttribute('aria-hidden','true');document.body.style.overflow=''}
 credentialImage.addEventListener('click',openLightbox);document.getElementById('fullscreenBtn').addEventListener('click',openLightbox);document.getElementById('closeLightbox').addEventListener('click',closeLightbox);lightbox.addEventListener('click',e=>{if(e.target===lightbox||e.target===lightboxImage)closeLightbox()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
