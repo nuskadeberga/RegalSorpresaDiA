@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#071018">
-<title>Operació 2209 · Calendari de viatge · V60</title>
+<title>Operació 2209 · Calendari de viatge · V62</title>
 <!-- V61: juliol compacte, només es mostra el dia 24 -->
 <style>
 :root{
@@ -1671,6 +1671,52 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
   display:none !important;
 }
 </style>
+
+<style id="v62-locked-activity-visibility">
+/* V62 · Les activitats futures continuen visibles encara que estiguin bloquejades.
+   La porta es manté desactivada fins que arriba la data, però el número i el tipus
+   conserven el color i una llegibilitat clara en ordinador i tauleta. */
+.day.report.locked:not(.test-enabled) .front,
+.day.mission.locked:not(.test-enabled) .front,
+.day.revelation.locked:not(.test-enabled) .front,
+.day.itinerary.locked:not(.test-enabled) .front,
+.day.closing.locked:not(.test-enabled) .front{
+  opacity:.84!important;
+  filter:saturate(.90)!important;
+}
+
+.day.report.locked:not(.test-enabled) .number,
+.day.report.locked:not(.test-enabled) .type{
+  color:var(--gold)!important;
+  opacity:1!important;
+}
+.day.mission.locked:not(.test-enabled) .number,
+.day.mission.locked:not(.test-enabled) .type{
+  color:var(--mission)!important;
+  opacity:1!important;
+}
+.day.revelation.locked:not(.test-enabled) .number,
+.day.revelation.locked:not(.test-enabled) .type{
+  color:#efd58e!important;
+  opacity:1!important;
+}
+.day.itinerary.locked:not(.test-enabled) .number,
+.day.itinerary.locked:not(.test-enabled) .type{
+  color:var(--cyan)!important;
+  opacity:1!important;
+}
+.day.closing.locked:not(.test-enabled) .number,
+.day.closing.locked:not(.test-enabled) .type{
+  color:var(--green)!important;
+  opacity:1!important;
+}
+
+/* El botó continua desactivat, però sense una opacitat addicional del navegador. */
+.day.locked:not(.test-enabled) .door:disabled{
+  opacity:1!important;
+}
+</style>
+
 </head>
 <body>
 <div class="shell">
@@ -1752,7 +1798,7 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
           </svg>
         </button>
       </div>
-      <h2>agost i setembre 2026</h2>
+      <h2>Juliol, agost i setembre 2026</h2>
     </div>
     <div class="legend" aria-label="Llegenda del calendari">
       <span><i style="background:var(--gold)"></i>Informe</span>
@@ -1788,7 +1834,7 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
 <section class="mobile-timeline" id="mobileTimeline" aria-labelledby="mobileTimelineTitle">
   <div class="mobile-timeline-head">
     <div class="eyebrow">CALENDARI DE L’OPERACIÓ</div>
-    <h2 id="mobileTimelineTitle">agost i setembre 2026</h2>
+    <h2 id="mobileTimelineTitle">Juliol, agost i setembre 2026</h2>
     <p>Desplaça’t verticalment i toca qualsevol dia disponible per consultar-ne el contingut.</p>
   </div>
   <div class="mobile-progress" aria-label="Progrés de les missions">
@@ -2003,7 +2049,7 @@ L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser
 🚨Alerta: Una resposta correcta no accelerarà la revelació. Una resposta especialment absurda, però, pot quedar incorporada a l’arxiu oficial.`,mission:true,puzzle:14},
 
 
-19:{kind:"activity",icon:"🎥",title:"Autorització de viatge", richHtml:`
+19:{kind:"activity",icon:"🎥",title:"Autorització d’embarcament", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    La Central necessita una última prova audiovisual que confirmi que l’Equip DiA continua acceptant voluntàriament el protocol de viatge secret.
 <br><p><b>EL REPTE:</b>  Graveu un vídeo de cinc segons, tots dos junts, mirant directament a càmera.
 <br><p><b>FRASE DE SEGURETAT: </b> «L’Equip DiA està preparat».
@@ -2013,7 +2059,7 @@ L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser
 
 20:{kind:"activity",icon:"⌖",title:"Desclassificació final",dynamic:true},
 
-21:{kind:"activity",icon:"✈️",title:"Pla de viatge",richHtml:`
+21:{kind:"activity",icon:"✈️",title:"Pla de vol i informació d’equipatge",richHtml:`
 <p>La documentació operativa ja pot ser consultada.</p>
 <div class="flight-card"><div class="flight-head">DETALLS DEL TEU VIATGE</div>
 <div class="flight-leg"><div class="flight-route">✈ BARCELONA – LANZAROTE <span class="flight-date">dt. 22 set.</span>
@@ -2032,12 +2078,12 @@ L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser
 <div class="flight-note"><b>INFORMACIÓ D’EQUIPATGE</b><br><br>Reviseu la documentació, els horaris i el material necessari abans del trasllat a l’aeroport.<br><br>
 La Central recomana tenir l’equipatge completament preparat durant el dia d’avui.</div>`},
 
-22:{kind:"trip",icon:"",title:"...",richHtml:`<p>
+22:{kind:"trip",icon:"✈️",title:"Activitat del dia · Arribada",richHtml:`<p>
 <b>Operació 2209: comença ara.</b></p>
 <div class="flight-note">Vol VY2470 a les <b>13.30 h</b>. Hora recomanada d’arribada a l’aeroport: <b>11.30 h</b> · Terminal 1.</div>
 <p>Arribada prevista a Lanzarote a les 15.50 h i trasllat al centre d’operacions.</p>`},
 
-23:{kind:"trip",icon:"",title:"...",text:`Haría — esmorzar amb calma al poble de les mil palmeres.
+23:{kind:"trip",icon:"🌴",title:"Nord de l’illa",text:`Haría — esmorzar amb calma al poble de les mil palmeres.
 
 Mirador del Río — vistes sobre La Graciosa.
 
@@ -2046,7 +2092,7 @@ Cueva de los Verdes i Jameos del Agua.
 Órzola — dinar de peix al port.
 
 Caleta de Famara — tarda i capvespre.`},
-24:{kind:"trip",icon:"",title:"...",text:`Timanfaya i Ruta dels Volcans.
+24:{kind:"trip",icon:"🌋",title:"Volcans i vinyes",text:`Timanfaya i Ruta dels Volcans.
 
 El Golfo — llacuna verda i dinar de peix.
 
@@ -2055,12 +2101,12 @@ Los Hervideros i Salinas de Janubio.
 La Geria — vinyes i tast en una bodega.
 
 Yaiza — passeig final.`},
-25:{kind:"trip",icon:"",title:"...",text:`Playa Blanca i Marina Rubicón.
+25:{kind:"trip",icon:"🏖️",title:"Sud i cales",text:`Playa Blanca i Marina Rubicón.
 
 Playa de Papagayo.
 
 Mirador de Femés — tarda amb vistes panoràmiques.`},
-26:{kind:"trip",icon:"️",title:"...",text:`Mercadillo de Teguise — de 9.00 a 14.00 h.
+26:{kind:"trip",icon:"🏘️",title:"Mercat i capital",text:`Mercadillo de Teguise — de 9.00 a 14.00 h.
 
 Passeig pel nucli antic.
 
@@ -2069,19 +2115,19 @@ San Bartolomé.
 Arrecife — Charco de San Ginés i platja d’El Reducto.
 
 Nit a Puerto del Carmen.`},
-27:{kind:"trip",icon:"",title:"...",text:`Ferri des d’Órzola fins a Caleta del Sebo.
+27:{kind:"trip",icon:"⛴️",title:"La Graciosa",text:`Ferri des d’Órzola fins a Caleta del Sebo.
 
 Bicicletes i ruta cap a Playa Francesa i Playa de las Conchas.
 
 Dinar a Caleta del Sebo i retorn de tarda.`},
-28:{kind:"trip",icon:"",title:"...",text:`Puerto Calero.
+28:{kind:"trip",icon:"🌅",title:"Últim dia complet",text:`Puerto Calero.
 
 Playa Quemada — dinar en un poble de pescadors.
 
 Peñas del Chache.
 
 Sopar de comiat a Puerto del Carmen.`},
-29:{kind:"trip",icon:"",title:"...",text:`Últimes hores a l’illa, recollida i trasllat a l’aeroport. El vol VY2471 surt a les 16.25 h.`},
+29:{kind:"trip",icon:"🛫",title:"Activitat del dia · Retorn",text:`Últimes hores a l’illa, recollida i trasllat a l’aeroport. El vol VY2471 surt a les 16.25 h.`},
 30:{kind:"final",icon:"⭐",title:"Informe final",text:"L’Operació 2209 ha finalitzat. Trieu una única fotografia que resumeixi tot el viatge i envieu-la al grup del CIDS.",mission:true}
 };
 
