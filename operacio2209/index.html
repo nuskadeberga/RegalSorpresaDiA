@@ -7,8 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#071018">
-<title>Operació 2209 · Calendari de viatge · V62</title>
-<!-- V61: juliol compacte, només es mostra el dia 24 -->
+<title>Operació 2209 · Calendari de viatge · V93</title>
+<!-- V93: versió pública sense informació operativa dels dies 21–29 -->
 <style>
 :root{
   --bg:#071018;--panel:#0d1923;--panel2:#111f2b;--ink:#edf3f4;--muted:#91a4ad;
@@ -1717,6 +1717,963 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
 }
 </style>
 
+
+<style id="v65-health-alert">
+/* V67 · Sistema visual compartit per a totes les alertes prioritàries */
+.health-alert-modal{
+  position:fixed;
+  inset:0;
+  z-index:15000;
+  display:none;
+  place-items:center;
+  padding-top:max(14px,env(safe-area-inset-top));
+  padding-right:max(14px,env(safe-area-inset-right));
+  padding-bottom:max(14px,env(safe-area-inset-bottom));
+  padding-left:max(14px,env(safe-area-inset-left));
+  background:rgba(13,2,4,.91);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+.health-alert-modal.show{
+  display:grid;
+  animation:healthBackdropFlash .72s ease-in-out 3;
+}
+.health-alert-box{
+  width:min(620px,100%);
+  max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 28px);
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  position:relative;
+  padding:26px;
+  border:2px solid #ef5555;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,76,76,.17),transparent 36%),
+    linear-gradient(160deg,#321014,#13090c 74%);
+  box-shadow:
+    0 0 0 1px rgba(255,90,90,.18),
+    0 0 42px rgba(255,35,35,.42),
+    0 34px 100px rgba(0,0,0,.78);
+  animation:healthAlertPulse .72s ease-in-out 3;
+}
+.health-alert-signal{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:-4px 0 18px;
+  padding:10px 12px;
+  border:1px solid rgba(255,111,111,.45);
+  border-radius:12px;
+  background:rgba(255,49,49,.10);
+  color:#ffb0b0;
+  font-size:.69rem;
+  font-weight:900;
+  letter-spacing:.16em;
+  text-align:center;
+}
+.health-alert-signal span{font-size:1.35rem;filter:drop-shadow(0 0 8px rgba(255,72,72,.8))}
+.health-alert-kicker{
+  color:#ff8d8d;
+  font-size:.68rem;
+  font-weight:800;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.health-alert-box h3{
+  margin:8px 0 17px;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(1.75rem,5vw,2.35rem);
+  font-weight:500;
+  line-height:1.08;
+  color:#fff1f1;
+}
+.health-alert-copy{
+  color:#f0dcdc;
+  font-size:.98rem;
+  line-height:1.65;
+}
+.health-alert-copy p{margin:0 0 14px}
+.health-alert-copy strong{color:#fff}
+.health-alert-classified{
+  margin:18px 0 0;
+  padding:13px 14px;
+  border:1px dashed rgba(255,130,130,.44);
+  border-radius:12px;
+  color:#f3c6c6;
+  background:rgba(255,255,255,.025);
+}
+.health-alert-disclaimer{
+  display:block;
+  margin-top:16px;
+  color:#b99a9f;
+  font-size:.72rem;
+  line-height:1.48;
+}
+.health-alert-ack{
+  width:100%;
+  min-height:50px;
+  margin-top:22px;
+  padding:12px 16px;
+  border:1px solid #ff8d8d;
+  border-radius:11px;
+  background:linear-gradient(180deg,#d93b43,#a8232c);
+  color:#fff;
+  font-weight:900;
+  letter-spacing:.12em;
+  cursor:pointer;
+  box-shadow:0 9px 24px rgba(190,25,36,.25);
+}
+.health-alert-ack:hover,.health-alert-ack:focus-visible{
+  background:linear-gradient(180deg,#ec4a53,#bd2d37);
+  outline:2px solid rgba(255,190,190,.75);
+  outline-offset:3px;
+}
+@keyframes healthBackdropFlash{
+  0%,100%{background-color:rgba(13,2,4,.91)}
+  50%{background-color:rgba(55,2,7,.96)}
+}
+@keyframes healthAlertPulse{
+  0%,100%{
+    border-color:#d84b52;
+    box-shadow:0 0 18px rgba(255,45,45,.25),0 34px 100px rgba(0,0,0,.78)
+  }
+  50%{
+    border-color:#ffc0c0;
+    box-shadow:0 0 20px rgba(255,85,85,.88),0 0 78px rgba(255,22,22,.72),0 34px 100px rgba(0,0,0,.78)
+  }
+}
+/* Identitat pròpia de la casella del dia 21 */
+.day.alert .front{
+  background:linear-gradient(145deg,rgba(74,29,35,.96),rgba(42,20,25,.96))!important;
+  border-color:rgba(239,85,85,.78)!important;
+  box-shadow:0 0 18px rgba(239,85,85,.10)!important;
+}
+.day.alert .number,.day.alert .type,
+.day.alert.locked:not(.test-enabled) .number,
+.day.alert.locked:not(.test-enabled) .type{color:#ff8d8d!important}
+
+/* V66 · Prioritat cromàtica de l’alerta a la vista d’ordinador.
+   Aquest selector supera les regles generals dels informes daurats. */
+.day.activity.alert .front,
+.day.activity.alert.locked:not(.test-enabled) .front{
+  border-color:rgba(239,85,85,.78)!important;
+}
+.day.activity.alert .front .number,
+.day.activity.alert .front .type,
+.day.activity.alert.locked:not(.test-enabled) .front .number,
+.day.activity.alert.locked:not(.test-enabled) .front .type{
+  color:#ff8d8d!important;
+}
+.timeline-item.alert:before{background:rgba(239,85,85,.58)}
+.timeline-item.alert .timeline-card{
+  background:linear-gradient(145deg,rgba(74,29,35,.72),rgba(42,20,25,.78));
+  border-color:rgba(239,85,85,.30);
+}
+.timeline-item.alert .timeline-kicker,.timeline-item.alert .timeline-arrow{color:#ff8d8d}
+.timeline-item.alert.available:before{background:#ef5555;box-shadow:0 0 0 4px rgba(239,85,85,.13)}
+.timeline-item.alert.available .timeline-card{
+  background:linear-gradient(145deg,rgba(99,34,42,.96),rgba(54,23,29,.96));
+  border-color:rgba(239,85,85,.68);
+  box-shadow:inset 3px 0 0 rgba(239,85,85,.80);
+}
+.timeline-item.alert.available .timeline-date strong,
+.timeline-item.alert.available .timeline-kicker{color:#ffb0b0}
+@media(max-width:600px){
+  .health-alert-box{padding:21px 18px;border-radius:18px}
+  .health-alert-copy{font-size:.94rem;line-height:1.58}
+  .health-alert-signal{font-size:.61rem;letter-spacing:.11em}
+}
+@media (prefers-reduced-motion:reduce){
+  .health-alert-modal.show,.health-alert-box{animation:none!important}
+}
+</style>
+
+
+<style id="v74-assignment-copper">
+:root{--assignment:#B87333}
+
+/* Encàrrecs: identitat coure diferenciada de les missions */
+.day.assignment .front,
+.day.activity.assignment .front{
+  background:linear-gradient(145deg,rgba(69,48,33,.96),rgba(40,32,27,.96))!important;
+  border-color:rgba(184,115,51,.78)!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.22)!important;
+}
+.day.assignment .number,
+.day.assignment .type,
+.day.assignment.locked:not(.test-enabled) .number,
+.day.assignment.locked:not(.test-enabled) .type{
+  color:var(--assignment)!important;
+}
+.day.assignment.locked:not(.test-enabled) .front{
+  opacity:.58!important;
+  filter:none!important;
+}
+.day.assignment:not(.locked) .door:hover .front,
+.day.assignment.test-enabled .door:hover .front{
+  box-shadow:inset 0 -12px 22px rgba(0,0,0,.12),0 9px 22px rgba(0,0,0,.20),0 0 0 1px rgba(184,115,51,.18)!important;
+}
+
+/* Modal dels encàrrecs */
+.modal-box.is-assignment{border-color:rgba(184,115,51,.72)}
+.modal-box.is-assignment .modal-tag,
+.modal-box.is-assignment .report-mark{color:var(--assignment)}
+.modal-box.is-assignment .report-mark{border-bottom-color:rgba(184,115,51,.34)}
+.modal-box.is-assignment .mission-actions{border-top-color:rgba(184,115,51,.34)}
+.modal-box.is-assignment .mission-primary{
+  border-color:rgba(184,115,51,.72);
+  background:rgba(184,115,51,.15);
+  color:#f0d2b5;
+}
+.modal-box.is-assignment .mission-primary:hover{background:rgba(184,115,51,.25)}
+.modal-box.is-assignment .mission-confirm{
+  border-color:rgba(184,115,51,.38);
+  background:rgba(184,115,51,.08);
+}
+
+/* Línia temporal mòbil */
+.timeline-item.assignment:before{background:rgba(184,115,51,.58)}
+.timeline-item.assignment .timeline-card{
+  background:linear-gradient(145deg,rgba(69,48,33,.68),rgba(38,30,25,.72));
+  border-color:rgba(184,115,51,.28);
+}
+.timeline-item.assignment .timeline-kicker,
+.timeline-item.assignment .timeline-arrow{color:var(--assignment)}
+.timeline-item.assignment.available:before{
+  background:var(--assignment);
+  box-shadow:0 0 0 4px rgba(184,115,51,.14);
+}
+.timeline-item.assignment.available .timeline-card{
+  background:linear-gradient(145deg,rgba(82,54,34,.97),rgba(47,35,27,.97));
+  border-color:rgba(184,115,51,.68);
+  box-shadow:inset 3px 0 0 rgba(184,115,51,.82);
+}
+.timeline-item.assignment.available .timeline-date strong{color:#f0d2b5}
+.timeline-item.assignment.available .timeline-kicker{color:var(--assignment)}
+.timeline-item.assignment.completed .timeline-card{
+  border-color:rgba(143,212,167,.48);
+  box-shadow:inset 3px 0 0 rgba(143,212,167,.72);
+}
+
+/* Dos botons individuals */
+.agent-action-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.agent-action-grid[hidden]{display:none!important}
+.agent-action-grid .mission-primary{
+  height:100%;
+  min-height:54px;
+}
+@media(max-width:560px){
+  .agent-action-grid{grid-template-columns:1fr}
+}
+</style>
+
+
+<style id="v77-complete-legend">
+.calendar-legend{
+  justify-content:flex-end;
+  row-gap:9px;
+  column-gap:14px;
+  max-width:680px;
+}
+.calendar-legend span,
+.mobile-legend span{
+  white-space:nowrap;
+}
+.calendar-legend i,
+.mobile-legend i{
+  flex:0 0 auto;
+}
+
+.mobile-legend{
+  margin-top:15px;
+  padding:12px 13px;
+  gap:10px 14px;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:13px;
+  background:rgba(13,25,35,.58);
+  font-size:.69rem;
+  line-height:1.25;
+}
+.mobile-legend span{
+  display:inline-flex;
+  align-items:center;
+}
+.mobile-legend i{
+  width:9px;
+  height:9px;
+  margin-right:6px;
+  border-radius:50%;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 0 10px rgba(255,255,255,.035);
+}
+
+@media(max-width:900px) and (min-width:701px){
+  .calendar-head{
+    align-items:flex-start;
+  }
+  .calendar-legend{
+    justify-content:flex-start;
+    max-width:100%;
+  }
+}
+@media(max-width:390px){
+  .mobile-legend{
+    gap:9px 12px;
+    padding:11px;
+    font-size:.66rem;
+  }
+}
+</style>
+
+
+<style id="v79-mission-progress">
+.desktop-mission-progress{
+  margin:0 0 24px;
+  padding:15px 17px;
+  border:1px solid rgba(217,185,111,.34);
+  border-radius:15px;
+  background:linear-gradient(145deg,rgba(217,185,111,.085),rgba(13,25,35,.78));
+}
+.desktop-mission-progress-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  margin-bottom:10px;
+  color:var(--gold);
+  font-size:.74rem;
+  font-weight:700;
+  letter-spacing:.08em;
+}
+.desktop-mission-progress-row b{
+  color:var(--gold);
+  font-size:.78rem;
+  letter-spacing:0;
+  white-space:nowrap;
+}
+.desktop-mission-progress-track{
+  height:9px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#182731;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.32);
+}
+.desktop-mission-progress-fill{
+  width:0;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--gold),#f0dfb2);
+  box-shadow:0 0 12px rgba(217,185,111,.22);
+  transition:width .35s ease;
+}
+
+/* La vista mòbil ja té el seu propi bloc de progrés */
+@media(max-width:700px){
+  .desktop-mission-progress{display:none}
+}
+
+/* Mateixa identitat daurada per a la barra mòbil */
+.mobile-progress{
+  border-color:rgba(217,185,111,.34);
+  background:linear-gradient(145deg,rgba(217,185,111,.085),rgba(13,25,35,.78));
+}
+.mobile-progress-row{
+  color:var(--gold);
+}
+.mobile-progress-row b{
+  color:var(--gold);
+}
+.mobile-progress-fill{
+  background:linear-gradient(90deg,var(--gold),#f0dfb2);
+  box-shadow:0 0 12px rgba(217,185,111,.22);
+}
+</style>
+
+
+
+<style id="v81-alert-sirens">
+/* Sirena CSS: moviment visible, independent dels emojis del sistema */
+.day.alert .front{
+  position:relative;
+  overflow:visible;
+  animation:alertCellPulse 1.6s ease-in-out infinite!important;
+}
+
+.alert-siren,
+.mobile-alert-siren{
+  position:relative;
+  display:inline-block!important;
+  width:38px;
+  height:38px;
+  transform-origin:50% 90%;
+  animation:sirenRock .72s ease-in-out infinite alternate;
+  filter:drop-shadow(0 0 8px rgba(255,52,45,.78));
+  pointer-events:none;
+}
+
+.alert-siren{
+  position:absolute;
+  top:8px;
+  left:50%;
+  z-index:12;
+  margin-left:-19px;
+}
+
+.mobile-alert-siren{
+  width:27px;
+  height:27px;
+  margin-right:7px;
+  vertical-align:-7px;
+}
+
+.siren-light{
+  position:absolute;
+  left:8px;
+  top:4px;
+  width:22px;
+  height:24px;
+  border:2px solid #ff8d87;
+  border-bottom:0;
+  border-radius:13px 13px 5px 5px;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.75),rgba(255,255,255,0) 34%),
+    linear-gradient(180deg,#ff746e,#d51f1f 68%,#8d1111);
+  box-shadow:
+    inset 0 0 7px rgba(255,255,255,.55),
+    0 0 4px #ff4f47,
+    0 0 13px rgba(255,47,40,.9),
+    0 0 25px rgba(255,47,40,.55);
+  animation:sirenFlash .72s steps(2,end) infinite;
+}
+
+.siren-light::after{
+  content:"";
+  position:absolute;
+  left:4px;
+  top:3px;
+  width:5px;
+  height:13px;
+  border-radius:999px;
+  background:rgba(255,255,255,.65);
+}
+
+.siren-base{
+  position:absolute;
+  left:5px;
+  top:27px;
+  width:28px;
+  height:7px;
+  border:1px solid #b9c2c6;
+  border-radius:2px 2px 5px 5px;
+  background:linear-gradient(180deg,#d9e0e2,#68767c 46%,#252f33 48%,#101619);
+  box-shadow:0 2px 5px rgba(0,0,0,.5);
+}
+
+.ray{
+  position:absolute;
+  display:block;
+  width:3px;
+  height:10px;
+  border-radius:999px;
+  background:#ff6c64;
+  box-shadow:0 0 7px rgba(255,63,55,.9);
+  opacity:.25;
+  animation:sirenRays .72s steps(2,end) infinite;
+}
+
+.ray-left{
+  left:1px;
+  top:5px;
+  transform:rotate(-48deg);
+}
+
+.ray-top{
+  left:18px;
+  top:-7px;
+}
+
+.ray-right{
+  right:1px;
+  top:5px;
+  transform:rotate(48deg);
+}
+
+.mobile-alert-siren .siren-light{
+  left:6px;
+  top:3px;
+  width:16px;
+  height:17px;
+  border-radius:10px 10px 4px 4px;
+}
+
+.mobile-alert-siren .siren-base{
+  left:4px;
+  top:20px;
+  width:20px;
+  height:5px;
+}
+
+.mobile-alert-siren .ray{
+  width:2px;
+  height:7px;
+}
+
+.mobile-alert-siren .ray-left{left:0;top:4px}
+.mobile-alert-siren .ray-top{left:13px;top:-5px}
+.mobile-alert-siren .ray-right{right:0;top:4px}
+
+.day.alert .number{
+  margin-top:27px;
+}
+
+.timeline-item.alert .timeline-card{
+  position:relative;
+  overflow:hidden;
+  animation:alertCardBorder 1.6s ease-in-out infinite;
+}
+
+@keyframes sirenRock{
+  0%{transform:rotate(-9deg) scale(.96)}
+  100%{transform:rotate(9deg) scale(1.08)}
+}
+
+@keyframes sirenFlash{
+  0%,42%{
+    opacity:.48;
+    filter:brightness(.72);
+    box-shadow:
+      inset 0 0 5px rgba(255,255,255,.35),
+      0 0 3px #ff4f47,
+      0 0 8px rgba(255,47,40,.55);
+  }
+  43%,100%{
+    opacity:1;
+    filter:brightness(1.45);
+    box-shadow:
+      inset 0 0 10px rgba(255,255,255,.75),
+      0 0 7px #ff4f47,
+      0 0 19px rgba(255,47,40,1),
+      0 0 34px rgba(255,47,40,.72);
+  }
+}
+
+@keyframes sirenRays{
+  0%,42%{opacity:.08}
+  43%,100%{opacity:1}
+}
+
+@keyframes alertCellPulse{
+  0%,100%{
+    box-shadow:0 12px 28px rgba(0,0,0,.22),0 0 0 rgba(239,85,85,0)!important;
+  }
+  50%{
+    box-shadow:0 12px 28px rgba(0,0,0,.22),0 0 24px rgba(239,85,85,.38)!important;
+  }
+}
+
+@keyframes alertCardBorder{
+  0%,100%{
+    border-color:rgba(239,85,85,.35);
+    box-shadow:inset 3px 0 0 rgba(239,85,85,.38);
+  }
+  50%{
+    border-color:rgba(255,105,98,.85);
+    box-shadow:
+      inset 3px 0 0 rgba(255,105,98,.9),
+      0 0 15px rgba(239,85,85,.25);
+  }
+}
+
+/* Encara bloquejada: continua animada, però menys intensa */
+.day.alert.locked:not(.test-enabled) .alert-siren,
+.timeline-item.alert:not(.available) .mobile-alert-siren{
+  opacity:.72;
+}
+
+/* Només s'atura si l'usuari ha activat explícitament la reducció de moviment */
+@media(prefers-reduced-motion:reduce){
+  .alert-siren,
+  .mobile-alert-siren,
+  .day.alert .front,
+  .timeline-item.alert .timeline-card{
+    animation:none!important;
+  }
+}
+</style>
+
+
+
+<style id="v82-current-clock">
+.current-clock{
+  margin-left:auto;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:center;
+  gap:4px;
+  min-width:255px;
+  padding:9px 12px;
+  border:1px solid rgba(217,185,111,.24);
+  border-radius:12px;
+  background:rgba(13,25,35,.72);
+  text-align:right;
+}
+.current-clock span{
+  color:var(--gold);
+  font-size:.58rem;
+  font-weight:800;
+  letter-spacing:.16em;
+}
+.current-clock strong{
+  color:#dbe5e7;
+  font-size:.78rem;
+  font-weight:600;
+  letter-spacing:.035em;
+  white-space:nowrap;
+}
+body.test-mode .current-clock{display:none!important}
+@media(max-width:700px){
+  .current-clock{
+    width:100%;
+    min-width:0;
+    margin-left:0;
+    align-items:flex-start;
+    text-align:left;
+  }
+  .current-clock strong{white-space:normal;line-height:1.4}
+}
+</style>
+
+
+<style id="v84-desktop-alert-size-fix">
+/* Les alertes ocupen exactament tota la cel·la del calendari, igual que la resta */
+@media(min-width:701px){
+  .day.alert{
+    width:100%;
+    height:auto;
+    min-width:0;
+    min-height:126px;
+  }
+
+  .day.alert .door{
+    position:absolute;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    margin:0!important;
+    padding:0!important;
+    transform:none;
+  }
+
+  .day.alert .front,
+  .day.alert .back{
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    min-width:100%!important;
+    min-height:100%!important;
+    margin:0!important;
+    box-sizing:border-box!important;
+  }
+
+  /* Evita que el resplendor alteri òpticament les dimensions de la targeta */
+  .day.alert .front{
+    overflow:hidden!important;
+    transform-origin:left center;
+  }
+
+  /* Recol·loquem la sirena perquè continuï visible dins la casella */
+  .day.alert .alert-siren{
+    top:8px;
+  }
+
+  .day.alert .number{
+    margin-top:27px;
+  }
+
+  /* L'obertura conserva exactament el mateix moviment que la resta */
+  .day.alert.open .front,
+  .day.alert.open .door:hover .front{
+    transform:translateX(-3px) rotateY(-108deg)!important;
+  }
+}
+</style>
+
+
+<style id="v85-progress-admin-styles">
+.progress-admin-modal{
+  position:fixed;inset:0;z-index:12000;display:none;place-items:center;padding:20px;
+  background:rgba(2,7,10,.86);backdrop-filter:blur(5px)
+}
+.progress-admin-modal.show{display:grid}
+.progress-admin-box{
+  position:relative;width:min(760px,100%);max-height:min(88dvh,900px);overflow:auto;
+  padding:25px;border:1px solid rgba(217,185,111,.45);border-radius:22px;
+  background:linear-gradient(rgba(255,255,255,.025),rgba(255,255,255,.025)),#0d1923;
+  box-shadow:0 35px 100px rgba(0,0,0,.62);color:var(--ink)
+}
+.progress-admin-close{
+  position:absolute;top:12px;right:14px;width:44px;height:44px;border:0;
+  background:transparent;color:var(--muted);font-size:1.65rem;cursor:pointer
+}
+.progress-admin-kicker{color:var(--gold);font-size:.66rem;font-weight:800;letter-spacing:.16em}
+.progress-admin-box h3{
+  margin:7px 50px 10px 0;font-family:Georgia,'Times New Roman',serif;
+  font-size:2rem;font-weight:500
+}
+.progress-admin-intro{margin:0 0 17px;color:#c7d4d8;line-height:1.55}
+.progress-admin-summary{
+  display:flex;justify-content:space-between;align-items:center;gap:15px;
+  margin-bottom:13px;padding:11px 13px;border:1px solid rgba(217,185,111,.24);
+  border-radius:12px;background:rgba(217,185,111,.06);color:var(--muted);font-size:.82rem
+}
+.progress-admin-summary strong{color:var(--gold)}
+.progress-admin-list{display:grid;gap:8px}
+.progress-admin-item{
+  display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+  min-height:58px;padding:10px 12px;border:1px solid rgba(255,255,255,.09);
+  border-radius:12px;background:rgba(255,255,255,.025)
+}
+.progress-admin-item.is-completed{
+  border-color:rgba(143,212,167,.38);background:rgba(143,212,167,.055)
+}
+.progress-admin-item input{width:20px;height:20px;accent-color:#8fd4a7}
+.progress-admin-copy{min-width:0}
+.progress-admin-copy b{display:block;color:#edf3f4;font-size:.9rem;line-height:1.3}
+.progress-admin-copy span{display:block;margin-top:4px;color:var(--muted);font-size:.7rem}
+.progress-admin-type{
+  padding:5px 8px;border:1px solid rgba(201,138,179,.3);border-radius:999px;
+  color:var(--mission);font-size:.61rem;font-weight:800;letter-spacing:.08em
+}
+.progress-admin-type.assignment{border-color:rgba(184,115,51,.42);color:#d99a63}
+.progress-admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+.progress-admin-actions button,.progress-publish-box button{
+  min-height:44px;padding:9px 13px;border:1px solid rgba(217,185,111,.42);
+  border-radius:10px;background:rgba(217,185,111,.09);color:var(--gold);
+  font-weight:700;cursor:pointer
+}
+.progress-admin-actions button:hover,.progress-publish-box button:hover{
+  background:rgba(217,185,111,.17)
+}
+.progress-publish-box{
+  display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;
+  margin-top:20px;padding:16px;border:1px solid rgba(123,209,206,.27);
+  border-radius:14px;background:rgba(123,209,206,.055)
+}
+.progress-publish-box b{color:var(--cyan)}
+.progress-publish-box p{margin:6px 0 0;color:#c7d4d8;font-size:.8rem;line-height:1.5}
+.progress-publish-box button{
+  border-color:rgba(123,209,206,.42);background:rgba(123,209,206,.1);
+  color:#bde9e7;white-space:nowrap
+}
+.progress-admin-note{margin-top:13px;color:var(--muted);font-size:.7rem;line-height:1.45}
+@media(max-width:650px){
+  .progress-admin-modal{padding:10px}
+  .progress-admin-box{max-height:92dvh;padding:18px;border-radius:18px}
+  .progress-admin-box h3{font-size:1.65rem}
+  .progress-admin-item{grid-template-columns:auto 1fr}
+  .progress-admin-type{grid-column:2;justify-self:start}
+  .progress-publish-box{grid-template-columns:1fr}
+  .progress-publish-box button{width:100%;white-space:normal}
+}
+</style>
+
+
+<style id="v86-hangman-styles">
+.hangman-wrap{
+  margin-top:16px;
+  padding:18px;
+  border:1px solid rgba(123,209,206,.32);
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(123,209,206,.07),rgba(217,185,111,.045));
+}
+.hangman-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+.hangman-head b{
+  color:var(--cyan);
+  font-size:.68rem;
+  letter-spacing:.16em;
+}
+.hangman-errors{
+  color:var(--muted);
+  font-size:.72rem;
+  white-space:nowrap;
+}
+.hangman-main{
+  display:grid;
+  grid-template-columns:130px 1fr;
+  gap:18px;
+  align-items:center;
+}
+.hangman-drawing{
+  width:130px;
+  height:150px;
+  display:block;
+  margin:auto;
+}
+.hangman-drawing line,
+.hangman-drawing circle{
+  fill:none;
+  stroke:#d9b96f;
+  stroke-width:4;
+  stroke-linecap:round;
+  opacity:.12;
+  transition:opacity .2s ease;
+}
+.hangman-drawing .visible{opacity:1}
+.hangman-words{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:14px 18px;
+  margin:6px 0 17px;
+}
+.hangman-word{
+  display:flex;
+  gap:5px;
+  align-items:flex-end;
+}
+.hangman-letter{
+  width:22px;
+  min-height:31px;
+  display:grid;
+  place-items:center;
+  border-bottom:2px solid rgba(217,185,111,.65);
+  color:#f3e7c8;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:1.05rem;
+  font-weight:800;
+  text-transform:uppercase;
+}
+.hangman-prefix{
+  color:var(--cyan);
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:1.25rem;
+  letter-spacing:.05em;
+}
+.hangman-keyboard{
+  display:grid;
+  grid-template-columns:repeat(9,minmax(0,1fr));
+  gap:6px;
+}
+.hangman-key{
+  min-height:38px!important;
+  padding:6px 2px;
+  border:1px solid rgba(217,185,111,.28);
+  border-radius:8px;
+  background:rgba(217,185,111,.07);
+  color:#e8edf0;
+  cursor:pointer;
+  font-size:.8rem;
+  font-weight:800;
+}
+.hangman-key:hover{background:rgba(217,185,111,.15)}
+.hangman-key:disabled{
+  cursor:default;
+  opacity:.32;
+}
+.hangman-key.correct{
+  border-color:rgba(143,212,167,.5);
+  background:rgba(143,212,167,.12);
+  color:#cdeed6;
+  opacity:.78;
+}
+.hangman-key.wrong{
+  border-color:rgba(232,112,97,.45);
+  background:rgba(232,112,97,.1);
+  color:#efb5ad;
+  opacity:.65;
+}
+.hangman-message{
+  margin-top:14px;
+  min-height:24px;
+  color:#c7d4d8;
+  font-size:.8rem;
+  line-height:1.5;
+  text-align:center;
+}
+.hangman-result{
+  display:none;
+  margin-top:16px;
+  padding:16px;
+  border:1px solid rgba(143,212,167,.42);
+  border-radius:14px;
+  background:rgba(143,212,167,.07);
+  text-align:center;
+}
+.hangman-result.show{display:block}
+.hangman-result .coords-value{margin:10px 0 4px}
+@media(max-width:620px){
+  .hangman-wrap{padding:14px}
+  .hangman-main{grid-template-columns:1fr}
+  .hangman-drawing{width:105px;height:118px}
+  .hangman-keyboard{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .hangman-letter{width:18px;font-size:.9rem}
+  .hangman-words{gap:12px}
+}
+</style>
+
+
+<style id="v89-trip-planning-styles">
+.trip-plan{display:grid;gap:15px;margin-top:14px}
+.trip-summary{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
+  padding:13px;border:1px solid rgba(123,209,206,.24);border-radius:14px;
+  background:rgba(123,209,206,.045)
+}
+.trip-summary div{min-width:0}
+.trip-summary span{
+  display:block;color:var(--muted);font-size:.62rem;font-weight:800;
+  letter-spacing:.09em;text-transform:uppercase
+}
+.trip-summary b{
+  display:block;margin-top:4px;color:#eaf2f3;font-size:.82rem;
+  line-height:1.35;overflow-wrap:anywhere
+}
+.trip-section{
+  padding:14px;border:1px solid rgba(255,255,255,.09);
+  border-radius:13px;background:rgba(255,255,255,.025)
+}
+.trip-section h4{
+  margin:0 0 10px;color:var(--cyan);font-size:.72rem;
+  letter-spacing:.13em;text-transform:uppercase
+}
+.trip-time{display:grid;grid-template-columns:80px 1fr;gap:10px;padding:7px 0}
+.trip-time+.trip-time{border-top:1px solid rgba(255,255,255,.065)}
+.trip-time time{color:var(--gold);font-size:.79rem;font-weight:800}
+.trip-time div{color:#c7d4d8;font-size:.85rem;line-height:1.48}
+.trip-time b{color:#edf3f4}
+.trip-list{margin:0;padding-left:18px;color:#c7d4d8;font-size:.84rem;line-height:1.55}
+.trip-note{
+  padding:12px 13px;border-left:3px solid var(--gold);border-radius:8px;
+  background:rgba(217,185,111,.06);color:#c7d4d8;font-size:.82rem;line-height:1.5
+}
+.trip-note.alt{border-left-color:var(--cyan);background:rgba(123,209,206,.05)}
+.trip-comment{
+  color:#d8c898;font-family:Georgia,'Times New Roman',serif;
+  font-size:.94rem;font-style:italic;line-height:1.55;text-align:center
+}
+.trip-general{
+  margin-top:18px;padding-top:17px;border-top:1px solid rgba(217,185,111,.2)
+}
+.trip-km-grid{display:grid;grid-template-columns:1fr auto;gap:7px 14px;font-size:.8rem}
+.trip-km-grid div{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.trip-km-grid div:nth-child(even){color:var(--gold);text-align:right;font-weight:700}
+@media(max-width:600px){
+  .trip-summary{grid-template-columns:1fr}
+  .trip-time{grid-template-columns:68px 1fr}
+}
+</style>
+
 </head>
 <body>
 <div class="shell">
@@ -1740,11 +2697,17 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
 </div>
     <div><b>OPERACIÓ 2209</b><span>CIDS · Centre Internacional de Destins Secrets</span></div>
   </div>
+
+  <div class="current-clock" id="currentClock" aria-live="polite">
+    <span>DATA I HORA ACTUAL</span>
+    <strong id="currentDateTime">—</strong>
+  </div>
   <div class="testbar" id="testbar" hidden>
     <span class="test-badge">MODE PROVES</span>
     <label>Data simulada <input id="simDate" type="date" aria-label="Data simulada"></label>
     <label>Hora <input id="simTime" type="time" value="12:00" aria-label="Hora simulada"></label>
     <button id="todayBtn" class="today-btn" type="button">Avui</button>
+    <button id="progressAdminBtn" class="today-btn" type="button">Gestionar progrés</button>
     <button id="completeAllBtn" class="today-btn" type="button">Completar missions</button>
     <button id="resetOperationBtn" class="today-btn danger-btn" type="button">Reiniciar operació</button>
     <input id="testMode" type="checkbox" hidden aria-hidden="true">
@@ -1798,13 +2761,26 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
           </svg>
         </button>
       </div>
-      <h2>Juliol, agost i setembre 2026</h2>
+      
     </div>
-    <div class="legend" aria-label="Llegenda del calendari">
+    <div class="legend calendar-legend" aria-label="Llegenda del calendari">
       <span><i style="background:var(--gold)"></i>Informe</span>
       <span><i style="background:var(--mission)"></i>Missió</span>
-      <span><i style="background:var(--cyan)"></i>Viatge</span>
+      <span><i style="background:var(--assignment)"></i>Encàrrec</span>
+      <span><i style="background:#ef5555"></i>Alerta</span>
+      <span><i style="background:#efd58e"></i>Revelació</span>
+      <span><i style="background:var(--cyan)"></i>Itinerari</span>
       <span><i style="background:var(--green)"></i>Final</span>
+    </div>
+  </div>
+
+  <div class="desktop-mission-progress" aria-label="Progrés de les missions principals">
+    <div class="desktop-mission-progress-row">
+      <span>MISSIONS PRINCIPALS COMPLETADES</span>
+      <b id="desktopMissionProgressText">0 de 16</b>
+    </div>
+    <div class="desktop-mission-progress-track" aria-hidden="true">
+      <div class="desktop-mission-progress-fill" id="desktopMissionProgressFill"></div>
     </div>
   </div>
 
@@ -1834,23 +2810,72 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
 <section class="mobile-timeline" id="mobileTimeline" aria-labelledby="mobileTimelineTitle">
   <div class="mobile-timeline-head">
     <div class="eyebrow">CALENDARI DE L’OPERACIÓ</div>
-    <h2 id="mobileTimelineTitle">Juliol, agost i setembre 2026</h2>
     <p>Desplaça’t verticalment i toca qualsevol dia disponible per consultar-ne el contingut.</p>
+    
   </div>
   <div class="mobile-progress" aria-label="Progrés de les missions">
     <div class="mobile-progress-row"><span>MISSIONS COMPLETADES</span><b id="mobileMissionProgressText">0 de 16</b></div>
     <div class="mobile-progress-track"><div class="mobile-progress-fill" id="mobileMissionProgressFill"></div></div>
   </div>
+  <div class="legend mobile-legend" aria-label="Llegenda del calendari mòbil">
+      <span><i style="background:var(--gold)"></i>Informe</span>
+      <span><i style="background:var(--mission)"></i>Missió</span>
+      <span><i style="background:var(--assignment)"></i>Encàrrec</span>
+      <span><i style="background:#ef5555"></i>Alerta</span>
+      <span><i style="background:#efd58e"></i>Revelació</span>
+      <span><i style="background:var(--cyan)"></i>Itinerari</span>
+      <span><i style="background:var(--green)"></i>Final</span>
+    </div>
+	<br>
   <div class="timeline-list" id="mobileTimelineList"></div>
   <div class="timeline-jump"><button id="jumpNextAvailable" type="button">Anar al pròxim informe disponible</button></div>
 </section>
 
 <section class="puzzle-panel" aria-labelledby="puzzleTitle">
-  <div class="puzzle-copy"><div class="eyebrow">DOCUMENT DESCLASSIFICAT</div><h2 id="puzzleTitle">Credencials de l’Operació</h2><p>Cada missió completada i transmesa al CIDS desbloqueja una part de la imatge. L’estat queda guardat en aquest dispositiu.</p><div class="puzzle-progress"><span id="puzzleCount">0</span>/16 fragments desbloquejats</div></div>
+  <div class="puzzle-copy"><div class="eyebrow">DOCUMENT DESCLASSIFICAT</div><h2 id="puzzleTitle">Credencials de l’Operació</h2><p>Cada missió principal completada i transmesa al CIDS desbloqueja una part de la imatge. L’estat queda guardat en aquest dispositiu.</p><div class="puzzle-progress"><span id="puzzleCount">0</span>/16 fragments desbloquejats</div></div>
   <div class="puzzle-grid" id="puzzleGrid" aria-label="Puzzle de setze fragments"></div>
 </section>
 
 <div class="footer">CIDS · Operació 2209</div>
+</div>
+
+
+<div class="progress-admin-modal" id="progressAdminModal" aria-modal="true" role="dialog" aria-labelledby="progressAdminTitle">
+  <div class="progress-admin-box">
+    <button class="progress-admin-close" id="progressAdminClose" type="button" aria-label="Tancar">×</button>
+    <div class="progress-admin-kicker">CIDS · ADMINISTRACIÓ</div>
+    <h3 id="progressAdminTitle">Gestió del progrés</h3>
+    <p class="progress-admin-intro">
+      Marca o desmarca les missions i els encàrrecs. Els canvis s’apliquen immediatament en aquest dispositiu.
+    </p>
+
+    <div class="progress-admin-summary">
+      <span>Completades</span>
+      <strong id="progressAdminCount">0 de 0</strong>
+    </div>
+
+    <div class="progress-admin-list" id="progressAdminList"></div>
+
+    <div class="progress-admin-actions">
+      <button id="progressSelectAll" type="button">Marcar totes</button>
+      <button id="progressClearAll" type="button">Desmarcar totes</button>
+    </div>
+
+    <div class="progress-publish-box">
+      <div>
+        <b>Versió per publicar a GitHub</b>
+        <p>
+          Descarrega una còpia de l’HTML amb l’estat actual incorporat com a progrés inicial.
+          En un navegador sense dades guardades, aquesta còpia recuperarà automàticament les missions marcades.
+        </p>
+      </div>
+      <button id="progressExportHtml" type="button">Descarregar HTML publicable</button>
+    </div>
+
+    <div class="progress-admin-note">
+      El progrés que ja existeixi al navegador sempre tindrà prioritat sobre l’estat inicial publicat.
+    </div>
+  </div>
 </div>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -1861,25 +2886,55 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
     </div>
     <p id="modalText"></p>
     <img id="modalMedia" class="modal-media" alt="Pista visual del CIDS">
-    <div id="missionActions" class="mission-actions" hidden><button id="sendWhatsApp" class="mission-primary" type="button">Copiar missatge i obrir WhatsApp</button><div id="missionConfirm" class="mission-confirm" hidden><p>Has enviat la resposta al grup?</p><div><button id="missionSent" type="button">Sí, missió enviada</button><button id="missionPending" type="button">Encara no</button></div></div><button id="missionReset" class="mission-reset" type="button" hidden>Marcar la missió com a pendent</button></div>
+    <div id="missionActions" class="mission-actions" hidden>
+      <button id="sendWhatsApp" class="mission-primary" type="button">Copiar missatge i obrir WhatsApp</button>
+      <div id="separateMissionActions" class="agent-action-grid" hidden>
+        <button id="sendWhatsAppA" class="mission-primary agent-a" type="button">Agent A · copiar missatge i obrir WhatsApp</button>
+        <button id="sendWhatsAppD" class="mission-primary agent-d" type="button">Agent D · copiar missatge i obrir WhatsApp</button>
+      </div>
+      <div id="missionConfirm" class="mission-confirm" hidden>
+        <p id="missionConfirmQuestion">Has enviat la resposta al grup?</p>
+        <div><button id="missionSent" type="button">Sí, missió enviada</button><button id="missionPending" type="button">Encara no</button></div>
+      </div>
+      <button id="missionReset" class="mission-reset" type="button" hidden>Marcar la missió com a pendent</button>
+    </div>
   </div>
 </div>
+
+<div class="health-alert-modal" id="healthAlertModal" role="alertdialog" aria-modal="true" aria-labelledby="healthAlertTitle" aria-describedby="healthAlertText">
+  <div class="health-alert-box">
+    <div class="health-alert-signal"><span aria-hidden="true">🚨</span><b id="priorityAlertSignal">TRANSMISSIÓ PRIORITÀRIA</b></div>
+    <div class="health-alert-kicker" id="priorityAlertDepartment">CIDS · TRANSMISSIÓ PRIORITÀRIA</div>
+    <h3 id="healthAlertTitle">Alerta operativa</h3>
+    <div class="health-alert-copy" id="healthAlertText"></div>
+    <button class="health-alert-ack" id="healthAlertAck" type="button">AVÍS REBUT</button>
+  </div>
+</div>
+
 <div id="missionResult" class="mission-result" role="status" aria-live="polite"></div>
 
 <script>
 const departure = new Date("2026-09-22T13:30:00");
 const returnDate = new Date("2026-09-29T20:25:00");
 
+/*
+  ACTIVITATS ORDENADES CRONOLÒGICAMENT
+  ------------------------------------
+  Els identificadors numèrics originals es mantenen per conservar
+  la compatibilitat amb les missions ja registrades al navegador.
+*/
 const activities = {
+/* 24 DE JULIOL */
 1:{kind:"activity",icon:"✉️",
 title:"Activació de l’operació",richHtml:`<div class="intel-kicker">BRIEFING INICIAL</div>
 <p><b>El CIDS confirma que l’Operació 2209 ha començat.</b></p>
 <p>A partir d’avui, aquest calendari serà l’únic canal oficial de comunicació amb els agents DiA.</p>
 <p>Durant les pròximes setmanes anireu rebent <b>informes</b>, <b>missions</b> i <b>instruccions</b> que us conduiran, pas a pas, fins a descobrir el destí de la vostra propera operació.</p>
 <h4>LES MISSIONS</h4>
-<p>A partir del <b>20 d’agost</b> començaran les missions operatives.</p>
+<p>A partir del <b>6 d’agost</b> començaran les missions operatives.</p>
 <p>Cada missió s’haurà de completar i enviar al canal de WhatsApp del CIDS. Quan l’acció estigui feta, caldrà tornar al calendari i marcar-la com a completada.</p>
-<p>Cada missió completada desbloquejarà una nova peça del <b>document classificat</b>.</p>
+<p>Cadascuna de les <b>16 missions principals</b> completades desbloquejarà una nova peça del <b>document classificat</b>.</p>
+<p>La Central podrà emetre encàrrecs extraordinaris si es produeixen canvis logístics. Aquests encàrrecs no modificaran el nombre de fragments del document.</p>
 <h4>EL DOCUMENT CLASSIFICAT</h4>
 <p>L’objectiu és reconstruir completament la credencial abans del dia de la revelació.</p>
 <p>No cal completar les missions immediatament, però totes les peces són necessàries per arribar a la imatge final.</p>
@@ -1887,211 +2942,538 @@ title:"Activació de l’operació",richHtml:`<div class="intel-kicker">BRIEFING
 Reserveu el migdia del dia 20. El CIDS convoca els agents DiA a un <b>dinar operatiu</b> conjunt.<br><br>
 Durant aquesta trobada es produiran els darrers esdeveniments abans de la desclassificació completa de l’Operació 2209. És imprescindible assistir-hi.</div>
 <p style="text-align:center;margin-top:20px"><b>Confieu en el procés. No intenteu avançar-vos als esdeveniments.</b></p>`},
-
-
+/* 01 D’AGOST */
 2:{kind:"activity",icon:"📄",title:"Destins descartats",richHtml:`<div class="intel-kicker">RESULTAT DE LES VOTACIONS</div>
-<p>Us recordem els destins descartats:</p>
-<div class="discarded-grid"><div class="discarded-row"><span><i class="flag">🇵🇹</i><b>Algarve</b> · 17 punts</span>
-<small>Descartat perquè hi heu anat fa massa poc i fins i tot el CIDS considera que repetir tan aviat seria sospitós.</small></div>
-<div class="discarded-row"><span><i class="flag">🇵🇹</i><b>Madeira</b> · 14 punts</span>
-<small>Descartada perquè degut a la reduïda dimensió de la pista d’aterratge de l’illa, provocaria que l’<em>agent D</em> taqués el seient de l’avió.</small></div>
-<div class="discarded-row"><span><i class="flag">🇭🇷</i><b>Croàcia</b> · 14 punts</span>
-<small>Descartada perquè, amb més de mil illes, l’operació podria allargar-se fins a l’any vinent.</small></div>
-<div class="discarded-row"><span><i class="flag">🇫🇷</i><b>París</b> · 12 punts</span>
-<small>Descartat perquè ens atiparíem de massa croissants i estem tots a dieta.</small></div>
-<div class="discarded-row"><span><i class="flag">🇳🇱</i><b>Països Baixos</b> · 12 punts</span>
-<small>Descartats perquè el CIDS no ha localitzat cap bicicleta amb espai per les maletes i tots els secrets de l’operació.</small></div>
-<div class="discarded-row"><span><i class="flag">🇮🇹</i><b>Toscana</b> · 12 punts</span>
-<small>Descartada perquè entre pasta, vi i paisatges hi havia un risc massa alt que l’<em>Equip DiA</em> no volgués tornar.</small>
-</div><div class="discarded-row"><span><i class="flag">🇨🇿</i><b>Txèquia</b> · 12 punts</span>
-<small>Descartada perquè pronunciar «Český Krumlov» en una situació d’emergència excedeix el nivell d’entrenament requerit.</small></div></div>`},
-
+<p>Us recordem els destins descartats tant per l'<em>Equip DiA</em> com per el CIDS:</p>
+<div class="discarded-grid"><div class="discarded-row"><span><i class="flag">🇵🇹</i><b>Algarve</b> </span>
+<small>Perquè hi heu anat fa massa poc i fins i tot el CIDS considera que repetir tan aviat seria sospitós.</small></div>
+<div class="discarded-row"><span><i class="flag">🇫🇷</i><b>París</b></span>
+<small>Perquè ens atiparíem de massa croissants de mantega i <em>croque-monsieur</em> ....i estem tots a dieta.</small></div>
+<div class="discarded-row"><span><i class="flag">🇭🇷</i><b>Croàcia</b></span>
+<small>Perquè, amb 1.246 illes, illots i esculls, l’operació podria allargar-se fins a l’any vinent.</small></div>
+<div class="discarded-row"><span><i class="flag">🇳🇱</i><b>Països Baixos</b></span>
+<small>Perquè el CIDS no ha localitzat cap bicicleta amb espai suficient per les maletes i tots els secrets de l’operació.</small></div>
+<div class="discarded-row">  <span>    <i class="flag">🇪🇸</i>    <b>Lanzarote</b>  </span>
+<small>Perquè la durada del vol supera el límit de tolerància aèria de l’<em>agent D</em>. La Central considera que ja fa prou mèrit pujant voluntàriament a un avió.</small>
+</div><div class="discarded-row"><span><i class="flag">🇮🇹</i><b>Toscana</b></span>
+<small>Perquè entre pasta, vi i paisatges hi havia un risc massa alt que l’<em>Equip DiA</em> no volgués tornar.</small>
+</div><div class="discarded-row"><span><i class="flag">🇨🇿</i><b>Txèquia</b></span>
+<small>Perquè pronunciar «Český Krumlov» amb tres cerveses i en una situació d’emergència, excedeix el nivell d’entrenament requerit.</small></div></div>`},
+/* 03 D’AGOST */
 3:{kind:"activity",icon:"📄",title:"Destins compatibles",richHtml:`
 <div class="intel-kicker">ACTUALITZACIÓ</div>
 <p>El CIDS confirma que <b>els tres destins seleccionats en el primer procés</b> continuen sent viables.</p>
 <h4>Destins compatibles</h4>
 <div class="compatible-list"><div class="compatible-coordinate">
-<span class="clue">🌿</span><b>41° 07′ 31″ N  i 16° 52′ 00″ E </b></div><div class="compatible-coordinate">
-<span class="clue">🌋</span><b>28° 57′ 47″ N  i 13° 32′ 52″ O </b></div><div class="compatible-coordinate">
-<span class="clue">🏰</span><b>55° 51' 40″ N i   4° 15' 00″ O </b></div>
+<span class="clue"></span><b>41° 07′ 31″ N  i 16° 52′ 00″ E </b></div><div class="compatible-coordinate">
+<span class="clue"></span><b>32° 39′ 03″ N i 16° 54′ 31″ O</b></div><div class="compatible-coordinate">
+<span class="clue"></span><b>55° 51' 40″ N i   4° 15' 00″ O </b></div>
 </div><div class="intel-kicker">🛰️ NOVA EVIDÈNCIA</div>
 <p>El Departament d’Anàlisi ha detectat un quart destí compatible i ha decidit incorporar-lo a la llista:</p><div class="compatible-coordinate">
-<span class="clue">🍷</span><b>///turistes.errats.compartint</b></div>`},
+<span class="clue"></span><b>///acollits.coixinera.impecables</b></div>`},
 
+/* 04 D’AGOST */
+37:{kind:"activity",icon:"📋",title:"Ampliació del protocol operatiu",richHtml:`
+<div class="intel-kicker">UNITAT DE PLANIFICACIÓ DE MISSIONS</div>
+
+<p>Degut a que les 16 <B>Missions</b> que obren les credencials de l'operació són inmodificables ja que comportaria refer tota l'operació 2209, el CIDS ha considerat oportú incorporar noves categories al calendari, anomenades <b>Alertes</b> i <b>Encàrrecs</b>.</p>
+
+
+<div class="flight-note">
+  <b>PROTOCOL D’ENCÀRRECS EXTRAORDINARIS</b><br><br>
+  Els encàrrecs tindran caràcter operatiu i s’hauran de completar i transmetre a la Central igual que qualsevol altra instrucció. Podran influir en la validació de rutes, les reserves i la preparació del viatge, però no desbloquejaran fragments addicionals de les credencials.
+</div>
+
+<br>
+<p>El CIDS recorda que el fet que una tasca no contingui cap peça del document classificat no significa que sigui opcional, decorativa ni susceptible de ser delegada a un traductor automàtic, un cunyat o una intel·ligència artificial especialment complaent.</p>
+
+<div class="hint">📌 <b>Resum operatiu:</b> 16 missions principals, 16 fragments de credencials i tants encàrrecs extraordinaris com la Central consideri necessaris.</div>`},
+/* 06 D’AGOST */
 4:{kind:"activity",icon:"🪪",title:"Control de documentació",richHtml:`
-<p><b>DESCRIPCIÓ:</b> Abans d’autoritzar qualsevol moviment internacional, la Central ha de verificar que la identitat de l’Equip DiA continua operativa i sense incidències.</p>
+<p><b>DESCRIPCIÓ:</b> Abans d’autoritzar qualsevol moviment nacional o internacional, la Central ha de verificar que la identitat de l’<em>Equip DiA</em> continua operativa i sense incidències.</p>
 </p><br>
-<p><b>EL REPTE:</b> Comproveu que els dos DNI són vigents durant tot el viatge.</p><br>
-<p><b>L’ACCIÓ:</b> Quan ho hàgiu verificat, feu-vos una selfie conjunta amb el DNI a la boca i envieu-la al canal de WhatsApp del CIDS.</p><br>
+<p><b>EL REPTE:</b> Comproveu que els DNI's i els PASSAPORTS,  són vigents durant tot el viatge.</p><br>
+<p><b>L’ACCIÓ:</b> Quan ho hàgiu verificat, feu-vos una selfie conjunta amb el DNI a la boca i el PASSAPORT a la mà dreta, i envieu-la al canal de WhatsApp del CIDS.</p><br>
+
 🚨Avís: Qualsevol document caducat pot provocar la suspensió immediata de l’Operació 2209.`,mission:true,puzzle:1},
-
-
+/* 07 D’AGOST */
+33:{kind:"activity",icon:"🚨",title:"Alerta sanitària",alert:true,
+alertDepartment:"CIDS · DEPARTAMENT DE SANITAT",
+alertTitle:"Alerta sanitària · nivell preventiu",
+alertHtml:`
+<p>A causa de les darreres informacions rebudes pel Departament de Sanitat del CIDS, es recomana revisar la documentació sanitària de l’<em>Equip DiA</em> i consultar si cal valorar la vacunació contra el dengue —vacuna Qdenga—.</p>
+<p>Un dels destins possibles ha notificat recentment <strong>dos casos autòctons</strong>.</p>
+<div class="health-alert-classified">Per motius de seguretat operativa, la identitat de la destinació afectada es manté classificada.</div>
+<small class="health-alert-disclaimer">Informació operativa provisional. Qualsevol decisió sanitària real s’ha de consultar amb un professional sanitari.</small>`,
+richHtml:`
+<div class="intel-kicker">DEPARTAMENT DE SANITAT · NIVELL PREVENTIU</div>
+<p>A causa de les darreres informacions rebudes pel Departament de Sanitat del CIDS, es recomana revisar la documentació sanitària de l’<em>Equip DiA</em> i consultar si cal valorar la vacunació contra el dengue —vacuna Qdenga—.</p>
+<p>Un dels destins possibles ha notificat recentment <b>dos casos autòctons</b>.</p>
+<div class="flight-note"><b>INFORMACIÓ CLASSIFICADA</b><br><br>Per motius de seguretat operativa, la identitat de la destinació afectada es manté classificada.</div>
+<small>Informació operativa provisional. Qualsevol decisió sanitària real s’ha de consultar amb un professional sanitari.</small>`},
+/* 09 D’AGOST */
 5:{kind:"activity",icon:"📦",title:"Objecte classificat", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    El Departament de Logística necessita avaluar el vostre instint operatiu.
-<br><p><b>EL REPTE:</b> Sense parlar entre vosaltres, cadascú ha de seleccionar un objecte de casa que consideri imprescindible o especialment útil durant el viatge (evitar roba interior).
-<br><p><b>L’ACCIÓ:</b> Fotografieu els dos objectes i envieu les imatges al canal de WhatsApp del CIDS.</p><br>
-🚨️Avís: No es permet coordinar l’elecció. La coincidència —o la falta absoluta de criteri compartit— serà penalitzada.`,mission:true,puzzle:2},
-
-
-
+<br><p><b>EL REPTE:</b> Sense parlar entre vosaltres, cadascú ha de seleccionar un objecte de l'agent contrari, que consideri especialment útil durant viatge.
+<br><p><b>L’ACCIÓ:</b> Fotografieu els dos objectes i envieu les imatges al canal de WhatsApp del CIDS indicant quin objecte és de cada agent.</p><br>
+🚨️Avís: La falta absoluta de criteri, comportarà una sanció, que serà cobrada pel CIDS durant el viatge.`,mission:true,puzzle:2},
+/* 10 D’AGOST */
+38:{kind:"activity",icon:"📝",title:"Interrogatori de preferències",richHtml:`
+<p><b>DESCRIPCIÓ:</b> El CIDS necessita conèixer millor les preferències dels agents abans de continuar valorant les diferents opcions de viatge. </p>
+<br><p><b>EL REPTE:</b> Sense parlar entre vosaltres, cadascú haurà d'escollir una opció en aquests vuit dilemes:</p>
+<ul>
+  <li>Ciutat o natura</li>
+  <li>Mar o muntanya</li>
+  <li>Caminar o conduir</li>
+  <li>Matinar o allargar el vespre</li>
+  <li>Improvisar o tenir-ho planificat</li>
+  <li>Menjar conegut o provar coses noves</li>
+  <li>Una activitat intensa o diverses de tranquil·les</li>
+  <li>Seguir la ruta o deixar marge per perdre's</li>
+</ul>
+<p><b>L’ACCIÓ:</b> Cada agent enviarà les seves respostes per separat al canal de WhatsApp del CIDS, utilitzant el seu botó individual.</p>
+<br>🚨Avís: Queda prohibit pactar les respostes. El CIDS detecta amb facilitat les coincidències sospitosament perfectes. L'elecció d'una o una altra opció, podrà condicionar el destí final.`,mission:true,supplementary:true,separateReplies:true,agentMessageLabels:{A:"RESPOSTES DE L’AGENT A:",D:"RESPOSTES DE L’AGENT D:"}},
+/* 12 D’AGOST */
 6:{kind:"activity",icon:"📍 ",title:"El Quart destí", richHtml:`
-<p><b>DESCRIPCIÓ:</b>    Fa tres dies, el CIDS va incorporar un nou destí a l'expedient de l'Operació 2209.
+<p><b>DESCRIPCIÓ:</b>    En un informe anterior, el CIDS va incorporar un nou destí a l'expedient de l'Operació 2209.
 <br><p><b>EL REPTE:</b>  A partir de les pistes publicades, quins son els quatre destins possibles?
 No cal que sigui una resposta conjunta. Si no coincidiu, podeu enviar dues hipòtesis diferents.
 <br><p><b>L’ACCIÓ:</b> Envieu al canal de WhatsApp del CIDS els noms dels 4 destins seleccionats. Si voleu, podeu afegir una breu explicació de com hi heu arribat. </p><br>
-🚨Avís: La Central no confirmarà ni desmentirà cap de les respostes. El veritable destí només serà revelat quan arribi el moment oportú.`,mission:true,puzzle:3},
+🚨Avís: La Central no confirmarà ni desmentirà cap de les respostes. No us flipeu abans d'hora.`,mission:true,puzzle:3},
+/* 13 D’AGOST */
+31:{kind:"activity",icon:"📡",title:"Actualització extraordinària",richHtml:`
+<div class="intel-kicker">AMPLIACIÓ DE L’EXPEDIENT</div>
+<p>La Unitat de Contractació del CIDS  té constància que la destinació de <b>Lanzarote</b> va ser mencionada de manera especulativa per l’<em>Equip DiA</em> durant la presentació de l'operació, abans de disposar de cap informació operativa.</p>
+<br><p>Degut a aquesta situació, el CIDS va dubtar si penalitzar amb una sanció a l'<em>agent D</em>. Després de moltes deliveracions, i gràcies a la infinita generositat del CIDS, s'ha decidit en una <em>Assamblea Extraordinària</em>, incorporar aquest nou destí a la llista actual.</p>
+<div class="flight-note"><b>Aquest nou destí no suposa cap benefici respecte als destins ja existens, no concedeix cap valoració extra i no implica que aquesta destinació hagi d'estar seleccionada. No continueu flipant-vos.</b></div>
+<br><p><Per tant, les destinacions actuals candidates passen a ser cinc.
+<p>Lanzarote seguirà el mateix procediment de selecció que la resta.</p>
 
 
+`},
+/* 14 D’AGOST */
+47:{kind:"activity",icon:"⛔",title:"Veto logístic",richHtml:`
+<div class="intel-kicker">CIDS · DEPARTAMENT DE LOGÍSTICA</div>
+<p>Després d’analitzar els objectes seleccionats pels agents el dia 9 d’agost, el Departament de Logística comunica una resolució definitiva.</p>
+<br><p><b>Els dos objectes seleccionats queden automàticament vetats i no es podran incloure a l’equipatge de l’Operació 2209.</b></p>
+<br><p>La prohibició afecta tant la maleta principal com qualsevol bossa, motxilla o equipatge de mà.</p>
+<div class="flight-note">La Central podrà comprovar el contingut de l’equipatge.</p>
+ La presència d’un dels objectes vetats serà considerada una incidència de desobediència logística, que suposarà una sanció.</div>`},
+
+/* 15 D’AGOST */
 7:{kind:"activity",icon:"🕵️‍♂️",title:"L’Art del Camuflatge", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    Per poder creuar la frontera sense aixecar sospites, el CIDS necessita comprovar la vostra capacitat de transformació camaleònica. 
-<br><p><b>EL REPTE:</b>  Trieu una de les quatre identitats operatives:
+<br><p><b>EL REPTE:</b>  Trieu cadascú una de les cinc identitats operatives, no poden ser coincidents:
 <ul>
-  <li><div class="intel-kicker">PERFIL HIGHLANDER </div>Roba amb patró de quadres (tartan), capes o peces d’abric, com si haguéssiu de sobreviure a una tempesta a la muntanya.</li>
-  <li><div class="intel-kicker">PERFIL DOLCE VITA </div> Estil estiuenc i sofisticat: camises de lli, mocadors de seda, barrets de palla i ulleres de sol fosques.</li>
-  <li><div class="intel-kicker">PERFIL EXPLORADOR </div>Equipament tàctic de reconeixement: pantalons curts, motxilla, gorra i calçat preparat per trepitjar terreny marcià.</li>
-  <li><div class="intel-kicker">PERFIL SOMMELIER </div> Vestimenta elegant de gala, sostenint una copa buida i fent posat  d’entès vinícola.</li>
+  <li><div class="intel-kicker">PERFIL DOLCE VITA</div>Estil estiuenc i sofisticat: camisa de lli, mocador, barret de palla i ulleres de sol fosques.</li>
+  <li><div class="intel-kicker">PERFIL BOTÀNIC</div>Impermeable lleuger, motxilla, prismàtics i calçat preparat per combinar pluja, costa i terreny volcànic.</li>
+  <li><div class="intel-kicker">PERFIL HIGHLANDER</div>Roba amb patró de quadres, capes o peces d’abric, com si haguéssiu de sobreviure a una tempesta a la muntanya.</li>
+  <li><div class="intel-kicker">PERFIL SOMMELIER</div>Vestimenta elegant, copa plena i posat d’expert capaç d’avaluar un vi sense haver-lo tastat.</li>
+  <li><div class="intel-kicker">PERFIL GEÒLEG</div>Roba fosca, gorra, ulleres de sol, motxilla i calçat preparat per trepitjar un paisatge d’un altre planeta.</li>
 </ul>
 
 <br><p><b>L’ACCIÓ:</b> Envieu la imatge del perfil escollit pel canal de WhatsApp del CIDS. </p><br>
 🚨Avís: Sigueu clàssics o agosarats. La Central vigila.`,mission:true,puzzle:3},
-
-
-8:{kind:"activity",icon:"🛞",title:"Generació de ruta 01", richHtml:`
-<p><b>DESCRIPCIÓ:</b>    Per començar a preparar-vos i involucrar-vos amb el viatge, us proposem el següent repte...
-<br><p><b>EL REPTE:</b>  Feu una ruta de 6 dies pel primer destí identificat a “destins compatibles” .
+/* 16 D’AGOST */
+34:{kind:"activity",icon:"🚗",title:"Alerta de mobilitat",alert:true,
+alertDepartment:"CIDS · DEPARTAMENT DE MOBILITAT",
+alertTitle:"Alerta de mobilitat · conducció sensible",
+alertHtml:`
+<p>El CIDS informa que més d'un dels escenaris operatius, podria obligar als agents a circular per carreteres estretes, amb desnivells importants o segons unes normes de conducció emocionalment incompatibles amb els costums de l’<em>Equip DiA</em>.</p>
+<p>Es recomana revisar la diferència entre <strong>dreta</strong>, <strong>esquerra</strong> i «jo pensava que venia per l’altre costat».</p>
+<div class="health-alert-classified">El CIDS prohibeix discutir amb el GPS durant una maniobra.</div>`,
+richHtml:`
+<div class="intel-kicker">DEPARTAMENT DE MOBILITAT · CONDUCCIÓ SENSIBLE</div>
+<p>El CIDS informa que un dels escenaris operatius podria obligar els agents a circular per carreteres estretes, amb desnivells importants o segons unes normes de conducció emocionalment incompatibles amb els costums de l’Equip DiA.</p>
+<p>Es recomana revisar la diferència entre <b>dreta</b>, <b>esquerra</b> i «jo pensava que venia per l’altre costat».</p>
+<div class="flight-note"><b>PROTOCOL DE SEGURETAT</b><br><br>El CIDS prohibeix discutir amb el GPS durant una maniobra.</div>`},
+/* 18 D’AGOST */
+8:{kind:"activity",icon:"🛞",title:"Generació de ruta", richHtml:`
+<p><b>DESCRIPCIÓ:</b>    Per començar a preparar-vos i involucrar-vos amb el viatge, us proposem ...
+<br><p><b>EL REPTE:</b>  Feu una ruta de 6 dies pel destí <b>///sonant.coixinet.renoi</b> identificat a “destins compatibles” .
 <br><p><b>L’ACCIÓ:</b> Envieu la ruta pel canal de WhatsApp del CIDS perquè el Departament de Viatges ho validi. </p><br>
 🚨Avís: Aquesta ruta ha de ser treballada seriosament, perquè serà parcial o totalment incorporada en cas que sigui el destí final.`,mission:true,puzzle:4},
-
-
-9:{kind:"activity",icon:"🧪",title:"L’Elixir del Combat", richHtml:`
-<p><b>DESCRIPCIÓ:</b>    Els membres de l’Equip DiA han de ser immunes a qualsevol substància encoberta. El CIDS requereix un test de resistència immediat. 
-<br><p><b>EL REPTE:</b>  Adquiriu un dels contraverins oficials, feu un brindis d’alta traïció davant la càmera i destruïu la prova bevent-vos-el.
-<ul>
-  <li><div class="intel-kicker">CONTRAVERÍ 01</div> Un vi negre de criança DO La Rioja 🍷</li>
-  <li><div class="intel-kicker">CONTRAVERÍ 02</div> Un glop de whisky escocès de malta 🥃</li>
-  <li><div class="intel-kicker">CONTRAVERÍ 03</div>Una copa de malvasia volcànica de Lanzarote 🥂</li>
-  <li><div class="intel-kicker">CONTRAVERÍ 04</div> Un xarrup de limoncello tradicional de la Puglia 🍋</li>
-</ul>
-
-<br><p><b>L’ACCIÓ:</b> Adjunteu una prova gràfica del brindis mitjançant l’enllaç de comunicacions.`,mission:true,puzle:5},
-
-
-10:{kind:"activity",icon:" 🛞",title:" Generació de ruta 02", richHtml:`
+/* 19 D’AGOST */
+39:{kind:"activity",icon:"🎭",title:"Coartada operativa",richHtml:`
+<p><b>DESCRIPCIÓ:</b> El CIDS considera probable que familiars, amistats o altres persones intentin descobrir què farà l'<em>Equip DiA</em> durant els dies de l'operació. Aquest vídeo ha de servir perquè us justifiqueu davant dels familiars, amistats o altres persones.</p>
+<br><p><b>EL REPTE:</b> Graveu un vídeo conjunt de màxim 30 segons explicant què fareu durant aquells dies, sense utilitzar les paraules <b>viatge</b>, <b>vacances</b>, <b>destí</b>, <b>avió</b>, <b>aeroport</b>, <b>cotxe</b>, <b>amics</b>, <b>casament</b> ni cap nom geogràfic. Tots dos agents haureu de parlar.</p>
+<br><p><b>L’ACCIÓ:</b> Envieu una única gravació al canal de WhatsApp del CIDS. Si utilitzeu una paraula prohibida, rebreu una sanció.</p>
+<br>🚨Avís: La coartada ha de semblar creïble. «<em>No podem explicar-ho perquè és secret</em>» o «<em>Tenim uns amics que van fumats</em>», no es consideraran explicació suficients.`,mission:true,supplementary:true},
+/* 21 D’AGOST */
+14:{kind:"activity",icon:"🛞",title:"Generació de ruta", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    Seguint amb la vostra involucració, us proposem ...
-<br><p><b>EL REPTE:</b>  Feu una ruta de 6 dies pel segon destí identificat a “destins compatibles” 
+<br><p><b>EL REPTE:</b>  Feu una ruta de 6 dies pel destí <b>///acollits.coixinera.impecables</b> identificat a “destins compatibles” .
+<br><p><b>L’ACCIÓ:</b> Envieu la ruta pel canal de WhatsApp del CIDS perquè el Departament de Viatges ho validi</p><br>
+🚨Avís: Aquesta ruta ha de ser treballada seriosament, perquè serà parcial o totalment incorporada en cas que sigui el destí final..`,mission:true,puzzle:10},
+/* 22 D’AGOST */
+40:{kind:"activity",icon:"📑",title:"Primera valoració de les rutes",richHtml:`
+<div class="intel-kicker">COMITÈ TÈCNIC DE RUTES</div>
+<p>El CIDS confirma que ha començat a revisar les primeres propostes de ruta enviades per l'<em>Equip DiA</em>.</p>
+<p>Les propostes contenen idees interessants i mostren una clara voluntat d'aprofitar el temps. Tot i això, la Central ha detectat alguns horaris massa ajustats i trajectes amb poc marge per als imprevistos.</p>
+<br><p>Es recomana que les pròximes rutes incloguin temps realista de desplaçament, pauses per menjar, marge per aparcar o orientar-se i alguna alternativa en cas de mal temps.</p>
+<div class="hint">📌 La Central recorda que quinze minuts no són suficients per visitar qualsevol lloc.</div>`},
+/* 24 D’AGOST */
+10:{kind:"activity",icon:" 🛞",title:"Generació de ruta", richHtml:`
+<p><b>DESCRIPCIÓ:</b>    Seguint amb la vostra involucració, us proposem ...
+<br><p><b>EL REPTE:</b>  Feu una ruta de 6 dies pel destí <b>///estendre.escoltes.heura</b> identificat a “destins compatibles” .
 <br><p><b>L’ACCIÓ:</b> Envieu la ruta pel canal de WhatsApp del CIDS perquè el Departament de Viatges ho validi</p><br>
 🚨Avís: Aquesta ruta ha de ser treballada seriosament, perquè serà parcial o totalment incorporada en cas que sigui el destí final..`,mission:true,puzzle:6},
-
-
-11:{kind:"activity",icon:"🗣️",title:"L’Idioma Encobert", richHtml:`
-<p><b>DESCRIPCIÓ:</b>    Els serveis d'intel·ligència han detectat que els canals de comunicació de l'Operació 2209 estan sota vigilància. Per evitar que la Central sigui identificada, tots els agents han de demostrar que són capaços de modificar la seva manera de parlar i confondre els sistemes de reconeixement de veu.
-<br><p><b>EL REPTE:</b>  Enregistreu una nota de veu dient la frase "Salut i força al canut!"  intentant  sonar com un autèntic Highlander escocès, introduir un toc de passione italiana de la Puglia, adoptar l’accent relaxat de Lanzarote o el caire de taverna de La Rioja.
-<br><p><b>L’ACCIÓ:</b> Envieu la nota de veu al canal de WhatsApp del CIDS. </p><br>
-🚨Avís: La Central valorarà especialment les interpretacions més creatives.`,mission:true,puzzle:7},
-
-12:{kind:"activity",icon:"🎙️🛞",title:" Generació de ruta 03", richHtml:`
+/* 25 D’AGOST */
+41:{kind:"activity",icon:"🚧",title:"Activació dels plans alternatius",richHtml:`
+<p><b>DESCRIPCIÓ:</b> Una operació també ha d'estar preparada per afrontar una incidència que afecti tots els sistemes de transport alhora.</p>
+<br><p><b>EL REPTE:</b> El dia de sortida de l'<em>Operació 2209</em>, es produeix una apagada elèctrica general (com la del 2025) i no funcionen ni trens, ni avions ni vaixells. Davant aquesta situació, cada agent haurà de plantejar un <b>pla B</b> de viatge diferent.</p>
+<br><p><b>L’ACCIÓ:</b> Cada agent enviarà el seu pla per separat al canal de WhatsApp del CIDS, utilitzant el botó corresponent. No podreu consultar la resposta de l'altre agent fins que tots dos plans hagin estat enviats.</p>
+<br>🚨Avís: Si es deteca una copia deliverada dels plans, es rebrà una sanció.`,mission:true,supplementary:true,separateReplies:true,agentMessageLabels:{A:"PLA B DE L’AGENT A:",D:"PLA C DE L’AGENT D:"}},
+/* 27 D’AGOST */
+32:{kind:"activity",icon:"🗺️",title:"Validació logística",richHtml:`
+<p><b>DESCRIPCIÓ:</b> La incorporació tardana d’una cinquena candidatura ha deixat incomplet l’expedient de mobilitat del CIDS.</p>
+<br><p><b>EL REPTE:</b> Prepareu una ruta de 6 dies pel destí <b>///peix.cirerer.melosa</b> incorporat recentment a l'operació.</p>
+<br><p><b>L’ACCIÓ:</b> Envieu la ruta al canal de WhatsApp del CIDS perquè el Departament de Viatges pugui comparar-la amb les quatre propostes anteriors.</p>
+<br>🚨Avís: És un encàrrec extraordinari i no desbloqueja cap fragment addicional del document classificat, però la ruta pot ser incorporada parcialment o totalment si aquesta candidatura supera la validació final.`,mission:true,supplementary:true},
+/* 28 D’AGOST */
+42:{kind:"activity",icon:"🧳",title:"L’equipatge impossible",richHtml:`
+<p><b>DESCRIPCIÓ:</b> La destinació continua classificada. El CIDS vol comprovar si els agents són capaços de preparar-se sense saber exactament quin temps, terreny o situació trobaran.</p>
+<br><p><b>EL REPTE:</b> Cada agent haurà d'escollir cinc objectes imprescindibles. No podeu repetir objectes, no val respondre simplement «roba» o «tecnologia», i la documentació i la roba interior no compten. Un dels deu objectes haurà de ser deliberadament absurd, però l'haureu de defensar com si fos imprescindible.</p>
+<br><p><b>L’ACCIÓ:</b> Col·loqueu els deu objectes junts, feu-ne una fotografia i envieu-la al canal de WhatsApp del CIDS. Afegiu una frase breu explicant per què heu escollit cada objecte.</p>
+<p>Després de revisar la proposta, el CIDS podrà eliminar <b>un objecte de cada agent</b>. Els dos objectes vetats no es podran portar al viatge.</p>
+<br>🚨Avís: El CIDS revisarà la maleta de cada agent en arribar al destí. Si hi apareix un objecte eliminat, s'obrirà un expedient per desobediència logística.`,mission:true,supplementary:true},
+/* 30 D’AGOST */
+12:{kind:"activity",icon:"️🛞",title:"Generació de ruta", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    Seguint amb la vostra involucració, us proposem ...
-<br><p><b>EL REPTE:</b>  Feu una ruta de 6 dies pel tercer destí identificat a “destins compatibles” 
+<br><p><b>EL REPTE:</b>  Feu una ruta de 6 dies pel destí <b>///nansa.abraçat.cirerer</b> identificat a “destins compatibles” .
 <br><p><b>L’ACCIÓ:</b> Envieu la ruta pel canal de WhatsApp del CIDS perquè el Departament de Viatges ho validi</p><br>
 🚨Avís: Aquesta ruta ha de ser treballada seriosament, perquè serà parcial o totalment incorporada en cas que sigui el destí final..`,mission:true,puzzle:8},
+/* 31 D’AGOST */
+35:{kind:"activity",icon:"📶",title:"Alerta de navegació",alert:true,
+alertDepartment:"CIDS · DEPARTAMENT DE COMUNICACIONS",
+alertTitle:"Alerta de navegació · cobertura sota revisió",
+alertHtml:`
+<p>El Departament de Comunicacions del CIDS informa que un dels possibles teatres d’operacions podria presentar condicions especials de roaming o cobertura irregular en determinades zones.</p>
+<p>Els agents hauran de comprovar les condicions del seu operador i valorar la instal·lació prèvia d’una <b>eSIM de dades</b> per mantenir oberts els canals de comunicació, a no ser que portin un intercomunicador via satèl·lit.</p>
+<div class="health-alert-classified">La Central no acceptarà com a informe de situació la frase: «Jo em pensava que entrava a la tarifa».</div>`,
+richHtml:`
+<div class="intel-kicker">DEPARTAMENT DE COMUNICACIONS · COBERTURA SOTA REVISIÓ</div>
+<p>El Departament de Comunicacions del CIDS informa que un dels possibles teatres d’operacions podria presentar condicions especials de roaming o cobertura irregular en determinades zones.</p>
+<p>Els agents hauran de comprovar les condicions del seu operador i valorar la instal·lació prèvia d’una <b>eSIM de dades</b> per mantenir oberts els canals de comunicació.</p>
+<div class="flight-note"><b>PROTOCOL DE COMUNICACIONS</b><br><br>La Central no acceptarà com a informe de situació la frase: «Jo em pensava que entrava a la tarifa».</div>`},
+/* 02 DE SETEMBRE */
+16:{kind:"activity",icon:"🥩",title:"Abastiment de Queviures", richHtml:`
+<p><b>DESCRIPCIÓ:</b>    Un membre de l’equip amb gana és un membre vulnerable. 
+El CIDS vol comprovar si l’<em>Equip DiA</em> és capaç d’identificar connexions gastronòmiques entre els cinc destins possibles utilitzant únicament els recursos disponibles a casa.
+<br><p><b>EL REPTE:</b>  Heu de trobar per casa cinc productes alimentaris,  que puguin relacionar-se amb cadascun dels cinc destins possibles.
+<p>Els productes poden estar relacionats amb el destí pel seu origen, pels ingredients, per una recepta típica o per qualsevol associació gastronòmica que pugueu defensar amb un mínim de coherència.</p>
+<br><p><b>L’ACCIÓ:</b> Col·loqueu els cinc productes junts, feu un video curt indicant quin producte correspon a cada destí i expliqueu-ne breument la relació. Envieu-lo al canal de WhatsApp del CIDS.</p><br>
+🚨Avís: Una ampolla de vi <b>NO</b> és una resposta vàlida. El CIDS és conscient que permetre-la facilitaria excessivament la missió i podria provocar que els cinc destins quedessin representats per la mateixa prestatgeria.
+`,mission:true,puzzle:3},
+/* 03 DE SETEMBRE */
+46:{kind:"activity",icon:"🚨",title:"Alerta gastronòmica",alert:true,
+alertDepartment:"CIDS · DEPARTAMENT DE GASTRONOMIA",
+alertTitle:"Alerta gastronòmica · concentració enològica",
+alertHtml:`
+<p>El Departament de Gastronomia del CIDS informa que l'anàlisi dels cinc destins possibles ha revelat una coincidència rellevant:</p>
+<p><strong>En tots cinc existeixen opcions de visitar cellers, conèixer vins locals o participar en alguna cata.</strong></p>
+<p>Per tant, independentment de la destinació definitiva, la Central considera altament probable que l'<em>Equip DiA</em> acabi participant en més d'una activitat relacionada amb el vi.</p>
+<p>Sabem que l'<em>Equip DiA</em> no té cap problema en aquest sentit, tot el contrari.</p>
+<p>El CIDS recomana, però, tenir presents els horaris, els desplaçaments posteriors i la necessitat d'establir amb antelació qui assumirà la conducció.</p>
+<p>També es recorda que:</p>
+<ul>
+  <li>una cata no deixa de comptar perquè les copes siguin petites;</li>
+  <li>visitar un celler «només per veure'l» acostuma a tenir una evolució previsible;</li>
+  <li>i comprar una ampolla de cada lloc pot acabar convertint-se en un problema d'equipatge.</li>
+</ul>
+<div class="health-alert-classified">
+  La Central recomana moderació, criteri i una maleta amb una certa capacitat d'ampliació.
+</div>
+`,
+richHtml:`
+<div class="intel-kicker">DEPARTAMENT DE GASTRONOMIA · CONCENTRACIÓ ENOLÒGICA</div>
+<p>El Departament de Gastronomia del CIDS informa que l'anàlisi dels cinc destins possibles ha revelat una coincidència rellevant:</p>
+<p><b>En tots cinc existeixen opcions de visitar cellers, conèixer vins locals o participar en alguna cata.</b></p>
+<p>Per tant, independentment de la destinació definitiva, la Central considera altament probable que l'<em>Equip DiA</em> acabi participant en més d'una activitat relacionada amb el vi.</p>
+<p>Sabem que l'<em>Equip DiA</em> no té cap problema en aquest sentit, tot el contrari.</p>
+<p>El CIDS recomana, però, tenir presents els horaris, els desplaçaments posteriors i la necessitat d'establir amb antelació qui assumirà la conducció.</p>
+<p>També es recorda que:</p>
+<ul>
+  <li>una cata no deixa de comptar perquè les copes siguin petites;</li>
+  <li>visitar un celler «només per veure'l» acostuma a tenir una evolució previsible;</li>
+  <li>i comprar una ampolla de cada lloc pot acabar convertint-se en un problema d'equipatge.</li>
+</ul>
+<div class="flight-note">
+  <b>Destins amb oferta enològica:</b> cinc de cinc<br>
+  <b>Probabilitat de cata:</b> molt elevada<br>
+  <b>Nombre estimat de tastos:</b> sota revisió<br>
+  <b>Risc de compra d'ampolles:</b> considerable<br>
+  <b>Conductor designat:</b> encara per determinar
+</div>
+<div class="hint">🍷 La Central recomana moderació, criteri i una maleta amb una certa capacitat d'ampliació.</div>`},
+/* 04 DE SETEMBRE */
+9:{kind:"activity",icon:"🧪",title:"L’Elixir del Combat", richHtml:`
+<p><b>DESCRIPCIÓ:</b>    Els membres de l’<em>Equip DiA</em> han de ser immunes a qualsevol substància encoberta. El CIDS requereix un test de resistència immediat. 
+<br><p><b>EL REPTE:</b>  Adquiriu un dels contraverins oficials, feu un brindis d’alta traïció davant la càmera i destruïu la prova bevent-vos-el.
+<ul>
+  <li><div class="intel-kicker">CONTRAVERÍ 01</div>Un xarrup de limoncello tradicional de la Puglia 🍋</li>
+  <li><div class="intel-kicker">CONTRAVERÍ 02</div>Una poncha tradicional de Madeira 🍹</li>
+  <li><div class="intel-kicker">CONTRAVERÍ 03</div>Un glop de whisky escocès de malta 🥃</li>
+  <li><div class="intel-kicker">CONTRAVERÍ 04</div>Un vi negre de criança DO La Rioja 🍷</li>
+  <li><div class="intel-kicker">CONTRAVERÍ 05</div>Una copa de malvasia volcànica de Lanzarote 🥂</li>
+</ul>
 
+<br><p><b>L’ACCIÓ:</b> Adjunteu una prova gràfica del brindis mitjançant l’enllaç de comunicacions.`,mission:true,puzzle:5},
+/* 06 DE SETEMBRE */
+11:{kind:"activity",icon:"🗣️",title:"L’Idioma Encobert", richHtml:`
+<p><b>DESCRIPCIÓ:</b>    Els serveis d'intel·ligència han detectat que els canals de comunicació de l'<em>Operació 2209</em> estan sent hackejat. Per evitar que la Central sigui identificada, tots els agents han de demostrar que són capaços de modificar la seva manera de parlar i confondre els sistemes de reconeixement de veu.
+<br><p><b>EL REPTE:</b>  Enregistreu un video dient, cada un dels agent, la frase <em>"Salut i força al canut!"</em>  alternant els cinc accents de cada destí: 
+<ul>
+  <li><div class="intel-kicker">UN TOC DE <em>PASSIONE</em> PUGLIANA</li>
+  <li><div class="intel-kicker">UN PORTUGUÈS INSULAR DE MADEIRA</li>
+  <li><div class="intel-kicker">UN AUTÈNTIC HIGHLANDER ESCOCÈS</li>
+  <li><div class="intel-kicker">EL CAIRE DE TAVERNA DE LA RIOJA</li>
+  <li><div class="intel-kicker">UN ACCENT RELAXAT DE LANZAROTE</li>
+  </ul>
+
+
+<br><p><b>L’ACCIÓ:</b> Envieu el video canal de WhatsApp del CIDS. </p><br>
+🚨Avís: La Central valorarà especialment les interpretacions més creatives.`,mission:true,puzzle:7},
+/* 07 DE SETEMBRE */
+15:{kind:"activity",icon:"🎵",title:"Banda sonora operativa", richHtml:`
+<p><b>DESCRIPCIÓ:</b>    Tota operació necessita una banda sonora. El Departament de Comunicacions vol comprovar si l’<em>Equip DiA</em> comparteix criteri musical abans d’iniciar el viatge.
+<br><p><b>EL REPTE:</b>  Sense consultar-vos prèviament, cadascú ha d’escollir una cançó que consideri adequada per a l’<em>Operació 2209</em>.
+<br><p><b>L’ACCIÓ:</b> Envieu al canal de WhatsApp del CIDS el títol i l’artista de les dues cançons. </p><br>
+🚨Avís: No cal que les cançons tinguin cap relació amb la destinació. Qualsevol coincidència serà considerada una anomalia estadística.`,mission:true,puzzle:11},
+/* 08 DE SETEMBRE */
+36:{kind:"activity",icon:"📑",title:"Resolució operativa",richHtml:`
+<div class="intel-kicker">COMITÈ DE VALIDACIÓ DE RUTES</div>
+<p>El CIDS informa que ha finalitzat el procés d’anàlisi de totes les propostes de ruta elaborades i transmeses per l’<em>Equip DiA</em>.</p>
+<p>Cadascun dels itineraris rebuts ha estat examinat pels departaments de Viatges, Logística, Seguretat, Pressupostos i Operacions Especials. La valoració ha tingut en compte la viabilitat dels desplaçaments, l’interès dels punts proposats, l’equilibri general de cada ruta, els temps de trajecte i la capacitat dels agents per arribar al final de l’operació sense amotinar-se.</p>
+<p>Un cop contrastats tots els informes, el Comitè de Coordinació ha adoptat una <b>decisió sobre el destí definitiu de l’<em>Operació 2209</em></b>.</p><br>
+<p>La resolució ja ha estat comunicada a la Central de Viatges, que ha rebut l’ordre d’iniciar les gestions necessàries per assegurar els transports, l’allotjament, les activitats i la resta de recursos operatius.</p>
+<br><p><b>A partir d’aquest moment, el procés de selecció queda oficialment tancat</b>. </p>
+<p>Cap nova teoria, petició, pressió, promesa o intent de suborn podrà alterar la destinació escollida.</p>
+<div class="hint">🔒 <b>La identitat del destí continuarà classificada fins al moment establert en el protocol de desclassificació.</b></div>`},
+/* 10 DE SETEMBRE */
+43:{kind:"activity",icon:"🧾",title:"Reserves realitzades",richHtml:`
+<div class="intel-kicker">CENTRAL DE VIATGES · COMUNICACIÓ DE SITUACIÓ</div>
+<p>La Central de Viatges informa que ha executat les instruccions rebudes pel CIDS.</p>
+<p>La destinació ja està decidida i les reserves principals relacionades amb el desplaçament, l'allotjament, la mobilitat i l'organització general de l'operació ja han estat realitzades.</p>
+<p>La logística principal queda, per tant, confirmada. Alguns horaris o detalls menors encara es podran ajustar, però la decisió i les reserves no es modificaran.</p>
+<br><p>Les rutes preparades per l'<em>Equip DiA</em> han estat revisades. Algunes de les propostes presentades seran incorporades parcial o totalment al programa definitiu. La Central, però, es reserva el dret de modificar-les, combinar-les o ignorar-les quan consideri que els agents han mostrat un excés d’optimisme.</p>
+<div class="hint">🔒 <b>Destinació:</b> confirmada · <b>Reserves:</b> realitzades · <b>Identitat del destí:</b> classificada.</div>`},
+
+/* 12 DE SETEMBRE */
 13:{kind:"activity",icon:"🛰️",title:"Reconeixement aeri",richHtml:`
 <p><b>DESCRIPCIÓ:</b>  Un dels satèl·lits del CIDS ha capturat una imatge de la zona on podria trobar-se una futura base operativa. Els analistes han detectat una àrea d’interès, però encara no n’han pogut determinar la localització exacta.
 <br><p><b>EL REPTE:</b> Observeu atentament la fotografia de reconeixement i indiqueu què creieu que representa la imatge.
-<br><p><b>L’ACCIÓ:</b>  Envieu la vostra hipòtesi al canal de WhatsApp del CIDS.p><br>
+<br><p><b>L’ACCIÓ:</b>  Envieu la vostra hipòtesi argumentada, al canal de WhatsApp del CIDS.</p><br>
 🚨Avís: No cal encertar-la. La Central valorarà especialment la vostra capacitat d’observació i deducció.`,
 media:"missio-13-reconeixement.webp",
 mission:true,puzzle:9},
-
-
-
-14:{kind:"activity",icon:"🎵🛞",title:" Generació de ruta 04", richHtml:`
-<p><b>DESCRIPCIÓ:</b>    Seguint amb la vostra involucració, us proposem ...
-<br><p><b>EL REPTE:</b>  Feu una ruta de 6 dies pel quart destí identificat a “destins compatibles” 
-<br><p><b>L’ACCIÓ:</b> Envieu la ruta pel canal de WhatsApp del CIDS perquè el Departament de Viatges ho validi</p><br>
-🚨Avís: Aquesta ruta ha de ser treballada seriosament, perquè serà parcial o totalment incorporada en cas que sigui el destí final..`,mission:true,puzzle:10},
-
-
-15:{kind:"activity",icon:"🎵",title:"Banda sonora operativa", richHtml:`
-<p><b>DESCRIPCIÓ:</b>    Tota operació necessita una banda sonora. El Departament de Comunicacions vol comprovar si l’Equip DiA comparteix criteri musical abans d’iniciar el viatge.
-<br><p><b>EL REPTE:</b>  Sense consultar-vos prèviament, cadascú ha d’escollir una cançó que consideri adequada per a l’Operació 2209.
-<br><p><b>L’ACCIÓ:</b> Envieu al canal de WhatsApp del CIDS el títol i l’artista de les dues cançons. </p><br>
-🚨Avís: No cal que les cançons tinguin cap relació amb la destinació. Qualsevol coincidència serà considerada una anomalia estadística.`,mission:true,puzzle:11},
-
-
-
-
-16:{kind:"activity",icon:"🥩",title:"Abastiment de Queviures", richHtml:`
-<p><b>DESCRIPCIÓ:</b>    Un membre de l’equip amb gana és un membre vulnerable. L’operació d’avui requereix abastir-se d’energia utilitzant exclusivament queviures confiscats d’un dels quatre punts de vigilància. 
-<br><p><b>EL REPTE:</b>  Trieu el vostre menú de combat.
+/* 15 DE SETEMBRE */
+17:{kind:"activity",icon:"🎥",title:"Autorització per viatjar", richHtml:`
+<p><b>DESCRIPCIÓ:</b> La Central necessita una  prova audiovisual que confirmi que els dos membres de l’<em>Equip DiA</em> estan preparats per operar en qualsevol dels cinc escenaris que han estat sotmesos a estudi.
+<br><p><b>EL REPTE:</b> Enregistreu uun video de vosaltres pronunciant la declaració <b>«<em>L’Equip DiA està preparat</em>»</b> en els cinc idiomes vinculats a les destinacions candidates; cada un dels agents ha de pronunciar les cinc frases alternativament en:
 <ul>
-  <li><div class="intel-kicker">RACCIÓ A</div> Orecchiette alle cime di rapa</li>
-  <li><div class="intel-kicker">RACCIÓ B</div> Pochas con codornices</li>
-  <li><div class="intel-kicker">RACCIÓ C</div> Fish and chips</li>
-  <li><div class="intel-kicker">RACCIÓ D</div> Papas arrugás  </li>
+  <li><div class="intel-kicker">ESPANYOL</div></li>
+  <li><div class="intel-kicker">ANGLÈS</div></li>
+  <li><div class="intel-kicker">ITALIÀ</div></li>
+  <li><div class="intel-kicker">BASC</div></li>
+  <li><div class="intel-kicker">PORTUGUÈS</div></li>
   </ul>
-<br><p><b>L’ACCIÓ:</b> Fotografieu el subministrament abans que sigui consumit i eliminat pel vostre metabolisme.`,mission:true,puzzle:3},
+Després de les cinc declaracions , tots dos agents hauran de pronunciar alhora: "<b><em>Operació 2209: Equip DiA preparat</em></b>" .</p>
+<br><p><b>L’ACCIÓ:</b> Envieu el vídeo al canal de WhatsApp del CIDS sense talls, edicions ni veus artificals. 
 
-17:{kind:"activity",icon:"💼",title:"Suborn a la Central", richHtml:`
-<p><b>DESCRIPCIÓ:</b>    El canal de reserves està controlat per un alt càrrec de la Central —l’organitzador de la missió— que posseeix els codis necessaris per agrupar els seients. Les defenses digitals són impenetrables: només queda la negociació directa.
-<br><p><b>EL REPTE:</b>  Poseu-vos d’acord i formuleu un «suborn oficial» prou convincent perquè l’organitzador alliberi els seients conjunts.
-L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser convidar-lo a la primera ronda de cerveses o cafès, portar-li la maleta el primer dia, preparar el sopar una nit o qualsevol pacte de valor equivalent.
-<br><p><b>L’ACCIÓ:</b> Envieu el tractat al canal de WhatsApp, aprovat per tots els membres de l’Equip DiA. </p><br>
+🚨Avís: Una pronunciació dubtosa serà tolerada. Una rialla incontrolada, probablement també. La substitució dels agents per un traductor automàtic comportarà la invalidació immediata del jurament i la corresponent sanció.`,mission:true,puzzle:13},
 
-🚨Alerta: Si la Central considera insuficient l’oferta, el protocol es tancarà i l’equip viatjarà en zones separades. Negocieu bé.`,mission:true,puzzle:13},
-
-
-
-18:{kind:"activity",icon:"🎬",title:"Hipòtesi de l’Equip DiA", richHtml:`
+/* 16 DE SETEMBRE */
+45:{kind:"activity",icon:"🚨",title:"Alerta logística",alert:true,
+alertDepartment:"CIDS · CENTRAL DE VIATGES",
+alertTitle:"Alerta logística · operació de mercat",
+alertHtml:`
+<p>La Central de Viatges informa que el <strong>diumenge 27 de setembre</strong> una part de l'operació es desenvoluparà en un mercat al carrer.</p>
+<p>Durant la visita, l'<em>Equip DiA</em> disposarà de temps per observar, comparar i comprar productes locals, artesania o qualsevol altre objecte que sembli imprescindible en aquell moment.</p>
+<p>Es recomana portar una petita quantitat de diners en efectiu, una targeta operativa, una bossa lleugera o reutilitzable i espai suficient dins l'equipatge per transportar les possibles adquisicions.</p>
+<p>Els agents hauran de recordar que qualsevol objecte comprat haurà de tornar amb ells.</p>
+<div class="health-alert-classified">La Central no acceptarà reclamacions posteriors relacionades amb falta d'espai, compres impulsives o frases com «en aquell moment em va semblar una bona idea».</div>
+`,
+richHtml:`
+<div class="intel-kicker">CENTRAL DE VIATGES · OPERACIÓ DE MERCAT</div>
+<p>La Central de Viatges informa que el <b>diumenge 27 de setembre</b> una part de l'operació es desenvoluparà en un mercat al carrer.</p>
+<p>Durant la visita, l'<em>Equip DiA</em> disposarà de temps per observar, comparar i comprar productes locals, artesania o qualsevol altre objecte que sembli imprescindible en aquell moment.</p>
+<p>Es recomana portar una petita quantitat de diners en efectiu, una targeta operativa, una bossa lleugera o reutilitzable i espai suficient dins l'equipatge per transportar les possibles adquisicions.</p>
+<p>Els agents hauran de recordar que qualsevol objecte comprat haurà de tornar amb ells.</p>
+<div class="flight-note">La Central no acceptarà reclamacions posteriors relacionades amb falta d'espai, compres impulsives o frases com «<em>en aquell moment em va semblar una bona idea</em>».</div>
+`},
+/* 17 DE SETEMBRE */
+18:{kind:"activity",icon:"🎬",title:"Hipòtesi de l’<em>Equip DiA</em>", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    La investigació entra en una fase crítica. La Central necessita saber fins a quin punt heu interpretat correctament les pistes, els falsos indicis i les coordenades interceptades.
-<br><p><b>EL REPTE:</b>  Graveu un vídeo breu explicant on penseu que us porta l’Operació 2209. Podeu defensar una teoria conjunta o presentar dues hipòtesis diferents.
+<br><p><b>EL REPTE:</b>  Graveu un vídeo breu i raonat, explicant on penseu que <b>NO</b> us porta l’<em>Operació 2209</em>. Podeu defensar una teoria conjunta o presentar hipòtesis diferents.
 <br><p><b>L’ACCIÓ:</b> Envieu el vídeo al canal de WhatsApp del CIDS. </p><br>
-🚨Alerta: Una resposta correcta no accelerarà la revelació. Una resposta especialment absurda, però, pot quedar incorporada a l’arxiu oficial.`,mission:true,puzzle:14},
+🚨Alerta: Una resposta correcta no accelerarà la revelació. Una resposta especialment absurda, però, pot quedar incorporada al diari oficial del viatge.`,mission:true,puzzle:14},
+/* 18 DE SETEMBRE */
+44:{kind:"activity",icon:"✅",title:"Preparació final",richHtml:`
+<p><b>DESCRIPCIÓ:</b> L'<em>Operació 2209</em> entra en la fase final. La destinació està decidida i la revelació és imminent. El CIDS necessita comprovar que els agents saben preparar una sortida sense oblidar cap element important.</p>
+<br><p><b>EL REPTE:</b> Creeu conjuntament la vostra pròpia llista final de comprovacions. El CIDS no facilitarà categories ni exemples: haureu d'identificar tot allò que cal revisar, preparar o deixar resolt abans de sortir. Organitzeu la llista en tres moments: <b>48 hores abans</b>, <b>la nit anterior</b> i <b>just abans de marxar</b>.</p>
+<br><p><b>L’ACCIÓ:</b> Envieu una única llista conjunta al canal de WhatsApp del CIDS. Al final, cada agent haurà d'afegir una cosa que creu que l'altre podria oblidar i una mesura concreta per evitar-ho.</p>
+<br>🚨Avís: «<em>Tenir-ho tot preparat</em>» no es considera una comprovació concreta.`,mission:true,supplementary:true},
+/* 19 DE SETEMBRE */
+19:{kind:"activity",icon:"💼",title:"Suborn a la Central", richHtml:`
+<p><b>DESCRIPCIÓ:</b>    El canal de reserves està controlat per un alt càrrec de la Central —l’organitzador de la missió— que posseeix els codis necessaris per agrupar els seients. Les defenses digitals són impenetrables: només queda la negociació directa.
+<br><p><b>EL REPTE:</b>  Poseu-vos d’acord i formuleu un «suborn oficial» prou convincent perquè l’organitzador alliberi els seients conjunts, cas que el destí ho requereixi.
+L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser convidar-lo a la primera ronda de cerveses o cafès, portar-li la maleta el primer dia, preparar el sopar una nit o qualsevol pacte de valor equivalent.
+<br><p><b>L’ACCIÓ:</b> Envieu el tractat al canal de WhatsApp, aprovat per tots els membres de l’<em>Equip DiA</em>. </p><br>
 
-
-19:{kind:"activity",icon:"🎥",title:"Autorització per viatjar", richHtml:`
-<p><b>DESCRIPCIÓ:</b>    La Central necessita una última prova audiovisual que confirmi que l’Equip DiA continua acceptant voluntàriament el protocol de viatge secret.
-<br><p><b>EL REPTE:</b>  Graveu un vídeo de cinc segons, tots dos junts, mirant directament a càmera.
-<br><p><b>FRASE DE SEGURETAT: </b> «L’Equip DiA està preparat».
-<br><p><b>L’ACCIÓ:</b> Envieu el vídeo al canal de WhatsApp del CIDS. </p><br>
-🚨Avís: Riure, dubtar o mirar fora de càmera serà interpretat com un possible intent de deserció.`,mission:true,puzzle:15},
-
-
+🚨Alerta: Si la Central considera insuficient l’oferta, el protocol es tancarà i l’equip viatjarà en zones separades. <b>Negocieu bé</b>.`,mission:true,puzzle:15},
+/* 20 DE SETEMBRE */
 20:{kind:"activity",icon:"⌖",title:"Desclassificació final",dynamic:true},
-
-
-21:{kind:"activity",icon:"✈️",title:"Pla de viatge",richHtml:``},
-22:{kind:"trip",icon:"",title:"...",richHtml:``},
-23:{kind:"trip",icon:"",title:"...",text:``},
-24:{kind:"trip",icon:"",title:"...",text:``},
-25:{kind:"trip",icon:"",title:"...",text:``},
-26:{kind:"trip",icon:"️",title:"...",text:``},
-27:{kind:"trip",icon:"",title:"...",text:``},
-28:{kind:"trip",icon:"",title:"...",text:``},
-29:{kind:"trip",icon:"",title:"...",text:`Últimes hores a l’illa, recollida i trasllat a l’aeroport. El vol VY2471 surt a les 16.25 h.`},
+/* 21 DE SETEMBRE */
+21:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
+/* 22 DE SETEMBRE */
+22:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
+/* 23 DE SETEMBRE */
+23:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
+/* 24 DE SETEMBRE */
+24:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
+/* 25 DE SETEMBRE */
+25:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
+/* 26 DE SETEMBRE */
+26:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
+/* 27 DE SETEMBRE */
+27:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
+/* 28 DE SETEMBRE */
+28:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
+/* 29 DE SETEMBRE */
+29:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
+/* 30 DE SETEMBRE */
 30:{kind:"final",icon:"⭐",title:"Informe final",text:"L’Operació 2209 ha finalitzat. Trieu una única fotografia que resumeixi tot el viatge i envieu-la al grup del CIDS.",mission:true}
+
 };
 
-/* V60 · Presentació el 24 de juliol; continuació des del 16 d’agost */
+/* V75 · Presentació el 24 de juliol; continuació des de l’1 d’agost */
 const scheduleByDate={
   "2026-07-24":1,
-  "2026-08-16":2,
-  "2026-08-18":3,
-  "2026-08-20":4,
-  "2026-08-22":5,
-  "2026-08-24":6,
-  "2026-08-26":7,
-  "2026-08-28":8,
-  "2026-08-30":9,
-  "2026-09-01":10,
-  "2026-09-03":11,
-  "2026-09-05":12,
-  "2026-09-07":13,
-  "2026-09-09":14,
-  "2026-09-11":15,
-  "2026-09-13":16,
+  "2026-08-01":37,
+  "2026-08-02":2,
+  "2026-08-03":3,
+  "2026-08-05":4,
+  "2026-08-07":33,
+  "2026-08-09":5,
+  "2026-08-10":38,
+  "2026-08-12":6,
+  "2026-08-13":31,
+  "2026-08-14":47,
+  "2026-08-15":7,
+  "2026-08-16":34,
+  "2026-08-18":8,
+  "2026-08-19":39,
+  "2026-08-21":14,
+  "2026-08-22":40,
+  "2026-08-24":10,
+  "2026-08-25":41,
+  "2026-08-27":32,
+  "2026-08-28":42,
+  "2026-08-30":12,
+  "2026-08-31":35,
+  "2026-09-02":16,
+  "2026-09-03":46,
+  "2026-09-04":9,
+  "2026-09-06":11,
+  "2026-09-07":15,
+  "2026-09-08":36,
+  "2026-09-10":43,
+  "2026-09-12":13,
   "2026-09-15":17,
+  "2026-09-16":45,
   "2026-09-17":18,
+  "2026-09-18":44,
   "2026-09-19":19,
   "2026-09-20":20,
   "2026-09-21":21,
@@ -2123,14 +3505,26 @@ const cidsSeal=document.getElementById("cidsSeal");
 const simDate=document.getElementById("simDate");
 const simTime=document.getElementById("simTime");
 const todayBtn=document.getElementById("todayBtn");
+const progressAdminBtn=document.getElementById("progressAdminBtn");
 const completeAllBtn=document.getElementById("completeAllBtn");
 const resetOperationBtn=document.getElementById("resetOperationBtn");
 const TEST_MODE_KEY="cids2209_testMode";
 const SIM_DATE_KEY="cids2209_simDate";
 const SIM_TIME_KEY="cids2209_simTime";
 const modal=document.getElementById("modal");
-const modalMedia=document.getElementById("modalMedia"),missionActions=document.getElementById("missionActions"),sendWhatsApp=document.getElementById("sendWhatsApp"),missionConfirm=document.getElementById("missionConfirm"),missionSent=document.getElementById("missionSent"),missionPending=document.getElementById("missionPending"),missionReset=document.getElementById("missionReset");
-const puzzleDays=[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
+const modalMedia=document.getElementById("modalMedia"),
+missionActions=document.getElementById("missionActions"),
+sendWhatsApp=document.getElementById("sendWhatsApp"),
+separateMissionActions=document.getElementById("separateMissionActions"),
+sendWhatsAppA=document.getElementById("sendWhatsAppA"),
+sendWhatsAppD=document.getElementById("sendWhatsAppD"),
+missionConfirm=document.getElementById("missionConfirm"),
+missionConfirmQuestion=document.getElementById("missionConfirmQuestion"),
+missionSent=document.getElementById("missionSent"),
+missionPending=document.getElementById("missionPending"),
+missionReset=document.getElementById("missionReset");
+/* Les 16 missions principals, ordenades per data. */
+const puzzleDays=[4,5,6,7,8,14,10,12,16,9,11,15,13,17,18,19];
 /*
   CONFIGURACIÓ DEL PUZZLE
   -----------------------
@@ -2153,32 +3547,49 @@ const puzzlePieceByDay={
   6:14,
   7:8,
   8:1,
-  9:13,
-  10:9,
-  11:4,
-  12:16,
-  13:3,
   14:12,
-  15:10,
+  10:9,
+  12:16,
   16:11,
-  17:6,   // FIX
-  18:5,   // FIX
-  19:15   // FIX QR
+  9:13,
+  11:4,
+  15:10,
+  13:3,
+  17:6,
+  18:5,
+  19:15
 };
 let currentMissionId=null;
 let currentMissionDate=null;
+/* Progrés inicial incorporat a la versió publicada.
+   L'admin pot generar un nou HTML substituint aquesta llista. */
+const DEFAULT_COMPLETED_MISSIONS=[];
+
 function completedMissions(){
-  try{return JSON.parse(localStorage.getItem("cids2209_missions")||"[]").map(Number).filter(Number.isFinite)}
-  catch{return []}
+  try{
+    const stored=localStorage.getItem("cids2209_missions");
+    const source=stored===null?DEFAULT_COMPLETED_MISSIONS:JSON.parse(stored);
+    return [...new Set((Array.isArray(source)?source:[]).map(Number).filter(Number.isFinite))];
+  }catch{
+    return [...DEFAULT_COMPLETED_MISSIONS];
+  }
 }
-function saveCompleted(list){localStorage.setItem("cids2209_missions",JSON.stringify([...new Set(list.map(Number))]));renderPuzzle()}
+function saveCompleted(list){
+  localStorage.setItem("cids2209_missions",JSON.stringify([...new Set(list.map(Number))]));
+  renderPuzzle();
+}
 function isCompleted(activityId){return activityId!=null&&completedMissions().includes(Number(activityId))}
-function missionMessage(activityId,dateKey){
+function missionMessage(activityId,dateKey,agent=null){
+  const info=activities[activityId];
+  const responseLabel=agent
+    ?(info?.agentMessageLabels?.[agent]||`RESPOSTA DE L’AGENT ${agent}:`)
+    :"Resposta de l’Equip DiA:";
+  if(info?.supplementary)return `CIDS · OPERACIÓ 2209 · ENCÀRREC EXTRAORDINARI · ${dateLabel(dateKey,{uppercase:true})}\n\n${responseLabel}\n`;
   if(puzzleDays.includes(activityId)){
     const missionNumber=puzzleDays.indexOf(activityId)+1;
-    return `CIDS · OPERACIÓ 2209 · MISSIÓ ${pad2(missionNumber)} · ${dateLabel(dateKey,{uppercase:true})}\n\nResposta de l’Equip DiA:\n`;
+    return `CIDS · OPERACIÓ 2209 · MISSIÓ ${pad2(missionNumber)} · ${dateLabel(dateKey,{uppercase:true})}\n\n${responseLabel}\n`;
   }
-  return `CIDS · OPERACIÓ 2209 · ${dateLabel(dateKey,{uppercase:true})}\n\nResposta de l’Equip DiA:\n`;
+  return `CIDS · OPERACIÓ 2209 · ${dateLabel(dateKey,{uppercase:true})}\n\n${responseLabel}\n`;
 }
 function resolvedActivity(dateKey,data){
   if(dateKey!=="2026-09-20"||!data.dynamic)return data;
@@ -2186,9 +3597,175 @@ function resolvedActivity(dateKey,data){
   const phase1=new Date("2026-09-20T15:00:00");
   const phase2=new Date("2026-09-20T16:00:00");
   if(now<phase1){return {...data,title:"Comunicació programada",richHtml:`<div class="phase-wait"><b>DOCUMENT ENCARA CLASSIFICAT</b><br><br>La desclassificació començarà el <b>20 de setembre a les 15.00 h</b>.</div>`};}
-  if(now<phase2){return {...data,title:"Coordenades desclassificades",richHtml:`<p>El CIDS ha autoritzat la publicació de les coordenades del centre d’operacions.</p><div class="coords-box"><div class="coords-label">COORDENADES CONFIDENCIALS</div><div class="coords-value">///terrasses.minúcies.emplenat</div></div><p>Disposeu d’una hora per interpretar aquesta informació. La comunicació definitiva es publicarà a les <b>16.00 h</b>.</p>`};}
+  if(now<phase2){return {...data,title:"Coordenades desclassificades",hangman:true,richHtml:`
+<p>El CIDS ha autoritzat la desclassificació progressiva de les coordenades del centre d’operacions.</p>
+<p>Recupereu les tres paraules mitjançant el protocol del penjat. Teniu un marge màxim de 5 errades.</p>
+<div class="hangman-wrap" id="hangmanGame">
+  <div class="hangman-head">
+    <b>PROTOCOL DE DESXIFRAT · WHAT3WORDS</b>
+    <span class="hangman-errors" id="hangmanErrors">Errors: 0 de 8</span>
+  </div>
+  <div class="hangman-main">
+    <svg class="hangman-drawing" viewBox="0 0 130 150" aria-label="Dibuix del penjat">
+      <line data-stage="1" x1="15" y1="140" x2="115" y2="140"/>
+      <line data-stage="1" x1="35" y1="140" x2="35" y2="15"/>
+      <line data-stage="1" x1="35" y1="15" x2="95" y2="15"/>
+      <line data-stage="1" x1="95" y1="15" x2="95" y2="35"/>
+      <circle data-stage="2" cx="95" cy="49" r="14"/>
+      <line data-stage="3" x1="95" y1="63" x2="95" y2="102"/>
+      <line data-stage="4" x1="95" y1="76" x2="75" y2="91"/>
+      <line data-stage="4" x1="95" y1="76" x2="115" y2="91"/>
+      <line data-stage="5" x1="95" y1="102" x2="78" y2="127"/>
+      <line data-stage="5" x1="95" y1="102" x2="112" y2="127"/>
+    </svg>
+    <div>
+      <div class="hangman-prefix">///</div>
+      <div class="hangman-words" id="hangmanWords"></div>
+      <div class="hangman-keyboard" id="hangmanKeyboard"></div>
+    </div>
+  </div>
+  <div class="hangman-message" id="hangmanMessage">Seleccioneu una lletra per iniciar el desxifrat.</div>
+  <div class="hangman-result" id="hangmanResult">
+    <div class="coords-label">COORDENADES RECUPERADES</div>
+    <div class="coords-value">
+	///saputo.lupi.vorrà
+	</div>
+	
+    <div>La comunicació definitiva es publicarà a les <b>16.00 h</b>.</div>
+  </div>
+  
+</div>`};}
   return {...data,title:"Destí desclassificat",richHtml:`<div class="intel-kicker" style="text-align:center">OPERACIÓ 2209 · DESTÍ CONFIRMAT</div><div class="reveal-title">LANZAROTE</div><img class="reveal-photo" src="https://turismolanzarote.com/wp-content/uploads/2021/09/Masdache_%C2%A9-Turismo-Lanzarote-1.jpg" alt="Paisatge de Lanzarote"><p style="text-align:center"></p><div class="coords-box"><a class="cids-link" href="https://www.google.com/maps?q=28.93591959649845,-13.61797219098307" target="_blank" rel="noopener">📍 Veure ubicació de l’allotjament a Google Maps</a></div>`};
 }
+
+const HANGMAN_TARGET=["saputo","lupi","vorrà"];
+const HANGMAN_STORAGE_KEY="cids2209_hangman_2009";
+const HANGMAN_MAX_ERRORS=5;
+
+function normalizeHangmanLetter(value){
+  return String(value||"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase();
+}
+
+function loadHangmanState(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(HANGMAN_STORAGE_KEY)||"{}");
+    return {
+      guessed:Array.isArray(parsed.guessed)?parsed.guessed.filter(x=>/^[a-z]$/.test(x)):[],
+      failed:Boolean(parsed.failed)
+    };
+  }catch{
+    return {guessed:[],failed:false};
+  }
+}
+
+function saveHangmanState(state){
+  localStorage.setItem(HANGMAN_STORAGE_KEY,JSON.stringify({
+    guessed:[...new Set(state.guessed)],
+    failed:Boolean(state.failed)
+  }));
+}
+
+function initHangmanGame(){
+  const root=document.getElementById("hangmanGame");
+  if(!root)return;
+
+  const wordsEl=document.getElementById("hangmanWords");
+  const keyboardEl=document.getElementById("hangmanKeyboard");
+  const errorsEl=document.getElementById("hangmanErrors");
+  const messageEl=document.getElementById("hangmanMessage");
+  const resultEl=document.getElementById("hangmanResult");
+  const alphabet="abcdefghijklmnopqrstuvwxyz".split("");
+  let state=loadHangmanState();
+
+  const targetLetters=[...new Set(
+    HANGMAN_TARGET.join("").split("").map(normalizeHangmanLetter)
+  )];
+
+  function wrongLetters(){
+    return state.guessed.filter(letter=>!targetLetters.includes(letter));
+  }
+
+  function solved(){
+    return targetLetters.every(letter=>state.guessed.includes(letter));
+  }
+
+  function renderWords(){
+    wordsEl.replaceChildren();
+    HANGMAN_TARGET.forEach(word=>{
+      const wordEl=document.createElement("span");
+      wordEl.className="hangman-word";
+      [...word].forEach(char=>{
+        const letter=document.createElement("span");
+        letter.className="hangman-letter";
+        const normalized=normalizeHangmanLetter(char);
+        letter.textContent=state.guessed.includes(normalized)?char:"";
+        wordEl.appendChild(letter);
+      });
+      wordsEl.appendChild(wordEl);
+    });
+  }
+
+  function renderDrawing(errors){
+    root.querySelectorAll("[data-stage]").forEach(part=>{
+      const stage=Number(part.dataset.stage);
+      part.classList.toggle("visible",stage<=errors);
+    });
+  }
+
+  function renderKeyboard(isSolved,isFailed){
+    keyboardEl.replaceChildren();
+    alphabet.forEach(letter=>{
+      const button=document.createElement("button");
+      button.type="button";
+      button.className="hangman-key";
+      button.textContent=letter.toUpperCase();
+      const used=state.guessed.includes(letter);
+      if(used){
+        button.classList.add(targetLetters.includes(letter)?"correct":"wrong");
+      }
+      button.disabled=used||isSolved||isFailed;
+      button.addEventListener("click",()=>{
+        if(!state.guessed.includes(letter)){
+          state.guessed.push(letter);
+          if(wrongLetters().length>=HANGMAN_MAX_ERRORS)state.failed=true;
+          saveHangmanState(state);
+          render();
+        }
+      });
+      keyboardEl.appendChild(button);
+    });
+  }
+
+  function render(){
+    const errors=wrongLetters().length;
+    const isSolved=solved();
+    const isFailed=state.failed||errors>=HANGMAN_MAX_ERRORS;
+
+    renderWords();
+    renderDrawing(errors);
+    renderKeyboard(isSolved,isFailed);
+    errorsEl.textContent=`Errors: ${Math.min(errors,HANGMAN_MAX_ERRORS)} de ${HANGMAN_MAX_ERRORS}`;
+    resultEl.classList.toggle("show",isSolved);
+
+    if(isSolved){
+      messageEl.innerHTML="<b>PROTOCOL COMPLETAT.</b> Les coordenades han estat recuperades.";
+    }else if(isFailed){
+      messageEl.innerHTML="<b>PROTOCOL BLOQUEJAT.</b> El nombre màxim d’errors ha estat superat. Les coordenades romandran classificades fins a les 16.00 h.";
+    }else if(errors===0&&state.guessed.length===0){
+      messageEl.textContent="Seleccioneu una lletra per iniciar el desxifrat.";
+    }else{
+      const remaining=HANGMAN_MAX_ERRORS-errors;
+      messageEl.textContent=`Continueu el desxifrat. Queden ${remaining} errors disponibles.`;
+    }
+  }
+
+  render();
+}
+
+
 function openMissionModal(activityId,dateKey,data){
   currentMissionId=activityId;
   currentMissionDate=dateKey;
@@ -2205,13 +3782,20 @@ function openMissionModal(activityId,dateKey,data){
   missionConfirm.hidden=true;
   if(data.mission){
     const done=isCompleted(activityId);
-    sendWhatsApp.hidden=done;
+    const separate=Boolean(data.separateReplies);
+    sendWhatsApp.hidden=done||separate;
+    separateMissionActions.hidden=done||!separate;
+    missionConfirmQuestion.textContent=separate
+      ?"Heu enviat les dues respostes per separat?"
+      :"Has enviat la resposta al grup?";
     missionReset.hidden=!done;
-    missionReset.textContent=done?"✓ Missió registrada · marcar com a pendent":"Marcar la missió com a pendent";
+    missionReset.textContent=done
+      ?(data.supplementary?"✓ Encàrrec registrat · marcar com a pendent":"✓ Missió registrada · marcar com a pendent")
+      :"Marcar la tasca com a pendent";
   }
 }
-async function copyMissionText(activityId,dateKey){
-  const text=missionMessage(activityId,dateKey);
+async function copyMissionText(activityId,dateKey,agent=null){
+  const text=missionMessage(activityId,dateKey,agent);
   try{await navigator.clipboard.writeText(text)}
   catch{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}
   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank");
@@ -2231,17 +3815,31 @@ function renderCompletedDays(){
   });
 }
 sendWhatsApp.addEventListener("click",()=>copyMissionText(currentMissionId,currentMissionDate));
+sendWhatsAppA.addEventListener("click",()=>copyMissionText(currentMissionId,currentMissionDate,"A"));
+sendWhatsAppD.addEventListener("click",()=>copyMissionText(currentMissionId,currentMissionDate,"D"));
 missionSent.addEventListener("click",()=>{
   const activityId=currentMissionId,list=completedMissions();
   if(activityId!=null&&!list.includes(activityId))list.push(activityId);
   saveCompleted(list);renderCompletedDays();
-  missionConfirm.hidden=true;sendWhatsApp.hidden=true;missionReset.hidden=false;missionReset.textContent="✓ Missió registrada · marcar com a pendent";
+  const info=activities[activityId];
+  missionConfirm.hidden=true;
+  sendWhatsApp.hidden=true;
+  separateMissionActions.hidden=true;
+  missionReset.hidden=false;
+  missionReset.textContent=info?.supplementary
+    ?"✓ Encàrrec registrat · marcar com a pendent"
+    :"✓ Missió registrada · marcar com a pendent";
   closeMainModal();showMissionResult(activityId);
 });
 missionPending.addEventListener("click",()=>missionConfirm.hidden=true);
 missionReset.addEventListener("click",()=>{
   saveCompleted(completedMissions().filter(id=>id!==currentMissionId));
-  renderCompletedDays();sendWhatsApp.hidden=false;missionReset.hidden=true;
+  renderCompletedDays();
+  const info=activities[currentMissionId];
+  const separate=Boolean(info?.separateReplies);
+  sendWhatsApp.hidden=separate;
+  separateMissionActions.hidden=!separate;
+  missionReset.hidden=true;
 });
 function renderPuzzle(){
   const grid=document.getElementById("puzzleGrid");
@@ -2266,14 +3864,40 @@ function renderPuzzle(){
     if(reveal)count++;
   }
   document.getElementById("puzzleCount").textContent=count;
+
+  const total=puzzleDays.length;
+  const percentage=total ? Math.min(100,(count/total)*100) : 0;
+
+  const progressTargets=[
+    {
+      text:document.getElementById("desktopMissionProgressText"),
+      fill:document.getElementById("desktopMissionProgressFill")
+    },
+    {
+      text:document.getElementById("mobileMissionProgressText"),
+      fill:document.getElementById("mobileMissionProgressFill")
+    }
+  ];
+
+  progressTargets.forEach(({text,fill})=>{
+    if(text)text.textContent=`${count} de ${total}`;
+    if(fill){
+      fill.style.width=`${percentage}%`;
+      fill.setAttribute("aria-valuenow",String(count));
+      fill.setAttribute("aria-valuemin","0");
+      fill.setAttribute("aria-valuemax",String(total));
+    }
+  });
 }
 renderPuzzle();
 
 function semanticType(dateKey,info){
   if(!info)return "empty";
+  if(info.alert)return "alert";
   if(info.kind==="final")return "closing";
   if(info.kind==="trip")return "itinerary";
   if(dateKey==="2026-09-20")return "revelation";
+  if(info.supplementary)return "assignment";
   return info.mission?"mission":"report";
 }
 function visibleTypeLabel(dateKey,info){
@@ -2281,6 +3905,8 @@ function visibleTypeLabel(dateKey,info){
   if(info.kind==="trip")return "ITINERARI";
   if(info.kind==="final")return "TANCAMENT";
   if(dateKey==="2026-09-20")return "REVELACIÓ";
+  if(info.alert)return "ALERTA";
+  if(info.supplementary)return "ENCÀRREC";
   return info.mission?"MISSIÓ":"INFORME";
 }
 function modalTypeLabel(dateKey,info){
@@ -2289,6 +3915,8 @@ function modalTypeLabel(dateKey,info){
   if(info.kind==="final")return `${label} · TANCAMENT`;
   if(info.kind==="empty")return `${label} · SENSE INFORME`;
   if(dateKey==="2026-09-20")return `${label} · REVELACIÓ`;
+  if(info.alert)return `${label} · ${info.title.toUpperCase()}`;
+  if(info.supplementary)return `${label} · ENCÀRREC EXTRAORDINARI`;
   return `${label} · ${info.mission?"MISSIÓ":"INFORME"}`;
 }
 function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
@@ -2326,7 +3954,7 @@ function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
 
     const front=document.createElement("div");
     front.className="front";
-    front.innerHTML=`<span class="number">${day}</span><span class="type">${visibleTypeLabel(dateKey,info)}</span><span class="lock">⌁</span>`;
+    front.innerHTML=`${info?.alert?'<span class="alert-siren" aria-hidden="true"><span class="siren-light"></span><span class="siren-base"></span><i class="ray ray-left"></i><i class="ray ray-top"></i><i class="ray ray-right"></i></span>':''}<span class="number">${day}</span><span class="type">${visibleTypeLabel(dateKey,info)}</span><span class="lock">⌁</span>`;
     button.append(back,front);cell.appendChild(button);calendarEl.appendChild(cell);
 
     let clickTimer=null;
@@ -2334,10 +3962,15 @@ function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
       if(button.disabled)return;
       clearTimeout(clickTimer);
       cell.classList.add("open");
+      if(info?.alert){
+        openPriorityAlertByDate(dateKey);
+        return;
+      }
       const base=info||{kind:"empty",title:`${dateLabel(dateKey)} · Sense novetats`,text:"Aquesta data no té cap informe ni missió prevista. El CIDS continua treballant."};
       const data=resolvedActivity(dateKey,base);
       const modalBox=modal.querySelector(".modal-box");
-      modalBox.classList.toggle("is-mission",Boolean(data.mission));
+      modalBox.classList.toggle("is-assignment",Boolean(data.supplementary));
+      modalBox.classList.toggle("is-mission",Boolean(data.mission&&!data.supplementary));
       modalBox.classList.toggle("is-report",data.kind==="activity"&&!data.mission&&dateKey!=="2026-09-20");
       modalBox.classList.toggle("is-trip",data.kind==="trip"||dateKey==="2026-09-20");
       modalBox.classList.toggle("is-final",data.kind==="final");
@@ -2346,6 +3979,7 @@ function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
       const modalText=document.getElementById("modalText");
       modalText.classList.toggle("modal-text-rich",Boolean(data.richHtml));
       if(data.richHtml)modalText.innerHTML=data.richHtml;else modalText.textContent=data.text||"";
+      if(data.hangman)initHangmanGame();
       openMissionModal(activityId,dateKey,data);
       modal.classList.add("show");
       document.body.classList.add("modal-open");
@@ -2361,7 +3995,7 @@ function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
   }
 }
 renderMonth(calendarJuly,2026,6,[24]);
-renderMonth(calendarAugust,2026,7,Array.from({length:16},(_,index)=>index+16));
+renderMonth(calendarAugust,2026,7);
 renderMonth(calendarSeptember,2026,8);
 renderCompletedDays();
 
@@ -2371,14 +4005,58 @@ function selectedNow(){
   }
   return new Date();
 }
+const priorityAlerts=Object.entries(scheduleByDate)
+  .map(([date,activityId])=>({date,activityId,...activities[activityId]}))
+  .filter(item=>item.alert)
+  .sort((a,b)=>a.date.localeCompare(b.date));
+
+const healthAlertModal=document.getElementById("healthAlertModal");
+const healthAlertAck=document.getElementById("healthAlertAck");
+const priorityAlertDepartment=document.getElementById("priorityAlertDepartment");
+const priorityAlertTitle=document.getElementById("healthAlertTitle");
+const priorityAlertText=document.getElementById("healthAlertText");
+const priorityAlertSignal=document.getElementById("priorityAlertSignal");
+let currentPriorityAlertId=null;
+
+function priorityAlertForDate(dateKey){
+  return priorityAlerts.find(alert=>alert.date===dateKey)||null;
+}
+function fillPriorityAlert(alert){
+  if(!alert)return;
+  currentPriorityAlertId=alert.activityId;
+  priorityAlertSignal.textContent=alert.alertSignal||"TRANSMISSIÓ PRIORITÀRIA";
+  priorityAlertDepartment.textContent=alert.alertDepartment||"CIDS · TRANSMISSIÓ PRIORITÀRIA";
+  priorityAlertTitle.textContent=alert.alertTitle||alert.title;
+  priorityAlertText.innerHTML=alert.alertHtml||alert.richHtml||"";
+}
+function openPriorityAlert(alert){
+  if(!healthAlertModal||!alert)return;
+  fillPriorityAlert(alert);
+  healthAlertModal.classList.remove("show");
+  void healthAlertModal.offsetWidth;
+  healthAlertModal.classList.add("show");
+  document.body.classList.add("modal-open");
+  window.setTimeout(()=>healthAlertAck?.focus(),140);
+}
+function openPriorityAlertByDate(dateKey){
+  openPriorityAlert(priorityAlertForDate(dateKey));
+}
+function closePriorityAlert(){
+  if(!healthAlertModal)return;
+  healthAlertModal.classList.remove("show");
+  const mainOpen=modal?.classList.contains("show");
+  const helpOpen=document.getElementById("helpModal")?.classList.contains("show");
+  if(!mainOpen&&!helpOpen)document.body.classList.remove("modal-open");
+}
+healthAlertAck?.addEventListener("click",closePriorityAlert);
 function updateCalendarAccess(){
   const now=selectedNow();
   document.querySelectorAll(".day").forEach(cell=>{
     const dateKey=cell.dataset.date;
     let available;
-    if(dateKey>="2026-09-22"&&dateKey<="2026-09-29"){
-      // En arribar el dia 22, tots els itineraris del viatge queden disponibles.
-      available=now>=new Date("2026-09-22T00:00:00");
+    if(dateKey>="2026-09-21"&&dateKey<="2026-09-29"){
+      // Quan el destí queda desclassificat, s’obren les caselles finals.
+      available=now>=new Date("2026-09-20T16:00:00");
     }else if(dateKey==="2026-09-30"){
       // L’informe final només queda disponible després del retorn.
       available=now>=returnDate;
@@ -2387,8 +4065,10 @@ function updateCalendarAccess(){
       available=now>=dateFromKey(dateKey);
     }
     cell.classList.toggle("locked",!available);
-    cell.classList.toggle("test-enabled",testMode.checked);
-    cell.querySelector("button").disabled=!testMode.checked&&!available;
+    // En mode prova, la data simulada governa l’accés igual que una data real.
+    // La classe visual només s’aplica a les caselles que ja són disponibles.
+    cell.classList.toggle("test-enabled",testMode.checked&&available);
+    cell.querySelector("button").disabled=!available;
   });
 }
 function updateCounter(){
@@ -2412,7 +4092,7 @@ function updateCounter(){
     minutes=Math.max(0,Math.floor(diff/60000)%60);
     seconds=Math.max(0,Math.floor(diff/1000)%60);
     label=`OPERACIÓ EN CURS · DIA ${elapsedDay}`;
-    sub=`Dia ${elapsedDay} de la missió · temps restant fins al retorn.`;
+    sub=`Dia ${elapsedDay} de l’operació · temps restant fins al retorn.`;
   }else{
     label="OPERACIÓ FINALITZADA";
     sub="Missió completada. El dia 30 us espera l’informe final.";
@@ -2457,6 +4137,148 @@ cidsSeal.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preve
 simDate.addEventListener("change",saveSimulation);
 simTime.addEventListener("change",saveSimulation);
 todayBtn.addEventListener("click",()=>{simDate.value="";simTime.value="12:00";saveSimulation();showSystemMessage("DATA REAL ACTIVADA","El calendari utilitza ara la data i l’hora actuals.");});
+
+const progressAdminModal=document.getElementById("progressAdminModal");
+const progressAdminClose=document.getElementById("progressAdminClose");
+const progressAdminList=document.getElementById("progressAdminList");
+const progressAdminCount=document.getElementById("progressAdminCount");
+const progressSelectAll=document.getElementById("progressSelectAll");
+const progressClearAll=document.getElementById("progressClearAll");
+const progressExportHtml=document.getElementById("progressExportHtml");
+
+function progressManagedActivities(){
+  const dateByActivity={};
+  Object.entries(scheduleByDate).forEach(([dateKey,activityId])=>{
+    dateByActivity[Number(activityId)]=dateKey;
+  });
+
+  return Object.entries(activities)
+    .map(([id,info])=>({
+      id:Number(id),
+      info,
+      dateKey:dateByActivity[Number(id)]||""
+    }))
+    .filter(item=>item.info?.mission)
+    .sort((a,b)=>(a.dateKey||"9999").localeCompare(b.dateKey||"9999"));
+}
+
+function refreshProgressAdmin(){
+  if(!progressAdminList)return;
+  const completed=new Set(completedMissions());
+  const managed=progressManagedActivities();
+  const fragment=document.createDocumentFragment();
+
+  managed.forEach(({id,info,dateKey})=>{
+    const label=document.createElement("label");
+    label.className=`progress-admin-item${completed.has(id)?" is-completed":""}`;
+
+    const checkbox=document.createElement("input");
+    checkbox.type="checkbox";
+    checkbox.checked=completed.has(id);
+    checkbox.dataset.activityId=String(id);
+
+    const copy=document.createElement("span");
+    copy.className="progress-admin-copy";
+    const title=document.createElement("b");
+    title.textContent=info.title||`Activitat ${id}`;
+    const meta=document.createElement("span");
+    meta.textContent=dateKey?dateLabel(dateKey):"Data no assignada";
+    copy.append(title,meta);
+
+    const type=document.createElement("span");
+    type.className=`progress-admin-type${info.supplementary?" assignment":""}`;
+    type.textContent=info.supplementary?"ENCÀRREC":"MISSIÓ";
+
+    checkbox.addEventListener("change",()=>{
+      const current=new Set(completedMissions());
+      if(checkbox.checked)current.add(id);
+      else current.delete(id);
+      saveCompleted([...current]);
+      renderCompletedDays();
+      refreshProgressAdmin();
+    });
+
+    label.append(checkbox,copy,type);
+    fragment.appendChild(label);
+  });
+
+  progressAdminList.replaceChildren(fragment);
+  progressAdminCount.textContent=`${managed.filter(item=>completed.has(item.id)).length} de ${managed.length}`;
+}
+
+function openProgressAdmin(){
+  refreshProgressAdmin();
+  progressAdminModal.classList.add("show");
+  document.body.classList.add("modal-open");
+}
+
+function closeProgressAdmin(){
+  progressAdminModal.classList.remove("show");
+  document.body.classList.remove("modal-open");
+}
+
+function applyManagedProgress(ids){
+  const managedIds=new Set(progressManagedActivities().map(item=>item.id));
+  const preserved=completedMissions().filter(id=>!managedIds.has(id));
+  saveCompleted([...preserved,...ids]);
+  renderCompletedDays();
+  refreshProgressAdmin();
+}
+
+function exportPublishableHtml(){
+  const selected=completedMissions();
+  const clone=document.documentElement.cloneNode(true);
+
+  clone.querySelectorAll(".show").forEach(el=>el.classList.remove("show"));
+  clone.querySelectorAll(".day.open").forEach(el=>el.classList.remove("open"));
+  clone.querySelector("body")?.classList.remove("modal-open","test-mode");
+
+  const cloneTestbar=clone.querySelector("#testbar");
+  if(cloneTestbar)cloneTestbar.hidden=true;
+
+  let source="<!doctype html>\n"+clone.outerHTML;
+  const replacement=`const DEFAULT_COMPLETED_MISSIONS=${JSON.stringify(selected)};`;
+
+  if(!/const DEFAULT_COMPLETED_MISSIONS=\[[^\]]*\];/.test(source)){
+    showSystemMessage("NO S’HA POGUT GENERAR","No s’ha localitzat la configuració del progrés inicial.");
+    return;
+  }
+
+  source=source.replace(/const DEFAULT_COMPLETED_MISSIONS=\[[^\]]*\];/,replacement);
+
+  const blob=new Blob([source],{type:"text/html;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;
+  link.download="operacio-2209-progres-publicat.html";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+
+  showSystemMessage(
+    "HTML PUBLICABLE GENERAT",
+    `La nova còpia incorpora ${selected.length} activitats completades com a estat inicial.`
+  );
+}
+
+progressAdminBtn?.addEventListener("click",openProgressAdmin);
+progressAdminClose?.addEventListener("click",closeProgressAdmin);
+progressAdminModal?.addEventListener("click",event=>{
+  if(event.target===progressAdminModal)closeProgressAdmin();
+});
+progressSelectAll?.addEventListener("click",()=>{
+  applyManagedProgress(progressManagedActivities().map(item=>item.id));
+});
+progressClearAll?.addEventListener("click",()=>{
+  applyManagedProgress([]);
+});
+progressExportHtml?.addEventListener("click",exportPublishableHtml);
+document.addEventListener("keydown",event=>{
+  if(event.key==="Escape"&&progressAdminModal?.classList.contains("show"))closeProgressAdmin();
+});
+
+
 completeAllBtn.addEventListener("click",()=>{
   if(!confirm("Vols marcar totes les missions com a completades i revelar el puzzle?"))return;
   saveCompleted(Object.keys(activities).map(Number).filter(activityId=>activities[activityId]?.mission));
@@ -2493,10 +4315,10 @@ setInterval(()=>{if(!testMode.checked||!simDate.value)updateCounter()},1000);
     <h3 id="helpTitle">Com funciona el calendari?</h3>
     <p><strong>Un toc</strong> obre o tanca la casella del dia.</p>
     <p><strong>Doble toc</strong> mostra tot el contingut de l’informe, la missió o l’itinerari.</p>
-    <p>Des del 24 de juliol fins al 21 de setembre, cada casella s’activa en arribar la seva data. Després de la presentació inicial, la següent comunicació arribarà el 16 d’agost.</p>
-    <p>Les missions de preparació inclouen un botó per copiar el missatge i obrir WhatsApp. Després de confirmar «Sí, missió enviada», la tasca queda registrada. Cada missió completada desbloqueja una nova peça del puzzle, visible sota el calendari.</p>
+    <p>Des del 24 de juliol fins al 20 de setembre, cada casella s’activa en arribar la seva data. Després de la presentació inicial, la següent comunicació arribarà l’1 d’agost.</p>
+    <p>Les missions i els encàrrecs inclouen botons per copiar el missatge i obrir WhatsApp. Quan la resposta ha de ser individual, apareix un botó per a cada agent. Després de confirmar «Sí, missió enviada», la tasca queda registrada. Cada missió completada desbloqueja una nova peça del puzzle, visible sota el calendari.</p>
     <p>El <strong>20 de setembre</strong>, consta de dues fases, una a les 15h i una altra a les 16h. </p>
-	<p>En aquest moment, també quedaran desbloquejats tots els itineraris del 22 al 29, perquè els pugueu revisar conjuntament.</p>
+	<p>A les <strong>16.00 h del 20 de setembre</strong>, també quedaran desbloquejades les caselles del 21 al 29.</p>
       <p>El dia 30, s’activa en arribar la seva data.</p>
 	
 	
@@ -2543,7 +4365,7 @@ if(hb&&hm&&ch&&chx){
 
   function timelineDates(){
     const dates=['2026-07-24'];
-    let cursor=new Date('2026-08-16T12:00:00');
+    let cursor=new Date('2026-08-01T12:00:00');
     const end=new Date('2026-09-30T12:00:00');
     while(cursor<=end){
       dates.push(makeDateKey(cursor.getFullYear(),cursor.getMonth(),cursor.getDate()));
@@ -2556,6 +4378,8 @@ if(hb&&hm&&ch&&chx){
     if(info.kind==='trip')return 'ITINERARI DE VIATGE';
     if(info.kind==='final')return 'TANCAMENT';
     if(dateKey==='2026-09-20')return 'REVELACIÓ';
+    if(info.alert)return info.title.toUpperCase();
+    if(info.supplementary)return 'ENCÀRREC';
     return info.mission?'MISSIÓ':'INFORME';
   }
   function createTimeline(){
@@ -2578,7 +4402,7 @@ if(hb&&hm&&ch&&chx){
         <span class="timeline-date"><strong>${pad2(day)}</strong><span>${weekDay} · ${monthShort[monthIndex]}</span></span>
         <span class="timeline-copy">
           <span class="timeline-kicker">${typeLabel(dateKey,info)}</span>
-          <span class="timeline-title">${info?.title||'Sense activitat prevista'}</span>
+          <span class="timeline-title">${info?.alert?'<span class="mobile-alert-siren" aria-hidden="true"><span class="siren-light"></span><span class="siren-base"></span><i class="ray ray-left"></i><i class="ray ray-top"></i><i class="ray ray-right"></i></span> ':''}${info?.title||'Sense activitat prevista'}</span>
           <span class="timeline-status"></span>
         </span>
         <span class="timeline-arrow" aria-hidden="true">›</span>`;
@@ -2598,6 +4422,7 @@ if(hb&&hm&&ch&&chx){
     document.querySelectorAll('.timeline-item').forEach(item=>{
       const dateKey=item.dataset.date;
       const activityId=Number(item.dataset.activityId)||null;
+      const info=activityId?activities[activityId]:null;
       const source=document.querySelector(`.day[data-date="${dateKey}"]`);
       const btn=item.querySelector('.timeline-card');
       const status=item.querySelector('.timeline-status');
@@ -2606,16 +4431,13 @@ if(hb&&hm&&ch&&chx){
       item.classList.toggle('available',available);
       item.classList.toggle('completed',done);
       btn.disabled=!available;
-      if(done)status.textContent='✓ Missió completada';
+      if(done)status.textContent=info?.supplementary?'✓ Encàrrec completat':'✓ Missió completada';
       else if(available)status.textContent=activityId?'Toca per consultar':'Toca per veure l’estat del dia';
       else status.textContent='Disponible quan arribi la data';
       if(done&&puzzleDays.includes(activityId))completedPuzzle++;
     });
-    const total=puzzleDays.length;
-    const txt=document.getElementById('mobileMissionProgressText');
-    const fill=document.getElementById('mobileMissionProgressFill');
-    if(txt)txt.textContent=`${completedPuzzle} de ${total}`;
-    if(fill)fill.style.width=`${(completedPuzzle/total)*100}%`;
+    /* El recompte de progrés s'actualitza de manera centralitzada a renderPuzzle(). */
+    renderPuzzle();
   }
   function scrollToNext(){
     const items=[...document.querySelectorAll('.timeline-item.available')];
@@ -2632,6 +4454,39 @@ if(hb&&hm&&ch&&chx){
   window.addEventListener('storage',syncTimeline);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncTimeline()});
   setTimeout(syncTimeline,0);
+})();
+</script>
+
+
+<script id="v82-current-clock-script">
+(function(){
+  const output=document.getElementById("currentDateTime");
+  if(!output)return;
+
+  const dateFormatter=new Intl.DateTimeFormat("ca-ES",{
+    weekday:"long",
+    day:"2-digit",
+    month:"long",
+    year:"numeric"
+  });
+  const timeFormatter=new Intl.DateTimeFormat("ca-ES",{
+    hour:"2-digit",
+    minute:"2-digit",
+    second:"2-digit",
+    hour12:false
+  });
+
+  function capitalize(text){
+    return text ? text.charAt(0).toUpperCase()+text.slice(1) : text;
+  }
+
+  function updateCurrentClock(){
+    const now=new Date();
+    output.textContent=`${capitalize(dateFormatter.format(now))} · ${timeFormatter.format(now)}`;
+  }
+
+  updateCurrentClock();
+  setInterval(updateCurrentClock,1000);
 })();
 </script>
 
