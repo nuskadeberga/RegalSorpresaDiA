@@ -7,8 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#071018">
-<title>Operació 2209 · Calendari de viatge · V95</title>
-<!-- V95: doble revelació del 20/09 · 16:00 LA RIOJA · 17:00 LANZAROTE; dies 21–29 continuen classificats -->
+<title>Operació 2209 · Calendari de viatge · V96</title>
+<!-- V96: doble revelació + encàrrecs probabilitats 20/08 i 05/09 -->
 <style>
 :root{
   --bg:#071018;--panel:#0d1923;--panel2:#111f2b;--ink:#edf3f4;--muted:#91a4ad;
@@ -2674,6 +2674,25 @@ body.test-mode .current-clock{display:none!important}
 }
 </style>
 
+
+<style id="v96-probability-assignment">
+.probability-form{margin-top:18px;padding:16px;border:1px solid rgba(184,115,51,.38);border-radius:14px;background:rgba(184,115,51,.055)}
+.probability-agent{padding:14px;border:1px solid rgba(255,255,255,.085);border-radius:12px;background:rgba(255,255,255,.02)}
+.probability-agent+.probability-agent{margin-top:12px}
+.probability-agent h4{margin:0 0 12px;color:var(--assignment);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.probability-grid{display:grid;grid-template-columns:minmax(0,1fr) 88px;gap:8px 12px;align-items:center}
+.probability-grid label{color:#dce5e7;font-size:.86rem}
+.probability-input-wrap{display:flex;align-items:center;gap:5px}
+.probability-input{width:68px;min-height:40px;padding:7px 8px;border:1px solid rgba(184,115,51,.42);border-radius:8px;background:#0b1720;color:#f2e9df;text-align:right;font-weight:800}
+.probability-total{margin-top:11px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:.78rem}
+.probability-total b{color:var(--assignment)}
+.probability-total.invalid b{color:#ef7777}
+.probability-send{width:100%;margin-top:12px;min-height:46px;border:1px solid rgba(184,115,51,.62);border-radius:10px;background:rgba(184,115,51,.14);color:#f0d2b5;font-weight:800;cursor:pointer}
+.probability-send:hover{background:rgba(184,115,51,.23)}
+.probability-send:disabled{opacity:.42;cursor:not-allowed}
+.probability-note{margin-top:12px;color:var(--muted);font-size:.72rem;line-height:1.45}
+@media(max-width:520px){.probability-grid{grid-template-columns:1fr 82px}.probability-input{width:62px}}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -3099,6 +3118,19 @@ richHtml:`
 <br><p><b>EL REPTE:</b> Graveu un vídeo conjunt de màxim 30 segons explicant què fareu durant aquells dies, sense utilitzar les paraules <b>viatge</b>, <b>vacances</b>, <b>destí</b>, <b>avió</b>, <b>aeroport</b>, <b>cotxe</b>, <b>amics</b>, <b>casament</b> ni cap nom geogràfic. Tots dos agents haureu de parlar.</p>
 <br><p><b>L’ACCIÓ:</b> Envieu una única gravació al canal de WhatsApp del CIDS. Si utilitzeu una paraula prohibida, rebreu una sanció.</p>
 <br>🚨Avís: La coartada ha de semblar creïble. «<em>No podem explicar-ho perquè és secret</em>» o «<em>Tenim uns amics que van fumats</em>», no es consideraran explicació suficients.`,mission:true,supplementary:true},
+/* 20 D’AGOST */
+48:{
+  kind:"activity",icon:"📊",title:"Estimació de probabilitats · Fase 1",
+  mission:true,supplementary:true,probabilityAssignment:true,
+  probabilityRound:"20-08",probabilityLabel:"20 D’AGOST",
+  richHtml:`
+<div class="intel-kicker">CIDS · UNITAT D’ANÀLISI PROSPECTIVA</div>
+<p><b>DESCRIPCIÓ:</b> La Central vol registrar la percepció actual dels agents sobre els cinc destins possibles.</p>
+<p><b>EL REPTE:</b> Cada agent haurà d’assignar un percentatge de probabilitat a cadascun dels cinc destins. La suma total ha de ser exactament del <b>100%</b>.</p>
+<p><b>L’ACCIÓ:</b> Ompliu els percentatges directament en aquest formulari i envieu-los per separat al canal de WhatsApp del CIDS.</p>
+<div class="probability-form" data-probability-form="20-08"></div>
+<div class="probability-note">Aquesta estimació es repetirà més endavant per comprovar com han evolucionat les hipòtesis.</div>`
+},
 /* 21 D’AGOST */
 14:{kind:"activity",icon:"🛞",title:"Generació de ruta", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    Seguint amb la vostra involucració, us proposem ...
@@ -3219,6 +3251,19 @@ richHtml:`
 </ul>
 
 <br><p><b>L’ACCIÓ:</b> Adjunteu una prova gràfica del brindis mitjançant l’enllaç de comunicacions.`,mission:true,puzzle:5},
+/* 05 DE SETEMBRE */
+49:{
+  kind:"activity",icon:"📊",title:"Estimació de probabilitats · Fase 2",
+  mission:true,supplementary:true,probabilityAssignment:true,
+  probabilityRound:"05-09",probabilityLabel:"5 DE SETEMBRE",
+  richHtml:`
+<div class="intel-kicker">CIDS · UNITAT D’ANÀLISI PROSPECTIVA</div>
+<p><b>DESCRIPCIÓ:</b> La Central reactiva el protocol d’estimació per mesurar si les noves pistes han modificat la percepció dels agents.</p>
+<p><b>EL REPTE:</b> Torneu a assignar un percentatge de probabilitat a cadascun dels cinc destins. La suma ha de ser exactament del <b>100%</b>.</p>
+<p><b>L’ACCIÓ:</b> Cada agent omplirà la seva estimació i l’enviarà per separat al canal de WhatsApp del CIDS.</p>
+<div class="probability-form" data-probability-form="05-09"></div>
+<div class="probability-note">La segona ronda és independent de la del 20 d’agost.</div>`
+},
 /* 06 DE SETEMBRE */
 11:{kind:"activity",icon:"🗣️",title:"L’Idioma Encobert", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    Els serveis d'intel·ligència han detectat que els canals de comunicació de l'<em>Operació 2209</em> estan sent hackejat. Per evitar que la Central sigui identificada, tots els agents han de demostrar que són capaços de modificar la seva manera de parlar i confondre els sistemes de reconeixement de veu.
@@ -3454,6 +3499,7 @@ const scheduleByDate={
   "2026-08-16":34,
   "2026-08-18":8,
   "2026-08-19":39,
+  "2026-08-20":48,
   "2026-08-21":14,
   "2026-08-22":40,
   "2026-08-24":10,
@@ -3465,6 +3511,7 @@ const scheduleByDate={
   "2026-09-02":16,
   "2026-09-03":46,
   "2026-09-04":9,
+  "2026-09-05":49,
   "2026-09-06":11,
   "2026-09-07":15,
   "2026-09-08":36,
@@ -3593,37 +3640,20 @@ function missionMessage(activityId,dateKey,agent=null){
 }
 function resolvedActivity(dateKey,data){
   if(dateKey!=="2026-09-20"||!data.dynamic)return data;
-
   const now=selectedNow();
   const phase1=new Date("2026-09-20T15:00:00");
   const phase2=new Date("2026-09-20T16:00:00");
   const phase3=new Date("2026-09-20T17:00:00");
 
-  /* ABANS DE LES 15.00 H */
   if(now<phase1){
-    return {
-      ...data,
-      title:"Comunicació programada",
-      richHtml:`<div class="phase-wait"><b>DOCUMENT ENCARA CLASSIFICAT</b><br><br>La desclassificació començarà el <b>20 de setembre a les 15.00 h</b>.</div>`
-    };
+    return {...data,title:"Comunicació programada",richHtml:`<div class="phase-wait"><b>DOCUMENT ENCARA CLASSIFICAT</b><br><br>La desclassificació començarà el <b>20 de setembre a les 15.00 h</b>.</div>`};
   }
-
-  /* DE 15.00 A 15.59 H · PENJAT / WHAT3WORDS */
   if(now<phase2){
-    return {
-      ...data,
-      title:"Coordenades desclassificades",
-      hangman:true,
-      richHtml:`
+    return {...data,title:"Coordenades desclassificades",hangman:true,richHtml:`
 <p>El CIDS ha autoritzat la desclassificació progressiva de les coordenades del centre d’operacions.</p>
 <p>Recupereu les tres paraules mitjançant el protocol del penjat. Teniu un marge màxim de 5 errades.</p>
-
 <div class="hangman-wrap" id="hangmanGame">
-  <div class="hangman-head">
-    <b>PROTOCOL DE DESXIFRAT · WHAT3WORDS</b>
-    <span class="hangman-errors" id="hangmanErrors">Errors: 0 de 5</span>
-  </div>
-
+  <div class="hangman-head"><b>PROTOCOL DE DESXIFRAT · WHAT3WORDS</b><span class="hangman-errors" id="hangmanErrors">Errors: 0 de 5</span></div>
   <div class="hangman-main">
     <svg class="hangman-drawing" viewBox="0 0 130 150" aria-label="Dibuix del penjat">
       <line data-stage="1" x1="15" y1="140" x2="115" y2="140"/>
@@ -3637,56 +3667,28 @@ function resolvedActivity(dateKey,data){
       <line data-stage="5" x1="95" y1="102" x2="78" y2="127"/>
       <line data-stage="5" x1="95" y1="102" x2="112" y2="127"/>
     </svg>
-
-    <div>
-      <div class="hangman-prefix">///</div>
-      <div class="hangman-words" id="hangmanWords"></div>
-      <div class="hangman-keyboard" id="hangmanKeyboard"></div>
-    </div>
+    <div><div class="hangman-prefix">///</div><div class="hangman-words" id="hangmanWords"></div><div class="hangman-keyboard" id="hangmanKeyboard"></div></div>
   </div>
-
   <div class="hangman-message" id="hangmanMessage">Seleccioneu una lletra per iniciar el desxifrat.</div>
-
   <div class="hangman-result" id="hangmanResult">
     <div class="coords-label">COORDENADES RECUPERADES</div>
     <div class="coords-value">///stanze.chiamate.eppure</div>
     <div>La comunicació definitiva es publicarà a les <b>16.00 h</b>.</div>
   </div>
-</div>`
-    };
+</div>`};
   }
-
-  /* DE 16.00 A 16.59 H · PRIMERA REVELACIÓ */
   if(now<phase3){
-    return {
-      ...data,
-      title:"Destí desclassificat",
-      richHtml:`
+    return {...data,title:"Destí desclassificat",richHtml:`
 <div class="intel-kicker" style="text-align:center">OPERACIÓ 2209 · DESTÍ CONFIRMAT</div>
 <div class="reveal-title">LA RIOJA</div>
-<img class="reveal-photo"
-     src="https://www.wonderbox.es/blog/wp-content/uploads/sites/6/2025/01/vino-espana-1024x731.jpg"
-     alt="Paisatge vinícola de La Rioja">
-<p style="text-align:center">La Central dona per finalitzat el protocol de desclassificació.</p>`
-    };
+<img class="reveal-photo" src="https://www.wonderbox.es/blog/wp-content/uploads/sites/6/2025/01/vino-espana-1024x731.jpg" alt="Paisatge vinícola de La Rioja">
+<p style="text-align:center">La Central dona per finalitzat el protocol de desclassificació.</p>`};
   }
-
-  /* A PARTIR DE LES 17.00 H · REVELACIÓ FINAL DEL TOT */
-  return {
-    ...data,
-    title:"Rectificació final del CIDS",
-    richHtml:`
+  return {...data,title:"Rectificació final del CIDS",richHtml:`
 <div class="intel-kicker" style="text-align:center">CIDS · RECTIFICACIÓ EXTRAORDINÀRIA</div>
 <div class="reveal-title">LANZAROTE</div>
-<img class="reveal-photo"
-     src="https://turismolanzarote.com/wp-content/uploads/2021/09/Masdache_%C2%A9-Turismo-Lanzarote-1.jpg"
-     alt="Paisatge volcànic de Lanzarote">
-<div class="flight-note" style="margin-top:16px;text-align:center">
-  <b>ARA SÍ: DESTÍ FINAL DEL TOT</b><br><br>
-  La Rioja queda oficialment desclassificada... però no com a destinació de l’Operació 2209.<br><br>
-  <b>La destinació definitiva és LANZAROTE.</b>
-</div>`
-  };
+<img class="reveal-photo" src="https://turismolanzarote.com/wp-content/uploads/2021/09/Masdache_%C2%A9-Turismo-Lanzarote-1.jpg" alt="Paisatge volcànic de Lanzarote">
+<div class="flight-note" style="margin-top:16px;text-align:center"><b>ARA SÍ: DESTÍ FINAL DEL TOT</b><br><br>La Rioja queda oficialment desclassificada... però no com a destinació de l’Operació 2209.<br><br><b>La destinació definitiva és LANZAROTE.</b></div>`};
 }
 const HANGMAN_TARGET=["stanze","chiamate","eppure"];
 /*const HANGMAN_TARGET=["saputo","lupi","vorrà"];*/
@@ -3717,6 +3719,138 @@ function saveHangmanState(state){
     guessed:[...new Set(state.guessed)],
     failed:Boolean(state.failed)
   }));
+}
+
+
+const PROBABILITY_DESTINATIONS=["La Puglia","Madeira","Escòcia","La Rioja","Lanzarote"];
+const PROBABILITY_STORAGE_PREFIX="cids2209_prob_";
+
+function probabilityStorageKey(round,agent){return `${PROBABILITY_STORAGE_PREFIX}${round}_${agent}`}
+
+function loadProbabilityValues(round,agent){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(probabilityStorageKey(round,agent))||"{}");
+    return Object.fromEntries(PROBABILITY_DESTINATIONS.map(dest=>[dest,parsed[dest]??""]));
+  }catch{
+    return Object.fromEntries(PROBABILITY_DESTINATIONS.map(dest=>[dest,""]));
+  }
+}
+
+function saveProbabilityValues(round,agent,values){
+  localStorage.setItem(probabilityStorageKey(round,agent),JSON.stringify(values));
+}
+
+function probabilityMessage(roundLabel,agent,values){
+  return [
+    `CIDS · OPERACIÓ 2209 · ESTIMACIÓ DE DESTÍ · ${roundLabel}`,
+    "",
+    `AGENT ${agent}`,
+    ...PROBABILITY_DESTINATIONS.map(dest=>`${dest}: ${values[dest]}%`),
+    "",
+    "TOTAL: 100%"
+  ].join("\n");
+}
+
+async function sendProbabilityWhatsApp(message){
+  try{await navigator.clipboard.writeText(message)}catch{}
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`,"_blank","noopener");
+}
+
+function initProbabilityAssignment(info){
+  if(!info?.probabilityAssignment)return;
+  const root=document.querySelector(`[data-probability-form="${info.probabilityRound}"]`);
+  if(!root)return;
+  root.replaceChildren();
+
+  ["A","D"].forEach(agent=>{
+    const section=document.createElement("section");
+    section.className="probability-agent";
+    section.innerHTML=`<h4>Agent ${agent}</h4>`;
+
+    const grid=document.createElement("div");
+    grid.className="probability-grid";
+    const inputs={};
+    const saved=loadProbabilityValues(info.probabilityRound,agent);
+
+    PROBABILITY_DESTINATIONS.forEach(dest=>{
+      const label=document.createElement("label");
+      label.textContent=dest;
+
+      const wrap=document.createElement("div");
+      wrap.className="probability-input-wrap";
+
+      const input=document.createElement("input");
+      input.type="number";
+      input.min="0";
+      input.max="100";
+      input.step="1";
+      input.inputMode="numeric";
+      input.className="probability-input";
+      input.value=saved[dest]??"";
+      input.setAttribute("aria-label",`${dest} · Agent ${agent}`);
+
+      const pct=document.createElement("span");
+      pct.textContent="%";
+
+      wrap.append(input,pct);
+      grid.append(label,wrap);
+      inputs[dest]=input;
+    });
+
+    const total=document.createElement("div");
+    total.className="probability-total";
+    total.innerHTML="<span>Total assignat</span><b>0%</b>";
+
+    const send=document.createElement("button");
+    send.type="button";
+    send.className="probability-send";
+    send.textContent=`Agent ${agent} · copiar i obrir WhatsApp`;
+
+    section.append(grid,total,send);
+    root.appendChild(section);
+
+    function collect(){
+      const values={};
+      let sum=0;
+      PROBABILITY_DESTINATIONS.forEach(dest=>{
+        const raw=inputs[dest].value.trim();
+        const val=raw===""?NaN:Number(raw);
+        values[dest]=val;
+        if(Number.isFinite(val))sum+=val;
+      });
+      return {values,sum};
+    }
+
+    function update(){
+      const {values,sum}=collect();
+      const valid=PROBABILITY_DESTINATIONS.every(dest=>Number.isFinite(values[dest])&&values[dest]>=0&&values[dest]<=100);
+      const ok=valid&&sum===100;
+      total.classList.toggle("invalid",!ok);
+      total.querySelector("b").textContent=`${sum}%`;
+      send.disabled=!ok;
+
+      const save={};
+      PROBABILITY_DESTINATIONS.forEach(dest=>{
+        const raw=inputs[dest].value.trim();
+        save[dest]=raw===""?"":Number(raw);
+      });
+      saveProbabilityValues(info.probabilityRound,agent,save);
+    }
+
+    Object.values(inputs).forEach(input=>input.addEventListener("input",update));
+
+    send.addEventListener("click",()=>{
+      const {values,sum}=collect();
+      const valid=PROBABILITY_DESTINATIONS.every(dest=>Number.isFinite(values[dest])&&values[dest]>=0&&values[dest]<=100);
+      if(!valid||sum!==100){
+        alert("Els percentatges han de sumar exactament 100%.");
+        return;
+      }
+      sendProbabilityWhatsApp(probabilityMessage(info.probabilityLabel,agent,values));
+    });
+
+    update();
+  });
 }
 
 function initHangmanGame(){
@@ -4031,6 +4165,7 @@ function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
       modalText.classList.toggle("modal-text-rich",Boolean(data.richHtml));
       if(data.richHtml)modalText.innerHTML=data.richHtml;else modalText.textContent=data.text||"";
       if(data.hangman)initHangmanGame();
+      if(data.probabilityAssignment)initProbabilityAssignment(data);
       openMissionModal(activityId,dateKey,data);
       modal.classList.add("show");
       document.body.classList.add("modal-open");
