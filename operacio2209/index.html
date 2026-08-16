@@ -7,8 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#071018">
-<title>Operació 2209 · Calendari de viatge · V93</title>
-<!-- V93: versió pública sense informació operativa dels dies 21–29 -->
+<title>Operació 2209 · Calendari de viatge · V95</title>
+<!-- V95: doble revelació del 20/09 · 16:00 LA RIOJA · 17:00 LANZAROTE; dies 21–29 continuen classificats -->
 <style>
 :root{
   --bg:#071018;--panel:#0d1923;--panel2:#111f2b;--ink:#edf3f4;--muted:#91a4ad;
@@ -3593,18 +3593,37 @@ function missionMessage(activityId,dateKey,agent=null){
 }
 function resolvedActivity(dateKey,data){
   if(dateKey!=="2026-09-20"||!data.dynamic)return data;
+
   const now=selectedNow();
   const phase1=new Date("2026-09-20T15:00:00");
   const phase2=new Date("2026-09-20T16:00:00");
-  if(now<phase1){return {...data,title:"Comunicació programada",richHtml:`<div class="phase-wait"><b>DOCUMENT ENCARA CLASSIFICAT</b><br><br>La desclassificació començarà el <b>20 de setembre a les 15.00 h</b>.</div>`};}
-  if(now<phase2){return {...data,title:"Coordenades desclassificades",hangman:true,richHtml:`
+  const phase3=new Date("2026-09-20T17:00:00");
+
+  /* ABANS DE LES 15.00 H */
+  if(now<phase1){
+    return {
+      ...data,
+      title:"Comunicació programada",
+      richHtml:`<div class="phase-wait"><b>DOCUMENT ENCARA CLASSIFICAT</b><br><br>La desclassificació començarà el <b>20 de setembre a les 15.00 h</b>.</div>`
+    };
+  }
+
+  /* DE 15.00 A 15.59 H · PENJAT / WHAT3WORDS */
+  if(now<phase2){
+    return {
+      ...data,
+      title:"Coordenades desclassificades",
+      hangman:true,
+      richHtml:`
 <p>El CIDS ha autoritzat la desclassificació progressiva de les coordenades del centre d’operacions.</p>
 <p>Recupereu les tres paraules mitjançant el protocol del penjat. Teniu un marge màxim de 5 errades.</p>
+
 <div class="hangman-wrap" id="hangmanGame">
   <div class="hangman-head">
     <b>PROTOCOL DE DESXIFRAT · WHAT3WORDS</b>
-    <span class="hangman-errors" id="hangmanErrors">Errors: 0 de 8</span>
+    <span class="hangman-errors" id="hangmanErrors">Errors: 0 de 5</span>
   </div>
+
   <div class="hangman-main">
     <svg class="hangman-drawing" viewBox="0 0 130 150" aria-label="Dibuix del penjat">
       <line data-stage="1" x1="15" y1="140" x2="115" y2="140"/>
@@ -3618,27 +3637,59 @@ function resolvedActivity(dateKey,data){
       <line data-stage="5" x1="95" y1="102" x2="78" y2="127"/>
       <line data-stage="5" x1="95" y1="102" x2="112" y2="127"/>
     </svg>
+
     <div>
       <div class="hangman-prefix">///</div>
       <div class="hangman-words" id="hangmanWords"></div>
       <div class="hangman-keyboard" id="hangmanKeyboard"></div>
     </div>
   </div>
+
   <div class="hangman-message" id="hangmanMessage">Seleccioneu una lletra per iniciar el desxifrat.</div>
+
   <div class="hangman-result" id="hangmanResult">
     <div class="coords-label">COORDENADES RECUPERADES</div>
-    <div class="coords-value">
-	///saputo.lupi.vorrà
-	</div>
-	
+    <div class="coords-value">///stanze.chiamate.eppure</div>
     <div>La comunicació definitiva es publicarà a les <b>16.00 h</b>.</div>
   </div>
-  
-</div>`};}
-  return {...data,title:"Destí desclassificat",richHtml:`<div class="intel-kicker" style="text-align:center">OPERACIÓ 2209 · DESTÍ CONFIRMAT</div><div class="reveal-title">LANZAROTE</div><img class="reveal-photo" src="https://turismolanzarote.com/wp-content/uploads/2021/09/Masdache_%C2%A9-Turismo-Lanzarote-1.jpg" alt="Paisatge de Lanzarote"><p style="text-align:center"></p><div class="coords-box"><a class="cids-link" href="https://www.google.com/maps?q=28.93591959649845,-13.61797219098307" target="_blank" rel="noopener">📍 Veure ubicació de l’allotjament a Google Maps</a></div>`};
-}
+</div>`
+    };
+  }
 
-const HANGMAN_TARGET=["saputo","lupi","vorrà"];
+  /* DE 16.00 A 16.59 H · PRIMERA REVELACIÓ */
+  if(now<phase3){
+    return {
+      ...data,
+      title:"Destí desclassificat",
+      richHtml:`
+<div class="intel-kicker" style="text-align:center">OPERACIÓ 2209 · DESTÍ CONFIRMAT</div>
+<div class="reveal-title">LA RIOJA</div>
+<img class="reveal-photo"
+     src="https://www.wonderbox.es/blog/wp-content/uploads/sites/6/2025/01/vino-espana-1024x731.jpg"
+     alt="Paisatge vinícola de La Rioja">
+<p style="text-align:center">La Central dona per finalitzat el protocol de desclassificació.</p>`
+    };
+  }
+
+  /* A PARTIR DE LES 17.00 H · REVELACIÓ FINAL DEL TOT */
+  return {
+    ...data,
+    title:"Rectificació final del CIDS",
+    richHtml:`
+<div class="intel-kicker" style="text-align:center">CIDS · RECTIFICACIÓ EXTRAORDINÀRIA</div>
+<div class="reveal-title">LANZAROTE</div>
+<img class="reveal-photo"
+     src="https://turismolanzarote.com/wp-content/uploads/2021/09/Masdache_%C2%A9-Turismo-Lanzarote-1.jpg"
+     alt="Paisatge volcànic de Lanzarote">
+<div class="flight-note" style="margin-top:16px;text-align:center">
+  <b>ARA SÍ: DESTÍ FINAL DEL TOT</b><br><br>
+  La Rioja queda oficialment desclassificada... però no com a destinació de l’Operació 2209.<br><br>
+  <b>La destinació definitiva és LANZAROTE.</b>
+</div>`
+  };
+}
+const HANGMAN_TARGET=["stanze","chiamate","eppure"];
+/*const HANGMAN_TARGET=["saputo","lupi","vorrà"];*/
 const HANGMAN_STORAGE_KEY="cids2209_hangman_2009";
 const HANGMAN_MAX_ERRORS=5;
 
