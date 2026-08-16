@@ -7,8 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#071018">
-<title>Operació 2209 · Calendari de viatge · V96</title>
-<!-- V96: doble revelació + encàrrecs probabilitats 20/08 i 05/09 -->
+<meta name="cids-build" content="98">
+<title>Operació 2209 · Calendari de viatge · V98</title>
+<!-- V98: actualització automàtica de versió en reentrar o tornar a la pestanya -->
 <style>
 :root{
   --bg:#071018;--panel:#0d1923;--panel2:#111f2b;--ink:#edf3f4;--muted:#91a4ad;
@@ -3963,6 +3964,17 @@ function openMissionModal(activityId,dateKey,data){
     mt.classList.add("modal-text-rich");
     mt.innerHTML=`<p>${data.text}</p><div class="intel-body" style="padding:12px 0 0"><div class="intel-kicker">EXPEDIENT ${data.code}</div><div class="intel-destination">${data.destination}</div><span class="discard-stamp">DESTÍ DESCARTAT</span></div>`;
   }
+  /* Els encàrrecs de probabilitats tenen un flux propi dins del formulari.
+     No han de mostrar els botons genèrics de missió/confirmació. */
+  if(data.probabilityAssignment){
+    missionActions.hidden=true;
+    missionConfirm.hidden=true;
+    sendWhatsApp.hidden=true;
+    separateMissionActions.hidden=true;
+    missionReset.hidden=true;
+    return;
+  }
+
   missionActions.hidden=!data.mission;
   missionConfirm.hidden=true;
   if(data.mission){
@@ -4673,6 +4685,83 @@ if(hb&&hm&&ch&&chx){
 
   updateCurrentClock();
   setInterval(updateCurrentClock,1000);
+})();
+</script>
+
+
+<script id="v98-auto-update">
+/*
+  V98 · ACTUALITZACIÓ AUTOMÀTICA
+  --------------------------------
+  Quan la web es carrega, torna a primer pla o recupera el focus,
+  consulta una còpia fresca de l'index. Si detecta una versió més nova,
+  recarrega automàticament amb un paràmetre anticaixeta.
+
+  En obrir l'HTML directament com a fitxer local (file://), no actua.
+*/
+(() => {
+  const CURRENT_BUILD = Number(document.querySelector('meta[name="cids-build"]')?.content || 0);
+  let checking = false;
+  let lastCheck = 0;
+  const MIN_INTERVAL = 15000; // evita múltiples comprovacions simultànies
+
+  async function checkForNewVersion(force = false){
+    if(location.protocol === "file:") return;
+    if(checking) return;
+
+    const now = Date.now();
+    if(!force && now - lastCheck < MIN_INTERVAL) return;
+    lastCheck = now;
+    checking = true;
+
+    try{
+      const checkUrl = new URL(location.href);
+      checkUrl.searchParams.set("_cids_check", String(Date.now()));
+
+      const response = await fetch(checkUrl.toString(), {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache, no-store, max-age=0",
+          "Pragma": "no-cache"
+        }
+      });
+
+      if(!response.ok) return;
+
+      const freshHtml = await response.text();
+      const match = freshHtml.match(/<meta\s+name=["']cids-build["']\s+content=["'](\d+)["']/i);
+      const remoteBuild = match ? Number(match[1]) : 0;
+
+      if(remoteBuild > CURRENT_BUILD){
+        const freshUrl = new URL(location.href);
+        freshUrl.searchParams.delete("_cids_check");
+        freshUrl.searchParams.set("v", String(remoteBuild));
+        freshUrl.searchParams.set("_fresh", String(Date.now()));
+        location.replace(freshUrl.toString());
+      }
+    }catch(err){
+      // Sense connexió o error puntual: la web continua funcionant amb normalitat.
+    }finally{
+      checking = false;
+    }
+  }
+
+  // En entrar a la pàgina
+  window.addEventListener("pageshow", () => checkForNewVersion(true));
+
+  // En tornar a una pestanya que havia quedat oberta
+  document.addEventListener("visibilitychange", () => {
+    if(document.visibilityState === "visible") checkForNewVersion(true);
+  });
+
+  // També quan la finestra recupera el focus
+  window.addEventListener("focus", () => checkForNewVersion(false));
+
+  // Comprovació de seguretat cada 5 minuts si la pestanya continua oberta
+  setInterval(() => {
+    if(document.visibilityState === "visible") checkForNewVersion(false);
+  }, 5 * 60 * 1000);
 })();
 </script>
 
