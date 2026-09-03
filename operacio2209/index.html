@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#071018">
-<meta name="cids-build" content="103">
-<title>Operació 2209 · Calendari de viatge · V103</title>
-<!-- V103: dia 18 · lectura invertida dels especialistes: primer números i després símbols -->
+<meta name="cids-build" content="104">
+<title>Operació 2209 · Calendari de viatge · V104</title>
+<!-- V104: nova missió 14/09 amb croquis operatiu + ajust text 19/09 -->
 <style>
 :root{
   --bg:#071018;--panel:#0d1923;--panel2:#111f2b;--ink:#edf3f4;--muted:#91a4ad;
@@ -3415,13 +3415,24 @@ Qualsevol incompliment d’aquest protocol podrà comportar una reavaluació imm
 },
 
 /* 14 DE SETEMBRE */
-13:{kind:"activity",icon:"🛰️",title:"Reconeixement aeri",richHtml:`
-<p><b>DESCRIPCIÓ:</b>  Un dels satèl·lits del CIDS ha capturat una imatge de la zona on podria trobar-se una futura base operativa. Els analistes han detectat una àrea d’interès, però encara no n’han pogut determinar la localització exacta.
-<br><p><b>EL REPTE:</b> Observeu atentament la fotografia de reconeixement i indiqueu què creieu que representa la imatge.
-<br><p><b>L’ACCIÓ:</b>  Envieu la vostra hipòtesi argumentada, al canal de WhatsApp del CIDS.</p><br>
-🚨Avís: No cal encertar-la. La Central valorarà especialment la vostra capacitat d’observació i deducció.`,
-media:"missio-13-reconeixement-v2.webp",
-mission:true,puzzle:9},
+13:{kind:"activity",icon:"🛰️",title:"Reconeixement territorial",richHtml:`
+<p><b>DESCRIPCIÓ:</b> La Central ha recuperat un <b>esbós operatiu</b> d’una zona encara no identificada oficialment. El document no permet una lectura exacta del lloc, però sí una interpretació prou fiable del terreny.</p>
+<p><b>EL REPTE:</b> Analitzeu el croquis i determineu <b>quin tipus d’entorn podria representar</b>.</p>
+<p><b>L’ACCIÓ:</b> Envieu al canal de WhatsApp del CIDS una hipòtesi conjunta indicant:</p>
+<ul>
+  <li>el tipus de lloc,</li>
+  <li>els elements que heu detectat.</li>
+</ul>
+<p>🚨Avís: No cal encertar-la. El que es jutja aquí és la vostra <b>capacitat de deducció</b>. I, si pot ser, una mica menys d’ansietat cartogràfica.</p>
+`,
+media:"missio-13-reconeixement-croquis.png",
+mission:true,puzzle:9,
+whatsappTemplate:`MISSIÓ 13 · RECONEIXEMENT TERRITORIAL
+
+La nostra hipòtesi és que la imatge representa: __________
+
+Detalls que ens ho fan pensar: __________`},
+
 /* 15 DE SETEMBRE */
 17:{kind:"activity",icon:"🎥",title:"Autorització per viatjar", richHtml:`
 <p><b>DESCRIPCIÓ:</b> La Central necessita una  prova audiovisual que confirmi que els dos membres de l’<em>Equip DiA</em> estan preparats per operar en qualsevol dels cinc escenaris que han estat sotmesos a estudi.
@@ -3485,7 +3496,7 @@ richHtml:`
 /* 19 DE SETEMBRE */
 19:{kind:"activity",icon:"💼",title:"Suborn a la Central", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    El canal de reserves està controlat per un alt càrrec de la Central —l’organitzador de la missió— que posseeix els codis necessaris per agrupar els seients. Les defenses digitals són impenetrables: només queda la negociació directa.
-<br><p><b>EL REPTE:</b>  Poseu-vos d’acord i formuleu un «suborn oficial» prou convincent perquè l’organitzador alliberi els seients conjunts, cas que el destí ho requereixi.
+<br><p><b>EL REPTE:</b>  Poseu-vos d’acord i formuleu un «suborn oficial» <b>PROU CONVINCENT</b> perquè l’organitzador alliberi els seients conjunts, cas que el destí ho requereixi.
 L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser convidar-lo a la primera ronda de cerveses o cafès, portar-li la maleta el primer dia, preparar el sopar una nit o qualsevol pacte de valor equivalent.
 <br><p><b>L’ACCIÓ:</b> Envieu el tractat al canal de WhatsApp, aprovat per tots els membres de l’<em>Equip DiA</em>. </p><br>
 
