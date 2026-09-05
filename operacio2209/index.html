@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#071018">
-<meta name="cids-build" content="107">
-<title>Operació 2209 · Calendari de viatge · V107</title>
-<!-- V107: memòria de posició de scroll en obrir i tancar les caselles -->
+<meta name="cids-build" content="104">
+<title>Operació 2209 · Calendari de viatge · V104</title>
+<!-- V104: nova missió 14/09 amb croquis operatiu + ajust text 19/09 -->
 <style>
 :root{
   --bg:#071018;--panel:#0d1923;--panel2:#111f2b;--ink:#edf3f4;--muted:#91a4ad;
@@ -2716,42 +2716,6 @@ body.test-mode .current-clock{display:none!important}
 }
 </style>
 
-
-<style id="v106-route-maps">
-.trip-map{
-  display:block;
-  width:100%;
-  max-height:430px;
-  object-fit:contain;
-  margin:4px 0 2px;
-  border:1px solid rgba(123,209,206,.26);
-  border-radius:14px;
-  background:#e8eef0;
-}
-.trip-plan .flight-note{margin-top:0}
-.trip-option{
-  padding:12px 13px;
-  border:1px solid rgba(217,185,111,.20);
-  border-radius:11px;
-  background:rgba(217,185,111,.045);
-  color:#c7d4d8;
-  font-size:.83rem;
-  line-height:1.52;
-}
-.trip-option b{color:#f1e6c8}
-.trip-festival{
-  padding:14px;
-  border:1px solid rgba(201,138,179,.26);
-  border-radius:13px;
-  background:rgba(201,138,179,.055);
-}
-.trip-festival h4{margin:0 0 10px;color:var(--mission);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase}
-.trip-festival p{margin:7px 0;color:#c7d4d8;line-height:1.48;font-size:.84rem}
-@media(max-width:600px){
-  .trip-map{max-height:none}
-}
-</style>
-
 </head>
 <body>
 <div class="shell">
@@ -3451,13 +3415,24 @@ Qualsevol incompliment d’aquest protocol podrà comportar una reavaluació imm
 },
 
 /* 14 DE SETEMBRE */
-13:{kind:"activity",icon:"🛰️",title:"Reconeixement aeri",richHtml:`
-<p><b>DESCRIPCIÓ:</b>  Un dels satèl·lits del CIDS ha capturat una imatge de la zona on podria trobar-se una futura base operativa. Els analistes han detectat una àrea d’interès, però encara no n’han pogut determinar la localització exacta.
-<br><p><b>EL REPTE:</b> Observeu atentament la fotografia de reconeixement i indiqueu què creieu que representa la imatge.
-<br><p><b>L’ACCIÓ:</b>  Envieu la vostra hipòtesi argumentada, al canal de WhatsApp del CIDS.</p><br>
-🚨Avís: No cal encertar-la. La Central valorarà especialment la vostra capacitat d’observació i deducció.`,
-media:"missio-13-reconeixement-v2.webp",
-mission:true,puzzle:9},
+13:{kind:"activity",icon:"🛰️",title:"Reconeixement territorial",richHtml:`
+<p><b>DESCRIPCIÓ:</b> La Central ha recuperat un <b>esbós operatiu</b> d’una zona encara no identificada oficialment. El document no permet una lectura exacta del lloc, però sí una interpretació prou fiable del terreny.</p>
+<p><b>EL REPTE:</b> Analitzeu el croquis i determineu <b>quin tipus d’entorn podria representar</b>.</p>
+<p><b>L’ACCIÓ:</b> Envieu al canal de WhatsApp del CIDS una hipòtesi conjunta indicant:</p>
+<ul>
+  <li>el tipus de lloc,</li>
+  <li>els elements que heu detectat.</li>
+</ul>
+<p>🚨Avís: No cal encertar-la. El que es jutja aquí és la vostra <b>capacitat de deducció</b>. I, si pot ser, una mica menys d’ansietat cartogràfica.</p>
+`,
+media:"missio-13-reconeixement-croquis.png",
+mission:true,puzzle:9,
+whatsappTemplate:`MISSIÓ 13 · RECONEIXEMENT TERRITORIAL
+
+La nostra hipòtesi és que la imatge representa: __________
+
+Detalls que ens ho fan pensar: __________`},
+
 /* 15 DE SETEMBRE */
 17:{kind:"activity",icon:"🎥",title:"Autorització per viatjar", richHtml:`
 <p><b>DESCRIPCIÓ:</b> La Central necessita una  prova audiovisual que confirmi que els dos membres de l’<em>Equip DiA</em> estan preparats per operar en qualsevol dels cinc escenaris que han estat sotmesos a estudi.
@@ -3521,7 +3496,7 @@ richHtml:`
 /* 19 DE SETEMBRE */
 19:{kind:"activity",icon:"💼",title:"Suborn a la Central", richHtml:`
 <p><b>DESCRIPCIÓ:</b>    El canal de reserves està controlat per un alt càrrec de la Central —l’organitzador de la missió— que posseeix els codis necessaris per agrupar els seients. Les defenses digitals són impenetrables: només queda la negociació directa.
-<br><p><b>EL REPTE:</b>  Poseu-vos d’acord i formuleu un «suborn oficial» prou convincent perquè l’organitzador alliberi els seients conjunts, cas que el destí ho requereixi.
+<br><p><b>EL REPTE:</b>  Poseu-vos d’acord i formuleu un «suborn oficial» <b>PROU CONVINCENT</b> perquè l’organitzador alliberi els seients conjunts, cas que el destí ho requereixi.
 L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser convidar-lo a la primera ronda de cerveses o cafès, portar-li la maleta el primer dia, preparar el sopar una nit o qualsevol pacte de valor equivalent.
 <br><p><b>L’ACCIÓ:</b> Envieu el tractat al canal de WhatsApp, aprovat per tots els membres de l’<em>Equip DiA</em>. </p><br>
 
@@ -3529,220 +3504,101 @@ L’oferta ha de ser una promesa real que es compleixi durant el viatge. Pot ser
 /* 20 DE SETEMBRE */
 20:{kind:"activity",icon:"⌖",title:"Desclassificació final",dynamic:true},
 /* 21 DE SETEMBRE */
-21:{kind:"activity",icon:"✈️",title:"Pla de vol i informació d’equipatge",richHtml:`
-<p>La documentació operativa ja pot ser consultada.</p>
-<div class="flight-card">
-  <div class="flight-head">DETALLS DEL TEU VIATGE</div>
-
-  <div class="flight-leg">
-    <div class="flight-route">✈ BARCELONA – LANZAROTE <span class="flight-date">dt. 22 set.</span></div>
-    <div class="flight-times">
-      <div class="flight-time">13:30</div>
-      <div class="flight-line"></div>
-      <div class="flight-time right">15:50</div>
+21:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
     </div>
-    <div class="flight-airports">
-      <div><div class="airport-code">BCN</div><div class="airport-city">Barcelona</div></div>
-      <div><div class="airport-code">ACE</div><div class="airport-city">Lanzarote</div></div>
-    </div>
-    <div class="flight-number"><b>vueling</b> · VY2470</div>
-  </div>
-
-  <div class="flight-leg">
-    <div class="flight-route">✈ LANZAROTE – BARCELONA <span class="flight-date">dt. 29 set.</span></div>
-    <div class="flight-times">
-      <div class="flight-time">16:25</div>
-      <div class="flight-line"></div>
-      <div class="flight-time right">20:25</div>
-    </div>
-    <div class="flight-airports">
-      <div><div class="airport-code">ACE</div><div class="airport-city">Lanzarote</div></div>
-      <div><div class="airport-code">BCN</div><div class="airport-city">Barcelona</div></div>
-    </div>
-    <div class="flight-number"><b>vueling</b> · VY2471</div>
-  </div>
-</div>
-
-<div class="flight-note">
-  <b>INFORMACIÓ D’EQUIPATGE</b><br><br>
-  Reviseu la documentació, els horaris i el material necessari abans del trasllat a l’aeroport.<br><br>
-  La Central recomana tenir l’equipatge completament preparat durant el dia d’avui.
-</div>`},
+  `
+},
 /* 22 DE SETEMBRE */
-22:{kind:"trip",icon:"🛬",title:"Arribada · Puerto del Carmen i Puerto Calero",richHtml:`
-<div class="trip-plan">
-  <div class="trip-summary">
-    <div><span>Ruta</span><b>Aeroport → Puerto del Carmen → Puerto Calero → Puerto del Carmen</b></div>
-    <div><span>Distància</span><b>25–35 km</b></div>
-  </div>
-  <div class="trip-section">
-    <h4>Tarda</h4>
-    <div class="trip-time"><time>16.00 h</time><div><b>Arribada a Lanzarote.</b> Recollida del cotxe de lloguer i trasllat a l’allotjament.</div></div>
-    <div class="trip-time"><time>Després</time><div>Compra bàsica d’aigua, esmorzars, etc. Lidl o Mercadona de Puerto del Carmen.</div></div>
-  </div>
-  <div class="trip-section">
-    <h4>Vespre</h4>
-    <div class="trip-time"><time>—</time><div><b>Puerto Calero.</b> Passeig tranquil pel port esportiu.</div></div>
-    <div class="trip-time"><time>🍴</time><div><b>Sopar: La Chalana, Puerto del Carmen.</b></div></div>
-    <div class="trip-time"><time>Final</time><div>Retorn a l’allotjament.</div></div>
-  </div>
-</div>`},
+22:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
 /* 23 DE SETEMBRE */
-23:{kind:"trip",icon:"🍷",title:"Las Grietas · Campesino · LagOmar · La Geria",richHtml:`
-<div class="trip-plan">
-  <div class="trip-summary">
-    <div><span>Ruta</span><b>Puerto del Carmen → Las Grietas → Campesino → LagOmar → Montaña Blanca → La Geria → STRATVS → Puerto del Carmen</b></div>
-    <div><span>Dia</span><b>Dimecres 23</b></div>
-  </div>
-  <img class="trip-map" src="ruta-23-setembre.png" alt="Mapa de la ruta del 23 de setembre">
-  <div class="trip-section">
-    <h4>Matí</h4>
-    <div class="trip-time"><time>08.45</time><div>Sortida de Puerto del Carmen.</div></div>
-    <div class="trip-time"><time>09.05–09.40</time><div><b>Las Grietas.</b> Parada fotogràfica, 30–40 min.</div></div>
-    <div class="trip-time"><time>10.00–10.50</time><div><b>Monumento / Casa Museo del Campesino.</b> Entrada gratuïta. Monumento a la Fecundidad, arquitectura de César Manrique i Casa-Museo.</div></div>
-    <div class="trip-time"><time>11.10</time><div>Arribada a <b>Museo LagOmar</b>.</div></div>
-    <div class="trip-time"><time>11.30–12.30</time><div><b>LagOmar.</b> Mantenir la visita guiada si continua disponible en aquesta franja.</div></div>
-  </div>
-  <div class="trip-section">
-    <h4>Migdia i tarda</h4>
-    <div class="trip-time"><time>13.00–15.00</time><div>🍴 <b>Teleclub Montaña Blanca.</b> Reservar taula.</div></div>
-    <div class="trip-time"><time>15.00–15.45</time><div><b>La Geria panoràmica.</b> Ruta tranquil·la per la LZ-30, vinyes volcàniques, zocos, lapil·li i parades fotogràfiques.</div></div>
-    <div class="trip-time"><time>16.00–17.00</time><div>🍷 <b>Bodega STRATVS.</b> Arribada amb 15 minuts de marge. Visita guiada, cultiu de vinya volcànica, elaboració, tast de 3 vins i formatges artesans de Finca de Uga. Durada 60 min · 25 €.</div></div>
-    <div class="trip-time"><time>17.00–17.30</time><div>Retorn a Puerto del Carmen.</div></div>
-  </div>
-  <div class="trip-comment">I després: piscina / dutxa / terrassa / sopar tranquil.</div>
-</div>`},
+23:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
 /* 24 DE SETEMBRE */
-24:{kind:"trip",icon:"🌋",title:"Timanfaya · El Golfo · Los Hervideros · Janubio",richHtml:`
-<div class="trip-plan">
-  <div class="trip-summary">
-    <div><span>Ruta</span><b>Puerto del Carmen → Timanfaya → Mancha Blanca → El Golfo → Los Hervideros → Salinas de Janubio → Yaiza → Puerto del Carmen</b></div>
-    <div><span>Distància</span><b>105–120 km</b></div>
-  </div>
-  <img class="trip-map" src="ruta-24-setembre.png" alt="Mapa de la ruta del 24 de setembre">
-  <div class="trip-section">
-    <h4>Matí</h4>
-    <div class="trip-time"><time>08.00</time><div>Sortida de Puerto del Carmen. Uns 30 minuts fins al pàrquing de Timanfaya.</div></div>
-    <div class="trip-time"><time>08.30</time><div>🌋 <b>Timanfaya · Montañas del Fuego.</b> Islote de Hilario i demostracions geotèrmiques. Preveure uns 90 minuts de visita.</div></div>
-  </div>
-  <div class="trip-section">
-    <h4>Migdia · dues possibilitats</h4>
-    <div class="trip-option"><b>OPCIÓ A · Teleclub Mancha Blanca ⭐</b><br>Primera opció si els horaris encaixen.</div>
-    <div class="trip-option"><b>OPCIÓ B · El Golfo</b><br>Continuar directament cap a El Golfo i dinar peix davant del mar: Casa Rafa o Casa Barriguita.</div>
-  </div>
-  <div class="trip-section">
-    <h4>Tarda</h4>
-    <ul class="trip-list">
-      <li>El Golfo</li>
-      <li>Mirador del Charco de los Clicos</li>
-      <li>Laguna Verde</li>
-      <li>Los Hervideros, si l’accés està obert</li>
-      <li>Salinas de Janubio i parada al mirador</li>
-      <li><b>Yaiza:</b> volta pel poble</li>
-    </ul>
-  </div>
-  <div class="trip-note alt"><b>Opcional · Uga.</b> Només si hi ha temps i ganes. No condiciona res; si a Yaiza ja pensem «hem fet prou coses per avui», Uga desapareix sense remordiments.</div>
-</div>`},
+24:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
 /* 25 DE SETEMBRE */
-25:{kind:"trip",icon:"🕳️",title:"Nord de Lanzarote + Arrecife en Vivo",richHtml:`
-<div class="trip-plan">
-  <div class="trip-summary">
-    <div><span>Ruta</span><b>Puerto del Carmen → Arrieta → Punta Mujeres → Cueva de los Verdes → Jameos del Agua → Yé → Mirador del Río → Haría → Los Valles → Jardín de Cactus → Arrecife → Puerto del Carmen</b></div>
-    <div><span>Distància / intensitat</span><b>105–115 km · alta</b></div>
-  </div>
-  <img class="trip-map" src="ruta-25-setembre.png" alt="Mapa de la ruta del 25 de setembre">
-  <div class="trip-section">
-    <h4>Matí</h4>
-    <div class="trip-time"><time>08.15</time><div>Sortida de Puerto del Carmen.</div></div>
-    <div class="trip-time"><time>09.00</time><div><b>Arrieta.</b> Parada breu i vistes del poble i la costa. <b>Punta Mujeres:</b> parada visual curta.</div></div>
-    <div class="trip-time"><time>09.30</time><div>🕳️ <b>Cueva de los Verdes.</b> Visita aproximada 50 min. Reservar hora amb antelació. Entrada 17 €.</div></div>
-    <div class="trip-time"><time>10.30/10.40–11.45</time><div><b>Jameos del Agua.</b> Visita del conjunt de César Manrique. Calcular aprox. 60–120 min.</div></div>
-    <div class="trip-time"><time>12.15–13.00</time><div><b>Mirador del Río.</b> Pas per Yé i vistes sobre La Graciosa. Visita curta, uns 45 min.</div></div>
-    <div class="trip-time"><time>13.20–13.50</time><div><b>Haría.</b> Volta curta pel centre i ambient de la vall.</div></div>
-    <div class="trip-time"><time>14.00–15.15</time><div>🍴 <b>Teleclub Los Valles ⭐</b></div></div>
-    <div class="trip-time"><time>15.45–16.45</time><div>🌵 <b>Jardín de Cactus.</b> Aproximadament 1 hora.</div></div>
-    <div class="trip-time"><time>17.15/17.30</time><div>Cap a <b>Arrecife</b>.</div></div>
-  </div>
-  <div class="trip-festival">
-    <h4>Arrecife en Vivo · 25/09</h4>
-    <p><b>18.00 · The Anger Price</b> — La Plazuela</p>
-    <p><b>19.30 · MFC Chicken</b> — Charco de San Ginés</p>
-    <p><b>21.00 · Alfredo Piedrafita</b> — Marina Lanzarote</p>
-    <p><b>22.30 · Chambao, 25 aniversari</b> — Muelle de Cruceros (+18)</p>
-    <p><b>19.00–19.15 · Arribada prevista a Arrecife.</b> Charco de San Ginés → MFC Chicken → ambient del festival → Alfredo Piedrafita.</p>
-  </div>
-  <div class="trip-option"><b>Opció A:</b> hem tingut prou → sopar / Puerto del Carmen.<br><b>Opció B:</b> ens ho estem passant bé → 22.30 Chambao.</div>
-</div>`},
+25:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
 /* 26 DE SETEMBRE */
-26:{kind:"trip",icon:"⛴️",title:"La Graciosa · Pla A / Pla B",richHtml:`
-<div class="trip-plan">
-  <div class="trip-summary">
-    <div><span>Pla A</span><b>Puerto del Carmen → Órzola → La Graciosa → Órzola → Puerto del Carmen</b></div>
-    <div><span>Distància / intensitat</span><b>125–135 km · alta per durada, no per caminar</b></div>
-  </div>
-  <img class="trip-map" src="ruta-26-setembre.png" alt="Mapa de la ruta del 26 de setembre">
-  <div class="trip-section">
-    <h4>Pla A · La Graciosa</h4>
-    <div class="trip-time"><time>08.30</time><div>⛴️ <b>Ferri Órzola → Caleta de Sebo.</b> Travessia d’uns 25 minuts.</div></div>
-    <div class="trip-time"><time>Matí</time><div>🚙 <b>Taxi 4×4, no bicicleta.</b> Tour Nord + Playa Francesa, aprox. 2 h 15 min · 40 € per persona. Inclou Pedro Barba, Playa Lambra, Caletón de los Arcos, Playa de las Conchas i Playa Francesa.</div></div>
-    <div class="trip-time"><time>Migdia</time><div>Retorn a Caleta de Sebo. Dinar al poble. Temps tranquil: port, carrers, ambient de l’illa i estona vora el mar.</div></div>
-    <div class="trip-time"><time>Vespre</time><div>Ferri de retorn a Órzola. Hi ha serveis publicats fins a les 19.00 h. Cotxe fins a Puerto del Carmen.</div></div>
-  </div>
-  <div class="trip-section">
-    <h4>Pla B · Si no anem a La Graciosa</h4>
-    <div class="trip-time"><time>Ruta</time><div>Puerto del Carmen → Tías → Casa de José Saramago → Fundación César Manrique → Tahíche → Puerto del Carmen.</div></div>
-    <div class="trip-time"><time>Matí</time><div><b>Casa de José Saramago.</b> Casa, biblioteca i espais de treball de l’escriptor. <b>Fundación César Manrique.</b> Arquitectura integrada en la colada volcànica.</div></div>
-    <div class="trip-time"><time>Migdia</time><div>🍴 <b>Teleclub Tahíche ⭐</b></div></div>
-    <div class="trip-time"><time>Tarda</time><div>Retorn a Puerto del Carmen. Port vell, compres, platja, piscina, terrassa i descans.</div></div>
-  </div>
-</div>`},
+26:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
 /* 27 DE SETEMBRE */
-27:{kind:"trip",icon:"🛍️",title:"Teguise · Famara · Costa Teguise",richHtml:`
-<div class="trip-plan">
-  <div class="trip-summary">
-    <div><span>Ruta</span><b>Puerto del Carmen → Mercat de Teguise → Castillo de Santa Bárbara → Caleta de Famara → Costa Teguise → Puerto del Carmen</b></div>
-    <div><span>Distància / intensitat</span><b>95–110 km · alta</b></div>
-  </div>
-  <img class="trip-map" src="ruta-27-setembre.png" alt="Mapa de la ruta del 27 de setembre">
-  <div class="trip-section">
-    <h4>Matí</h4>
-    <div class="trip-time"><time>08.15</time><div>Sortida cap a <b>Teguise</b>. Intentar arribar abans de les 9.00 h per aparcar millor.</div></div>
-    <div class="trip-time"><time>09.00–</time><div><b>Mercat dominical.</b> Artesania, productes locals, gastronomia i centre històric. Plaza de la Constitución i Nuestra Señora de Guadalupe. La idea és marxar abans de l’hora de màxima afluència.</div></div>
-    <div class="trip-time"><time>Després</time><div><b>Castillo de Santa Bárbara.</b> Pujar-hi directament des de Teguise. Visita si l’accés està disponible i vistes panoràmiques.</div></div>
-  </div>
-  <div class="trip-section">
-    <h4>Migdia i tarda</h4>
-    <div class="trip-time"><time>—</time><div>Baixada cap a <b>Caleta de Famara</b>.</div></div>
-    <div class="trip-time"><time>🍴</time><div><b>Dinar · Teleclub Caleta de Famara ⭐</b></div></div>
-    <div class="trip-time"><time>Tarda</time><div><b>Famara.</b> Platja i vistes dels riscos.</div></div>
-    <div class="trip-time"><time>Després</time><div><b>Costa Teguise.</b> Pueblo Marinero, passeig curt i terrassa. Retorn a Puerto del Carmen.</div></div>
-  </div>
-  <div class="trip-note alt"><b>Alternativa gastronòmica · Teleclub El Mojón.</b> Continua com a comodí si aquell dia ens ve més de gust que Famara i els horaris encaixen.</div>
-</div>`},
+27:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
 /* 28 DE SETEMBRE */
-28:{kind:"trip",icon:"🏖️",title:"Femés · Playa Blanca · Papagayo",richHtml:`
-<div class="trip-plan">
-  <div class="trip-summary">
-    <div><span>Ruta</span><b>Puerto del Carmen → Femés → Faro de Pechiguera → Playa Blanca → Marina Rubicón → Playa Mujeres → Papagayo → Puerto del Carmen</b></div>
-    <div><span>Distància / intensitat</span><b>90–110 km · mitjana-alta</b></div>
-  </div>
-  <img class="trip-map" src="ruta-28-setembre.png" alt="Mapa de la ruta del 28 de setembre">
-  <div class="trip-section">
-    <h4>Ruta</h4>
-    <div class="trip-time"><time>—</time><div><b>Femés.</b> Parada panoràmica.</div></div>
-    <div class="trip-time"><time>—</time><div><b>Faro de Pechiguera.</b> Parada a l’extrem occidental i vistes de la costa.</div></div>
-    <div class="trip-time"><time>—</time><div><b>Playa Blanca.</b> Passeig per la zona marítima.</div></div>
-    <div class="trip-time"><time>—</time><div><b>Marina Rubicón.</b> Volta pel port esportiu.</div></div>
-    <div class="trip-time"><time>🍴</time><div>Dinar a Marina Rubicón o Playa Blanca.</div></div>
-  </div>
-  <div class="trip-section">
-    <h4>Tarda · platges</h4>
-    <div class="trip-time"><time>🏖️</time><div><b>Playa Mujeres.</b> Ampla, oberta i bona per estar-hi una bona estona.</div></div>
-    <div class="trip-time"><time>🏖️</time><div><b>Playa Papagayo.</b> Segona parada; la cala més emblemàtica de la zona. Anirem amb cotxe d’una a l’altra.</div></div>
-  </div>
-  <div class="trip-note"><b>Condició:</b> Papagayo i Playa Mujeres només si contracte del cotxe + estat de la pista + ganes = sí.</div>
-  <div class="trip-note alt"><b>Alternatives si preferim evitar la pista:</b> Playa Dorada · Playa Flamingo.</div>
-</div>`},
+28:{
+  kind:"trip",
+  icon:"🔒",
+  title:"Expedient classificat",
+  richHtml:`
+    <div class="phase-wait">
+      <b>CONTINGUT CLASSIFICAT</b><br><br>
+      La informació operativa d’aquesta jornada no forma part d’aquesta versió del document.
+    </div>
+  `
+},
 /* 29 DE SETEMBRE */
 29:{
   kind:"trip",
@@ -4400,26 +4256,6 @@ function modalTypeLabel(dateKey,info){
   if(info.supplementary)return `${label} · ENCÀRREC EXTRAORDINARI`;
   return `${label} · ${info.mission?"MISSIÓ":"INFORME"}`;
 }
-
-let mainModalScrollY=0;
-
-function lockBodyForMainModal(){
-  mainModalScrollY=window.scrollY||window.pageYOffset||0;
-  document.body.classList.add("modal-open");
-  document.body.style.top=`-${mainModalScrollY}px`;
-  document.body.style.left="0";
-  document.body.style.right="0";
-}
-
-function unlockBodyFromMainModal(){
-  const y=mainModalScrollY||0;
-  document.body.classList.remove("modal-open");
-  document.body.style.removeProperty("top");
-  document.body.style.removeProperty("left");
-  document.body.style.removeProperty("right");
-  window.scrollTo({top:y,left:0,behavior:"auto"});
-}
-
 function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
   if(!calendarEl)return;
   calendarEl.replaceChildren();
@@ -4484,7 +4320,7 @@ function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
       if(data.probabilityAssignment)initProbabilityAssignment(data);
       openMissionModal(activityId,dateKey,data);
       modal.classList.add("show");
-      lockBodyForMainModal();
+      document.body.classList.add("modal-open");
     };
     button.addEventListener("click",()=>{
       if(button.disabled)return;
@@ -4558,7 +4394,7 @@ function updateCalendarAccess(){
     let available;
     if(dateKey>="2026-09-21"&&dateKey<="2026-09-29"){
       // Quan el destí queda desclassificat, s’obren les caselles finals.
-      available=now>=new Date("2026-09-20T17:00:00");
+      available=now>=new Date("2026-09-20T16:00:00");
     }else if(dateKey==="2026-09-30"){
       // L’informe final només queda disponible després del retorn.
       available=now>=returnDate;
@@ -4795,9 +4631,11 @@ resetOperationBtn.addEventListener("click",()=>{
   location.reload();
 });
 function closeMainModal(){
-  if(!modal.classList.contains("show"))return;
   modal.classList.remove("show");
-  unlockBodyFromMainModal();
+  document.body.classList.remove("modal-open");
+  document.body.style.removeProperty("top");
+  document.body.style.removeProperty("left");
+  document.body.style.removeProperty("right");
 }
 document.querySelector(".modal-close").addEventListener("click",closeMainModal);
 modal.addEventListener("click",e=>{if(e.target===modal)closeMainModal()});
