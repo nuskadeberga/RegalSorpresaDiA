@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#071018">
-<meta name="cids-build" content="106">
-<title>Operació 2209 · Calendari de viatge · V106</title>
-<!-- V106: itineraris 22–28/09 incorporats des de LANZAROTE - RUTES, pàgines 1–9, amb mapes -->
+<meta name="cids-build" content="107">
+<title>Operació 2209 · Calendari de viatge · V107</title>
+<!-- V107: memòria de posició de scroll en obrir i tancar les caselles -->
 <style>
 :root{
   --bg:#071018;--panel:#0d1923;--panel2:#111f2b;--ink:#edf3f4;--muted:#91a4ad;
@@ -4400,6 +4400,26 @@ function modalTypeLabel(dateKey,info){
   if(info.supplementary)return `${label} · ENCÀRREC EXTRAORDINARI`;
   return `${label} · ${info.mission?"MISSIÓ":"INFORME"}`;
 }
+
+let mainModalScrollY=0;
+
+function lockBodyForMainModal(){
+  mainModalScrollY=window.scrollY||window.pageYOffset||0;
+  document.body.classList.add("modal-open");
+  document.body.style.top=`-${mainModalScrollY}px`;
+  document.body.style.left="0";
+  document.body.style.right="0";
+}
+
+function unlockBodyFromMainModal(){
+  const y=mainModalScrollY||0;
+  document.body.classList.remove("modal-open");
+  document.body.style.removeProperty("top");
+  document.body.style.removeProperty("left");
+  document.body.style.removeProperty("right");
+  window.scrollTo({top:y,left:0,behavior:"auto"});
+}
+
 function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
   if(!calendarEl)return;
   calendarEl.replaceChildren();
@@ -4464,7 +4484,7 @@ function renderMonth(calendarEl,year,monthIndex,onlyDays=null){
       if(data.probabilityAssignment)initProbabilityAssignment(data);
       openMissionModal(activityId,dateKey,data);
       modal.classList.add("show");
-      document.body.classList.add("modal-open");
+      lockBodyForMainModal();
     };
     button.addEventListener("click",()=>{
       if(button.disabled)return;
@@ -4775,11 +4795,9 @@ resetOperationBtn.addEventListener("click",()=>{
   location.reload();
 });
 function closeMainModal(){
+  if(!modal.classList.contains("show"))return;
   modal.classList.remove("show");
-  document.body.classList.remove("modal-open");
-  document.body.style.removeProperty("top");
-  document.body.style.removeProperty("left");
-  document.body.style.removeProperty("right");
+  unlockBodyFromMainModal();
 }
 document.querySelector(".modal-close").addEventListener("click",closeMainModal);
 modal.addEventListener("click",e=>{if(e.target===modal)closeMainModal()});
