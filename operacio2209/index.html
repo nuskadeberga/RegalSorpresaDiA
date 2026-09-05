@@ -4156,22 +4156,25 @@ function resolvedActivity(dateKey,data){
   <div class="hangman-result" id="hangmanResult">
     <div class="coords-label">COORDENADES RECUPERADES</div>
     <div class="coords-value">///stanze.chiamate.eppure</div>
-    <div>La comunicació definitiva es publicarà a les <b>16.00 h</b>.</div>
+    <div>La comunicació definitiva es publicarà a partir de les <b>16.00 h</b>.</div>
   </div>
 </div>`};
   }
   if(now<phase3){
     return {...data,title:"Destí desclassificat",richHtml:`
-<div class="intel-kicker" style="text-align:center">OPERACIÓ 2209 · DESTÍ CONFIRMAT</div>
+
 <div class="reveal-title">LA RIOJA</div>
 <img class="reveal-photo" src="https://www.wonderbox.es/blog/wp-content/uploads/sites/6/2025/01/vino-espana-1024x731.jpg" alt="Paisatge vinícola de La Rioja">
-<p style="text-align:center">La Central dona per finalitzat el protocol de desclassificació.</p>`};
+<p style="text-align:center"></p>`};
   }
-  return {...data,title:"Rectificació final del CIDS",richHtml:`
-<div class="intel-kicker" style="text-align:center">CIDS · RECTIFICACIÓ EXTRAORDINÀRIA</div>
+
+
+  return {...data,title:"A petició de la Central de Viatges",richHtml:`
+<div class="intel-kicker" style="text-align:center">DESTÍ FINAL APROVAT PEL CIDS</div>
+
 <div class="reveal-title">LANZAROTE</div>
 <img class="reveal-photo" src="https://turismolanzarote.com/wp-content/uploads/2021/09/Masdache_%C2%A9-Turismo-Lanzarote-1.jpg" alt="Paisatge volcànic de Lanzarote">
-<div class="flight-note" style="margin-top:16px;text-align:center"><b>ARA SÍ: DESTÍ FINAL DEL TOT</b><br><br>La Rioja queda oficialment desclassificada... però no com a destinació de l’Operació 2209.<br><br><b>La destinació definitiva és LANZAROTE.</b></div>`};
+<div class="flight-note" style="margin-top:16px;text-align:center">La Rioja queda oficialment desclassificada... però no com a destinació de l’Operació 2209.</div>`};
 }
 const HANGMAN_TARGET=["stanze","chiamate","eppure"];
 /*const HANGMAN_TARGET=["saputo","lupi","vorrà"];*/
